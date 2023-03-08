@@ -15,6 +15,7 @@ import {
 import { BlogsService } from './blogs.service';
 import { QueryParser } from '../application/query.parser';
 import { BlogsQuery } from './blogs.query';
+import { PostsService } from '../posts/posts.service';
 
 @Controller('blogs')
 export class BlogsController {
