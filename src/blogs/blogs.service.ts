@@ -1,5 +1,6 @@
 import { BlogDbClass, BlogViewType } from './blogs.types';
 import mongoose from 'mongoose';
+import { BlogsRepository } from './blogs.repository';
 
 export class BlogsService {
   constructor(protected readonly blogsRepo: BlogsRepository) {}
@@ -28,5 +29,8 @@ export class BlogsService {
     websiteUrl: string,
   ) {
     return await this.blogsRepo.updateBlog(id, name, description, websiteUrl);
+  }
+  async deleteBlog(id: string) {
+    return await this.blogsRepo.deleteBlog(id);
   }
 }

@@ -1,8 +1,17 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import {
   CreateBlogInputModelType,
   CreatePostForBlogModelType,
 } from './blogs.types';
+import { BlogsService } from './blogs.service';
 
 @Controller('blogs')
 export class BlogsController {
@@ -10,6 +19,7 @@ export class BlogsController {
     protected readonly blogsService: BlogsService,
     protected readonly postsService: PostsService,
     protected readonly blogsQueryRepo: BlogsQueryRepo,
+    protected readonly postsQueryRepo: PostsQueryRepo,
   ) {}
   @Post()
   async createBlog(@Body() input: CreateBlogInputModelType) {
@@ -42,6 +52,10 @@ export class BlogsController {
       input.description,
       input.websiteUrl,
     );
+  }
+  @Delete(':id')
+  async deleteBlog(@Param('id') id: string) {
+    return await this.blogsService.deleteBlog(id);
   }
   @Get()
   async getAllBlogs() {
