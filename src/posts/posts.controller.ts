@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostInputModelType, UpdatePostInputModel } from './posts.types';
 import { PostsQuery } from './posts.query';
@@ -32,5 +32,9 @@ export class PostsController {
       input.content,
       input.blogId,
     );
+  }
+  @Delete(':id')
+  async deletePost(@Param(':id') id: string) {
+    return await this.postsService.deletePost(id);
   }
 }
