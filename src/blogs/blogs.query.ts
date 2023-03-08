@@ -1,7 +1,9 @@
 import { QueryParser } from '../application/query.parser';
 import { BlogDbClass, BlogPaginatorType, BlogViewType } from './blogs.types';
 import mongoose from 'mongoose';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class BlogsQuery {
   async viewAllBlogs(q: QueryParser): Promise<BlogPaginatorType> {
     let filter = '';

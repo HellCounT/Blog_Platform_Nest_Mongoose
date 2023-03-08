@@ -7,14 +7,22 @@ import { UsersRepository } from './users/users.repository';
 import { BlogsService } from './blogs/blogs.service';
 import { BlogsRepository } from './blogs/blogs.repository';
 import { BlogsController } from './blogs/blogs.controller';
+import { BlogsQuery } from './blogs/blogs.query';
+import { PostsController } from './posts/posts.controller';
 
 @Module({
   imports: [],
-  controllers: [AppController, BlogsController, UsersController],
+  controllers: [
+    AppController,
+    BlogsController,
+    PostsController,
+    UsersController,
+  ],
   providers: [
     AppService,
     BlogsService,
     BlogsRepository,
+    BlogsQuery,
     UsersService,
     UsersRepository,
   ],

@@ -1,7 +1,9 @@
 import { BlogDbClass, BlogViewType } from './blogs.types';
 import mongoose from 'mongoose';
 import { BlogsRepository } from './blogs.repository';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class BlogsService {
   constructor(protected readonly blogsRepo: BlogsRepository) {}
   async createBlog(
