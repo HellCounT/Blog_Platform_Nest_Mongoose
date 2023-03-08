@@ -13,7 +13,7 @@ export class BlogsRepository {
     description: string,
     websiteUrl: string,
   ): Promise<boolean> {
-    const blogInstance = await BlogModelClass.findOne({
+    const blogInstance = await BlogModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
     });
     if (!blogInstance) return false;

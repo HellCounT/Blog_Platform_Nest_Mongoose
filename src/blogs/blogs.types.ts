@@ -29,3 +29,11 @@ export class BlogDbClass {
     public createdAt: string,
   ) {}
 }
+
+export type BlogPaginatorType = {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: BlogViewType[];
+};

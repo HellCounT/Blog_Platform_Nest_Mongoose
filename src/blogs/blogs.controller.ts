@@ -6,19 +6,22 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import {
   CreateBlogInputModelType,
   CreatePostForBlogModelType,
 } from './blogs.types';
 import { BlogsService } from './blogs.service';
+import { QueryParser } from '../application/query.parser';
+import { BlogsQuery } from './blogs.query';
 
 @Controller('blogs')
 export class BlogsController {
   constructor(
     protected readonly blogsService: BlogsService,
     protected readonly postsService: PostsService,
-    protected readonly blogsQueryRepo: BlogsQueryRepo,
+    protected readonly blogsQueryRepo: BlogsQuery,
     protected readonly postsQueryRepo: PostsQueryRepo,
   ) {}
   @Post()
@@ -58,15 +61,18 @@ export class BlogsController {
     return await this.blogsService.deleteBlog(id);
   }
   @Get()
-  async getAllBlogs() {
-    return await this.blogsQueryRepo.viewAllBlogs(queryParams);
+  async getAllBlogs(@Query() query: QueryParser) {
+    return await this.blogsQueryRepo.viewAllBlogs(query);
   }
   @Get(':id')
   async getBlogById(@Param('id') id: string) {
     return await this.blogsQueryRepo.findBlogById(id);
   }
   @Get(':id/posts')
-  async getPostsForBlogId(@Param('id') id: string) {
-    return this.postsQueryRepo.findPostsByBlogId(id, queryParams);
+  async getPostsForBlogId(
+    @Param('id') id: string,
+    @Query() query: QueryParser,
+  ) {
+    return this.postsQueryRepo.findPostsByBlogId(id, query);
   }
 }
