@@ -1,13 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { QueryParser } from '../application/query.parser';
 import { PostDb, PostPaginatorType, PostViewModelType } from './posts.types';
+import { InjectModel } from '@nestjs/mongoose';
+import { Post, PostDocument } from './posts.schema';
+import { Blog, BlogDocument } from '../blogs/blogs.schema';
 
 @Injectable()
 export class PostsQuery {
+  constructor(
+    @InjectModel(Post.name) private postModel: Model<PostDocument>,
+    @InjectModel(Blog.name) private blogModel: Model<BlogDocument>,
+  ) {}
   async viewAllPosts(q: QueryParser): Promise<PostPaginatorType> {
-    const allPostsCount = await PostModel.countDocuments();
-    const reqPageDbPosts = await PostModel.find()
+    const allPostsCount = await this.postModel.countDocuments();
+    const reqPageDbPosts = await this.postModel
+      .find()
       .sort({ [q.sortBy]: q.sortDirection })
       .skip((q.pageNumber - 1) * q.pageSize)
       .limit(q.pageSize)
@@ -26,7 +34,7 @@ export class PostsQuery {
     };
   }
   async findPostById(id: string): Promise<PostViewModelType | null> {
-    const foundPostInstance = await PostModel.findOne({
+    const foundPostInstance = await this.postModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
     });
     if (foundPostInstance) return this._mapPostToViewType(foundPostInstance);
@@ -37,14 +45,17 @@ export class PostsQuery {
     q: QueryParser,
   ): Promise<PostPaginatorType | null> {
     if (
-      await BlogModel.findOne({
-        _id: new mongoose.Types.ObjectId(blogId),
-      }).lean()
+      await this.blogModel
+        .findOne({
+          _id: new mongoose.Types.ObjectId(blogId),
+        })
+        .lean()
     ) {
-      const foundPostsCount = await PostModel.countDocuments({
+      const foundPostsCount = await this.postModel.countDocuments({
         blogId: { $eq: blogId },
       });
-      const reqPageDbPosts = await PostModel.find({ blogId: { $eq: blogId } })
+      const reqPageDbPosts = await this.postModel
+        .find({ blogId: { $eq: blogId } })
         .sort({ [q.sortBy]: q.sortDirection })
         .skip((q.pageNumber - 1) * q.pageSize)
         .limit(q.pageSize)

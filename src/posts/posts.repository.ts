@@ -1,11 +1,18 @@
 import { PostDb, PostViewModelType } from './posts.types';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Post, PostDocument } from './posts.schema';
+import { Blog, BlogDocument } from '../blogs/blogs.schema';
 
 @Injectable()
 export class PostsRepository {
+  constructor(
+    @InjectModel(Post.name) private postModel: Model<PostDocument>,
+    @InjectModel(Blog.name) private blogModel: Model<BlogDocument>,
+  ) {}
   async createPost(newPost: PostDb): Promise<PostViewModelType | null> {
-    const postInstance = new PostModel(newPost);
+    const postInstance = new this.postModel(newPost);
     const saveResult = await postInstance.save();
     return {
       id: saveResult._id.toString(),
@@ -29,12 +36,12 @@ export class PostsRepository {
     text: string,
     blogId: string,
   ): Promise<boolean | null> {
-    const foundBlog = await BlogModel.findOne({
+    const foundBlog = await this.blogModel.findOne({
       _id: new mongoose.Types.ObjectId(blogId),
     });
     if (!foundBlog) return null;
     else {
-      const postInstance = await PostModel.findOne({
+      const postInstance = await this.postModel.findOne({
         _id: new mongoose.Types.ObjectId(inputId),
       });
       if (!postInstance) return false;
@@ -48,7 +55,7 @@ export class PostsRepository {
     }
   }
   async deletePost(inputId: string): Promise<boolean> {
-    const postInstance = await PostModel.findOne({
+    const postInstance = await this.postModel.findOne({
       _id: new mongoose.Types.ObjectId(inputId),
     });
     if (!postInstance) return false;

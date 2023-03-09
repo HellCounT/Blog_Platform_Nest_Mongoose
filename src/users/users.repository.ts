@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { UserDb, UserViewModelType } from './users.types';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { User, UserDocument } from './users.schema';
 
 @Injectable()
 export class UsersRepository {
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
   async createUser(newUser: UserDb): Promise<UserViewModelType> {
-    const userInstance = new UserModel(newUser);
+    const userInstance = new this.userModel(newUser);
     const result = await userInstance.save();
     return {
       id: result._id.toString(),
@@ -15,7 +18,7 @@ export class UsersRepository {
     };
   }
   async deleteUser(id: string): Promise<boolean | null> {
-    const userInstance = await UserModel.findOne({
+    const userInstance = await this.userModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
     });
     if (!userInstance) return false;

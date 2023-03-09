@@ -1,16 +1,17 @@
-import mongoose from 'mongoose';
-import {
-  CommentDb,
-  CommentPaginatorType,
-  CommentViewModelType,
-} from './comments.types';
+import mongoose, { Model } from 'mongoose';
+import { CommentPaginatorType, CommentViewModelType } from './comments.types';
 import { QueryParser } from '../application/query.parser';
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Comment, CommentDocument } from './comments.schema';
 
 @Injectable()
 export class CommentsQuery {
+  constructor(
+    @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
+  ) {}
   async findCommentById(id: string): Promise<CommentViewModelType | null> {
-    const foundCommentInstance = await CommentModel.findOne({
+    const foundCommentInstance = await this.commentModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
     });
     if (foundCommentInstance)
@@ -21,12 +22,13 @@ export class CommentsQuery {
     postId: string,
     q: QueryParser,
   ): Promise<CommentPaginatorType | null> {
-    const foundCommentsCount = await CommentModel.countDocuments({
+    const foundCommentsCount = await this.commentModel.countDocuments({
       postId: { $eq: postId },
     });
-    const reqPageDbComments = await CommentModel.find({
-      postId: { $eq: postId },
-    })
+    const reqPageDbComments = await this.commentModel
+      .find({
+        postId: { $eq: postId },
+      })
       .sort({ [q.sortBy]: q.sortDirection })
       .skip((q.pageNumber - 1) * q.pageSize)
       .limit(q.pageSize)
@@ -48,7 +50,7 @@ export class CommentsQuery {
     }
   }
   async _mapCommentToViewType(
-    comment: CommentDb,
+    comment: CommentDocument,
   ): Promise<CommentViewModelType> {
     return {
       id: comment._id.toString(),
