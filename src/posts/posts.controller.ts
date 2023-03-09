@@ -34,7 +34,7 @@ export class PostsController {
   @Put(':id')
   @HttpCode(204)
   async updatePost(
-    @Param(':id') id: string,
+    @Param('id') id: string,
     @Body() input: UpdatePostInputModel,
   ) {
     return await this.postsService.updatePost(
