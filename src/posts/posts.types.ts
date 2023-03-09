@@ -22,7 +22,7 @@ export type PostViewModelType = {
   blogId: string;
   blogName: string;
   createdAt: string;
-  extendedLikesInfo: LikesInfoViewModelType;
+  extendedLikesInfo: ExtendedLikesInfoViewModelType;
 };
 
 export type LikesInfoViewModelType = {

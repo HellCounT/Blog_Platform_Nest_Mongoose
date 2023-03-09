@@ -26,6 +26,7 @@ export class PostsRepository {
         likesCount: saveResult.likesInfo.likesCount,
         dislikesCount: saveResult.likesInfo.dislikesCount,
         myStatus: 'None',
+        newestLikes: [],
       },
     };
   }

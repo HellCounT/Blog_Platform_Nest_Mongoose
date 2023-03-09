@@ -1,4 +1,4 @@
-import { Controller, Delete, Get } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode } from '@nestjs/common';
 import { AppService } from './app.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument } from './blogs/blogs.schema';
@@ -22,6 +22,7 @@ export class AppController {
     return this.appService.getHello();
   }
   @Delete('testing/all-data')
+  @HttpCode(204)
   async deleteAllData() {
     await this.blogModel.deleteMany({});
     await this.postModel.deleteMany({});
