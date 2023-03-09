@@ -25,7 +25,6 @@ export class AppController {
   async deleteAllData() {
     await this.blogModel.deleteMany({});
     await this.postModel.deleteMany({});
-    await this.commentModel.deleteMany({});
     await this.userModel.deleteMany({});
     return;
   }
