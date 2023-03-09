@@ -47,6 +47,7 @@ export class BlogsQuery {
       description: blog.description,
       websiteUrl: blog.websiteUrl,
       createdAt: blog.createdAt,
+      isMembership: blog.isMembership,
     };
   }
 }

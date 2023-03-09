@@ -18,6 +18,7 @@ export type BlogViewModelType = {
   description: string;
   websiteUrl: string;
   createdAt: string;
+  isMembership: boolean;
 };
 
 export class BlogDb {
@@ -27,6 +28,7 @@ export class BlogDb {
     public description: string,
     public websiteUrl: string,
     public createdAt: string,
+    public isMembership: boolean,
   ) {}
 }
 

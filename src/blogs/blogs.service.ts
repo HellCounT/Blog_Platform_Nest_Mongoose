@@ -17,6 +17,7 @@ export class BlogsService {
       description,
       website,
       new Date().toISOString(),
+      true,
     );
     const result = await this.blogsRepo.createBlog(newBlog);
     return {
@@ -25,6 +26,7 @@ export class BlogsService {
       description: result.description,
       websiteUrl: result.websiteUrl,
       createdAt: result.createdAt,
+      isMembership: result.isMembership,
     };
   }
   async updateBlog(

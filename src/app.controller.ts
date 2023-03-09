@@ -1,4 +1,4 @@
-import { Controller, Delete, Get } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode } from '@nestjs/common';
 import { AppService } from './app.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument } from './blogs/blogs.schema';
@@ -18,6 +18,7 @@ export class AppController {
   ) {}
 
   @Get()
+  @HttpCode(204)
   getHello(): string {
     return this.appService.getHello();
   }
