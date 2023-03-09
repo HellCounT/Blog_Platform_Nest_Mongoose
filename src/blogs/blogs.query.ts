@@ -1,5 +1,5 @@
 import { QueryParser } from '../application/query.parser';
-import { BlogDbClass, BlogPaginatorType, BlogViewType } from './blogs.types';
+import { BlogDb, BlogPaginatorType, BlogViewModelType } from './blogs.types';
 import mongoose from 'mongoose';
 import { Injectable } from '@nestjs/common';
 
@@ -27,14 +27,14 @@ export class BlogsQuery {
       items: pageBlogs,
     };
   }
-  async findBlogById(id: string): Promise<BlogViewType | null> {
+  async findBlogById(id: string): Promise<BlogViewModelType | null> {
     const foundBlogInstance = await BlogModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
     }).lean();
     if (foundBlogInstance) return this._mapBlogToViewType(foundBlogInstance);
     else return null;
   }
-  _mapBlogToViewType(blog: BlogDbClass): BlogViewType {
+  _mapBlogToViewType(blog: BlogDb): BlogViewModelType {
     return {
       id: blog._id.toString(),
       name: blog.name,

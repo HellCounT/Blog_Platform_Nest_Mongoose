@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { PostDbClass, PostViewType } from './posts.types';
+import { PostDb, PostViewModelType } from './posts.types';
 import mongoose from 'mongoose';
 import { BlogsQuery } from '../blogs/blogs.query';
+import { PostsRepository } from './posts.repository';
 
 @Injectable()
 export class PostsService {
   constructor(
-    protected readonly postsRepo: PostsRepository,
+    protected postsRepo: PostsRepository,
     protected readonly blogsQueryRepo: BlogsQuery,
   ) {}
   async createPost(
@@ -14,10 +15,10 @@ export class PostsService {
     short: string,
     text: string,
     blogId: string,
-  ): Promise<PostViewType | null> {
+  ): Promise<PostViewModelType | null> {
     const foundBlog = await this.blogsQueryRepo.findBlogById(blogId);
     if (!foundBlog) return null;
-    const newPost = new PostDbClass(
+    const newPost = new PostDb(
       new mongoose.Types.ObjectId(),
       postTitle,
       short,

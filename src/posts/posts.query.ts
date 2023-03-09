@@ -1,14 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import mongoose from 'mongoose';
 import { QueryParser } from '../application/query.parser';
-import { PostDbClass, PostPaginatorType, PostViewType } from './posts.types';
+import { PostDb, PostPaginatorType, PostViewModelType } from './posts.types';
 
 @Injectable()
 export class PostsQuery {
-  async viewAllPosts(
-    q: QueryParser,
-    activeUserId: string,
-  ): Promise<PostPaginatorType> {
+  async viewAllPosts(q: QueryParser): Promise<PostPaginatorType> {
     const allPostsCount = await PostModel.countDocuments();
     const reqPageDbPosts = await PostModel.find()
       .sort({ [q.sortBy]: q.sortDirection })
@@ -17,7 +14,7 @@ export class PostsQuery {
       .lean();
     const items = [];
     for await (const p of reqPageDbPosts) {
-      const post = await this._mapPostToViewType(p, activeUserId);
+      const post = await this._mapPostToViewType(p);
       items.push(post);
     }
     return {
@@ -28,21 +25,16 @@ export class PostsQuery {
       items: items,
     };
   }
-  async findPostById(
-    id: string,
-    activeUserId: string,
-  ): Promise<PostViewType | null> {
+  async findPostById(id: string): Promise<PostViewModelType | null> {
     const foundPostInstance = await PostModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
     });
-    if (foundPostInstance)
-      return this._mapPostToViewType(foundPostInstance, activeUserId);
+    if (foundPostInstance) return this._mapPostToViewType(foundPostInstance);
     else return null;
   }
   async findPostsByBlogId(
     blogId: string,
     q: QueryParser,
-    activeUserId: string,
   ): Promise<PostPaginatorType | null> {
     if (
       await BlogModel.findOne({
@@ -61,7 +53,7 @@ export class PostsQuery {
       else {
         const items = [];
         for await (const p of reqPageDbPosts) {
-          const post = await this._mapPostToViewType(p, activeUserId);
+          const post = await this._mapPostToViewType(p);
           items.push(post);
         }
         return {
@@ -74,19 +66,7 @@ export class PostsQuery {
       }
     } else return null;
   }
-  async _mapPostToViewType(
-    post: PostDbClass,
-    userId: string,
-  ): Promise<PostViewType> {
-    const userLike = await this.getUserLikeForPost(userId, post._id.toString());
-    const newestLikes = await this._getNewestLikes(post._id.toString());
-    const mappedLikes = newestLikes.map((e) => {
-      return {
-        addedAt: new Date(e.addedAt).toISOString(),
-        userId: e.userId,
-        login: e.userLogin,
-      };
-    });
+  async _mapPostToViewType(post: PostDb): Promise<PostViewModelType> {
     return {
       id: post._id.toString(),
       title: post.title,
@@ -98,8 +78,7 @@ export class PostsQuery {
       extendedLikesInfo: {
         likesCount: post.likesInfo?.likesCount,
         dislikesCount: post.likesInfo?.dislikesCount,
-        myStatus: userLike?.likeStatus || LikeStatus.none,
-        newestLikes: mappedLikes,
+        myStatus: 'None',
       },
     };
   }

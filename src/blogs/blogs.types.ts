@@ -12,7 +12,7 @@ export type CreatePostForBlogModelType = {
   content: string;
 };
 
-export type BlogViewType = {
+export type BlogViewModelType = {
   id: string;
   name: string;
   description: string;
@@ -20,7 +20,7 @@ export type BlogViewType = {
   createdAt: string;
 };
 
-export class BlogDbClass {
+export class BlogDb {
   constructor(
     public _id: Types.ObjectId,
     public name: string,
@@ -35,5 +35,5 @@ export type BlogPaginatorType = {
   page: number;
   pageSize: number;
   totalCount: number;
-  items: BlogViewType[];
+  items: BlogViewModelType[];
 };

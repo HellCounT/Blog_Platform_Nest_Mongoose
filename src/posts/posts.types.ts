@@ -14,7 +14,7 @@ export type UpdatePostInputModel = {
   blogId: string;
 };
 
-export type PostViewType = {
+export type PostViewModelType = {
   id: string;
   title: string;
   shortDescription: string;
@@ -22,10 +22,10 @@ export type PostViewType = {
   blogId: string;
   blogName: string;
   createdAt: string;
-  extendedLikesInfo: ExtendedLikesInfoViewType;
+  extendedLikesInfo: LikesInfoViewModelType;
 };
 
-export type LikesInfoViewType = {
+export type LikesInfoViewModelType = {
   likesCount: number;
   dislikesCount: number;
   myStatus: string;
@@ -37,11 +37,11 @@ export type newestLike = {
   login: string;
 };
 
-export type ExtendedLikesInfoViewType = LikesInfoViewType & {
+export type ExtendedLikesInfoViewModelType = LikesInfoViewModelType & {
   newestLikes: newestLike[];
 };
 
-export class PostDbClass {
+export class PostDb {
   constructor(
     public _id: Types.ObjectId,
     public title: string,
@@ -62,5 +62,5 @@ export type PostPaginatorType = {
   page: number;
   pageSize: number;
   totalCount: number;
-  items: PostViewType[];
+  items: PostViewModelType[];
 };

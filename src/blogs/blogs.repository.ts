@@ -1,10 +1,10 @@
-import { BlogDbClass } from './blogs.types';
+import { BlogDb } from './blogs.types';
 import mongoose from 'mongoose';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class BlogsRepository {
-  async createBlog(newBlog: BlogDbClass): Promise<BlogDbClass> {
+  async createBlog(newBlog: BlogDb): Promise<BlogDb> {
     const blogInstance = new BlogModel(newBlog);
     await blogInstance.save();
     return newBlog;

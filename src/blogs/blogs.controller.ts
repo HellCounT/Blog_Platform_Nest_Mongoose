@@ -13,16 +13,16 @@ import {
   CreatePostForBlogModelType,
 } from './blogs.types';
 import { BlogsService } from './blogs.service';
-import { QueryParser } from '../application/query.parser';
+import { parseQueryPagination, QueryParser } from '../application/query.parser';
 import { BlogsQuery } from './blogs.query';
 import { PostsService } from '../posts/posts.service';
 
 @Controller('blogs')
 export class BlogsController {
   constructor(
-    protected readonly blogsService: BlogsService,
-    protected readonly postsService: PostsService,
-    protected readonly blogsQueryRepo: BlogsQuery,
+    protected blogsService: BlogsService,
+    protected postsService: PostsService,
+    protected blogsQueryRepo: BlogsQuery,
     protected readonly postsQueryRepo: PostsQueryRepo,
   ) {}
   @Post()
@@ -63,7 +63,8 @@ export class BlogsController {
   }
   @Get()
   async getAllBlogs(@Query() query: QueryParser) {
-    return await this.blogsQueryRepo.viewAllBlogs(query);
+    const queryParams = parseQueryPagination(query);
+    return await this.blogsQueryRepo.viewAllBlogs(queryParams);
   }
   @Get(':id')
   async getBlogById(@Param('id') id: string) {
@@ -74,6 +75,7 @@ export class BlogsController {
     @Param('id') id: string,
     @Query() query: QueryParser,
   ) {
-    return this.postsQueryRepo.findPostsByBlogId(id, query);
+    const queryParams = parseQueryPagination(query);
+    return this.postsQueryRepo.findPostsByBlogId(id, queryParams);
   }
 }
