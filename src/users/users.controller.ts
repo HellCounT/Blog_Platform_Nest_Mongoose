@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Query,
@@ -35,6 +36,7 @@ export class UsersController {
     );
   }
   @Delete(':id')
+  @HttpCode(204)
   async deleteUser(@Param('id') id: string) {
     return await this.usersService.deleteUser(id);
   }

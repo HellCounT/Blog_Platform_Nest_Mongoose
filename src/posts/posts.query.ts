@@ -90,6 +90,7 @@ export class PostsQuery {
         likesCount: post.likesInfo?.likesCount,
         dislikesCount: post.likesInfo?.dislikesCount,
         myStatus: 'None',
+        newestLikes: [],
       },
     };
   }

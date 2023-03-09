@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Put,
@@ -31,6 +32,7 @@ export class PostsController {
     );
   }
   @Put(':id')
+  @HttpCode(204)
   async updatePost(
     @Param(':id') id: string,
     @Body() input: UpdatePostInputModel,
@@ -44,6 +46,7 @@ export class PostsController {
     );
   }
   @Delete(':id')
+  @HttpCode(204)
   async deletePost(@Param(':id') id: string) {
     return await this.postsService.deletePost(id);
   }
