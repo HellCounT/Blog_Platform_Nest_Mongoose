@@ -5,47 +5,37 @@ import {
   Get,
   Param,
   Post,
-  Put,
   Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import {
+  parseUserQueryPagination,
+  UserQueryParser,
+} from '../application/query.parser';
+import { CreateUserInputModelType } from './users.types';
+import { UsersQuery } from './users.query';
 
 @Controller('users')
 export class UsersController {
-  constructor(protected usersService: UsersService) {}
+  constructor(
+    protected usersService: UsersService,
+    protected readonly usersQueryRepo: UsersQuery,
+  ) {}
   @Get()
-  getUsers(@Query() query: { term: string }) {
-    return this.usersService.findUsers(query.term);
-  }
-  @Get(':id')
-  getUser(@Param('id') userId: string) {
-    return [{ id: 1 }, { id: 2 }].find((u) => u.id === +userId);
+  async getAllUsers(@Query() query: UserQueryParser) {
+    const queryParams: UserQueryParser = parseUserQueryPagination(query);
+    return this.usersQueryRepo.viewAllUsers(queryParams);
   }
   @Post()
-  createUser(@Body() inputModel: CreateUserInputModelType) {
-    return {
-      id: 12,
-      name: inputModel.name,
-      childrenCount: inputModel.childrenCount,
-    };
+  async createUser(@Body() input: CreateUserInputModelType) {
+    return await this.usersService.createUser(
+      input.login,
+      input.password,
+      input.email,
+    );
   }
   @Delete(':id')
-  deleteUser(@Param('id') userId: string) {
-    return;
-  }
-  @Put(':id')
-  updateUser(
-    @Param('id') userId: string,
-    @Body() model: CreateUserInputModelType,
-  ) {
-    return {
-      id: userId,
-      model: model,
-    };
+  async deleteUser(@Param('id') id: string) {
+    return await this.usersService.deleteUser(id);
   }
 }
-
-type CreateUserInputModelType = {
-  name: string;
-  childrenCount: number;
-};

@@ -5,7 +5,9 @@ import {
   CommentViewModelType,
 } from './comments.types';
 import { QueryParser } from '../application/query.parser';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class CommentsQuery {
   async findCommentById(id: string): Promise<CommentViewModelType | null> {
     const foundCommentInstance = await CommentModel.findOne({

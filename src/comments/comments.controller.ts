@@ -1,4 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
+import { CommentsQuery } from './comments.query';
 
 @Controller('posts')
 export class PostsController {

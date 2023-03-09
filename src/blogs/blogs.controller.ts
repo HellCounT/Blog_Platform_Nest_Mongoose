@@ -16,6 +16,7 @@ import { BlogsService } from './blogs.service';
 import { parseQueryPagination, QueryParser } from '../application/query.parser';
 import { BlogsQuery } from './blogs.query';
 import { PostsService } from '../posts/posts.service';
+import { PostsQuery } from '../posts/posts.query';
 
 @Controller('blogs')
 export class BlogsController {
@@ -23,7 +24,7 @@ export class BlogsController {
     protected blogsService: BlogsService,
     protected postsService: PostsService,
     protected blogsQueryRepo: BlogsQuery,
-    protected readonly postsQueryRepo: PostsQueryRepo,
+    protected readonly postsQueryRepo: PostsQuery,
   ) {}
   @Post()
   async createBlog(@Body() input: CreateBlogInputModelType) {
