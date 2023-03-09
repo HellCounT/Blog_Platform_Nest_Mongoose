@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostDb, PostViewModelType } from './posts.types';
 import mongoose from 'mongoose';
 import { BlogsQuery } from '../blogs/blogs.query';
@@ -48,7 +48,10 @@ export class PostsService {
       blogId,
     );
   }
-  async deletePost(inputId: string): Promise<boolean | null> {
-    return await this.postsRepo.deletePost(inputId);
+  async deletePost(id: string): Promise<boolean | null> {
+    const deleteResult = this.postsRepo.deletePost(id);
+    if (!deleteResult) {
+      throw new NotFoundException();
+    } else return;
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import mongoose from 'mongoose';
 import { UserDb, UserViewModelType } from './users.types';
@@ -34,7 +34,10 @@ export class UsersService {
     return await this.usersRepo.createUser(newUser);
   }
   async deleteUser(id: string) {
-    return await this.usersRepo.deleteUser(id);
+    const deleteResult = await this.usersRepo.deleteUser(id);
+    if (!deleteResult) {
+      throw new NotFoundException();
+    } else return;
   }
   async _generateHash(password: string): Promise<string> {
     //const salt = await bcrypt.genSalt(10);

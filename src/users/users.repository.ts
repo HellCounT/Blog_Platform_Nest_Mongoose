@@ -17,12 +17,10 @@ export class UsersRepository {
       createdAt: result.accountData.createdAt,
     };
   }
-  async deleteUser(id: string): Promise<boolean | null> {
-    const userInstance = await this.userModel.findOne({
+  async deleteUser(id: string): Promise<boolean> {
+    const deleteResult = await this.userModel.deleteOne({
       _id: new mongoose.Types.ObjectId(id),
     });
-    if (!userInstance) return false;
-    await userInstance.deleteOne();
-    return true;
+    return deleteResult.deletedCount === 1;
   }
 }

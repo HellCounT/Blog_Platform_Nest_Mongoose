@@ -56,11 +56,9 @@ export class PostsRepository {
     }
   }
   async deletePost(inputId: string): Promise<boolean> {
-    const postInstance = await this.postModel.findOne({
+    const deleteResult = await this.postModel.deleteOne({
       _id: new mongoose.Types.ObjectId(inputId),
     });
-    if (!postInstance) return false;
-    await postInstance.deleteOne();
-    return true;
+    return deleteResult.deletedCount === 1;
   }
 }
