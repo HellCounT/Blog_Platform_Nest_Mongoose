@@ -17,7 +17,7 @@ export class BlogsService {
       description,
       website,
       new Date().toISOString(),
-      true,
+      false,
     );
     const result = await this.blogsRepo.createBlog(newBlog);
     return {
