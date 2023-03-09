@@ -15,10 +15,11 @@ export class UsersQuery {
     if (q.searchEmailTerm) emailFilter = '.*' + q.searchEmailTerm + '.*';
     const allUsersCount = await this.userModel.countDocuments({
       $or: [
-        { login: { $regex: loginFilter, $options: 'i' } },
-        { email: { $regex: emailFilter, $options: 'i' } },
+        { 'accountData.login': { $regex: loginFilter, $options: 'i' } },
+        { 'accountData.email': { $regex: emailFilter, $options: 'i' } },
       ],
     });
+    console.log(allUsersCount);
     const reqPageDbUsers = await this.userModel
       .find({
         $or: [

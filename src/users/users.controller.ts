@@ -25,6 +25,7 @@ export class UsersController {
   @Get()
   async getAllUsers(@Query() query: UserQueryParser) {
     const queryParams: UserQueryParser = parseUserQueryPagination(query);
+    console.log(queryParams);
     return this.usersQueryRepo.viewAllUsers(queryParams);
   }
   @Post()
