@@ -21,7 +21,10 @@ export class BlogsService {
     const result = await this.blogsRepo.createBlog(newBlog);
     return {
       id: result._id.toString(),
-      ...newBlog,
+      name: result.name,
+      description: result.description,
+      websiteUrl: result.websiteUrl,
+      createdAt: result.createdAt,
     };
   }
   async updateBlog(

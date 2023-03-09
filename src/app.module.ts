@@ -16,21 +16,28 @@ import { PostsQuery } from './posts/posts.query';
 import { CommentsQuery } from './comments/comments.query';
 import { UsersQuery } from './users/users.query';
 import { MongooseModule } from '@nestjs/mongoose';
-import { settings } from './settings';
 import { Blog, BlogSchema } from './blogs/blogs.schema';
 import { Post, PostSchema } from './posts/posts.schema';
 import { Comment, CommentSchema } from './comments/comments.schema';
 import { User, UserSchema } from './users/users.schema';
+import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(settings.MONGO_URI),
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MONGO_URL),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostSchema },
       { name: Comment.name, schema: CommentSchema },
       { name: User.name, schema: UserSchema },
     ]),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'swagger-static'),
+      serveRoot: process.env.NODE_ENV === 'development' ? '/' : '/swagger',
+    }),
   ],
   controllers: [
     AppController,

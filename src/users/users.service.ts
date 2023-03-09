@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import mongoose from 'mongoose';
 import { UserDb, UserViewModelType } from './users.types';
-import bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -38,7 +37,8 @@ export class UsersService {
     return await this.usersRepo.deleteUser(id);
   }
   async _generateHash(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt(10);
-    return await bcrypt.hash(password, salt);
+    //const salt = await bcrypt.genSalt(10);
+    //return await bcrypt.hash(password, salt);
+    return `test hash for ${password}`;
   }
 }
