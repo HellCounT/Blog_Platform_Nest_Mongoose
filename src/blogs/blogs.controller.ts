@@ -24,7 +24,7 @@ export class BlogsController {
   constructor(
     protected blogsService: BlogsService,
     protected postsService: PostsService,
-    protected blogsQueryRepo: BlogsQuery,
+    protected readonly blogsQueryRepo: BlogsQuery,
     protected readonly postsQueryRepo: PostsQuery,
   ) {}
   @Post()

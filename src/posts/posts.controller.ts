@@ -47,7 +47,7 @@ export class PostsController {
   }
   @Delete(':id')
   @HttpCode(204)
-  async deletePost(@Param(':id') id: string) {
+  async deletePost(@Param('id') id: string) {
     return await this.postsService.deletePost(id);
   }
   @Get()
@@ -56,7 +56,7 @@ export class PostsController {
     return await this.postsQueryRepo.viewAllPosts(queryParams);
   }
   @Get(':id')
-  async getPostById(@Param(':id') id: string) {
+  async getPostById(@Param('id') id: string) {
     return await this.postsQueryRepo.findPostById(id);
   }
   @Get(':postId/comments')

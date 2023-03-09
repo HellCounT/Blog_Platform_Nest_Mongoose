@@ -56,8 +56,8 @@ export class CommentsQuery {
       id: comment._id.toString(),
       content: comment.content,
       commentatorInfo: {
-        userId: comment.commentatorInfo.userId,
-        userLogin: comment.commentatorInfo.userLogin,
+        userId: 'userId', //comment.commentatorInfo.userId,
+        userLogin: 'userId', //comment.commentatorInfo.userLogin,
       },
       createdAt: comment.createdAt,
       likesInfo: {
