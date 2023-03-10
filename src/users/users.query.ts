@@ -19,7 +19,6 @@ export class UsersQuery {
         { 'accountData.email': { $regex: emailFilter, $options: 'i' } },
       ],
     });
-    console.log(allUsersCount);
     const reqPageDbUsers = await this.userModel
       .find({
         $or: [
@@ -27,7 +26,7 @@ export class UsersQuery {
           { 'accountData.email': { $regex: emailFilter, $options: 'i' } },
         ],
       })
-      .sort({ [q.sortBy]: q.sortDirection })
+      .sort({ ['accountData.' + q.sortBy]: q.sortDirection })
       .skip((q.pageNumber - 1) * q.pageSize)
       .limit(q.pageSize)
       .lean();
