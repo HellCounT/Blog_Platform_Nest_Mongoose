@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import mongoose, { Model } from 'mongoose';
 import { QueryParser } from '../application/query.parser';
 import { PostDb, PostPaginatorType, PostViewModelType } from './posts.types';
@@ -38,7 +38,7 @@ export class PostsQuery {
       _id: new mongoose.Types.ObjectId(id),
     });
     if (foundPostInstance) return this._mapPostToViewType(foundPostInstance);
-    else return null;
+    else throw new NotFoundException();
   }
   async findPostsByBlogId(
     blogId: string,
@@ -75,7 +75,7 @@ export class PostsQuery {
           items: items,
         };
       }
-    } else return null;
+    } else throw new NotFoundException();
   }
   async _mapPostToViewType(post: PostDb): Promise<PostViewModelType> {
     return {
