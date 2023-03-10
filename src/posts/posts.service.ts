@@ -1,5 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PostDb, PostViewModelType } from './posts.types';
+import {
+  CreatePostInputModelType,
+  PostDb,
+  PostViewModelType,
+  UpdatePostInputModel,
+} from './posts.types';
 import mongoose from 'mongoose';
 import { BlogsQuery } from '../blogs/blogs.query';
 import { PostsRepository } from './posts.repository';
@@ -11,19 +16,18 @@ export class PostsService {
     protected readonly blogsQueryRepo: BlogsQuery,
   ) {}
   async createPost(
-    postTitle: string,
-    short: string,
-    text: string,
-    blogId: string,
+    postCreateDto: CreatePostInputModelType,
   ): Promise<PostViewModelType | null> {
-    const foundBlog = await this.blogsQueryRepo.findBlogById(blogId);
-    if (!foundBlog) return null;
+    const foundBlog = await this.blogsQueryRepo.findBlogById(
+      postCreateDto.blogId,
+    );
+    if (!foundBlog) throw new NotFoundException();
     const newPost = new PostDb(
       new mongoose.Types.ObjectId(),
-      postTitle,
-      short,
-      text,
-      blogId,
+      postCreateDto.title,
+      postCreateDto.shortDescription,
+      postCreateDto.content,
+      postCreateDto.blogId,
       foundBlog.name,
       new Date(),
       {
@@ -35,23 +39,23 @@ export class PostsService {
   }
   async updatePost(
     inputId: string,
-    postTitle: string,
-    short: string,
-    text: string,
-    blogId: string,
-  ): Promise<boolean | null> {
-    return await this.postsRepo.updatePost(
+    postUpdateDto: UpdatePostInputModel,
+  ): Promise<boolean> {
+    const updateResult = await this.postsRepo.updatePost(
       inputId,
-      postTitle,
-      short,
-      text,
-      blogId,
+      postUpdateDto.title,
+      postUpdateDto.shortDescription,
+      postUpdateDto.content,
+      postUpdateDto.blogId,
     );
+    if (updateResult === null || updateResult === false)
+      throw new NotFoundException();
+    else return true;
   }
   async deletePost(id: string): Promise<boolean | null> {
-    const deleteResult = this.postsRepo.deletePost(id);
-    if (!deleteResult) {
+    const deleteResult = await this.postsRepo.deletePost(id);
+    if (deleteResult === false) {
       throw new NotFoundException();
-    } else return;
+    } else return true;
   }
 }

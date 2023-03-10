@@ -1,23 +1,25 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import mongoose from 'mongoose';
-import { UserDb, UserViewModelType } from './users.types';
+import {
+  CreateUserInputModelType,
+  UserDb,
+  UserViewModelType,
+} from './users.types';
 
 @Injectable()
 export class UsersService {
   constructor(protected usersRepo: UsersRepository) {}
   async createUser(
-    login: string,
-    password: string,
-    email: string,
+    userCreateDto: CreateUserInputModelType,
   ): Promise<UserViewModelType | null> {
-    const passwordHash = await this._generateHash(password);
+    const passwordHash = await this._generateHash(userCreateDto.password);
     const currentDate = new Date();
     const newUser = new UserDb(
       new mongoose.Types.ObjectId(),
       {
-        login: login,
-        email: email,
+        login: userCreateDto.login,
+        email: userCreateDto.email,
         hash: passwordHash,
         createdAt: currentDate.toISOString(),
       },

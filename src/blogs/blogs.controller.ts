@@ -18,6 +18,7 @@ import { parseQueryPagination, QueryParser } from '../application/query.parser';
 import { BlogsQuery } from './blogs.query';
 import { PostsService } from '../posts/posts.service';
 import { PostsQuery } from '../posts/posts.query';
+import { CreatePostInputModelType } from '../posts/posts.types';
 
 @Controller('blogs')
 export class BlogsController {
@@ -28,37 +29,27 @@ export class BlogsController {
     protected readonly postsQueryRepo: PostsQuery,
   ) {}
   @Post()
-  async createBlog(@Body() input: CreateBlogInputModelType) {
-    return await this.blogsService.createBlog(
-      input.name,
-      input.description,
-      input.websiteUrl,
-    );
+  async createBlog(@Body() blogCreateDto: CreateBlogInputModelType) {
+    return await this.blogsService.createBlog(blogCreateDto);
   }
   @Post(':blogId/posts')
   async createPostForBlogId(
-    @Body() input: CreatePostForBlogModelType,
+    @Body() postCreateForBlogDto: CreatePostForBlogModelType,
     @Param('blogId') blogId: string,
   ) {
-    return await this.postsService.createPost(
-      input.title,
-      input.shortDescription,
-      input.content,
-      blogId,
-    );
+    const postCreateDto: CreatePostInputModelType = {
+      ...postCreateForBlogDto,
+      blogId: blogId,
+    };
+    return await this.postsService.createPost(postCreateDto);
   }
   @Put(':id')
   @HttpCode(204)
   async updateBlog(
-    @Body() input: CreateBlogInputModelType,
+    @Body() blogDataDto: CreateBlogInputModelType,
     @Param('id') id: string,
   ) {
-    return await this.blogsService.updateBlog(
-      id,
-      input.name,
-      input.description,
-      input.websiteUrl,
-    );
+    return await this.blogsService.updateBlog(id, blogDataDto);
   }
   @Delete(':id')
   @HttpCode(204)

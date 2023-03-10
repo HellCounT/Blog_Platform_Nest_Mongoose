@@ -29,12 +29,8 @@ export class UsersController {
     return this.usersQueryRepo.viewAllUsers(queryParams);
   }
   @Post()
-  async createUser(@Body() input: CreateUserInputModelType) {
-    return await this.usersService.createUser(
-      input.login,
-      input.password,
-      input.email,
-    );
+  async createUser(@Body() userCreateDto: CreateUserInputModelType) {
+    return await this.usersService.createUser(userCreateDto);
   }
   @Delete(':id')
   @HttpCode(204)

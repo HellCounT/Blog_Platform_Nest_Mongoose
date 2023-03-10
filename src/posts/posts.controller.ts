@@ -23,27 +23,16 @@ export class PostsController {
     protected readonly commentsQueryRepo: CommentsQuery,
   ) {}
   @Post()
-  async createPost(@Body() input: CreatePostInputModelType) {
-    return await this.postsService.createPost(
-      input.title,
-      input.shortDescription,
-      input.content,
-      input.blogId,
-    );
+  async createPost(@Body() postCreateDto: CreatePostInputModelType) {
+    return await this.postsService.createPost(postCreateDto);
   }
   @Put(':id')
   @HttpCode(204)
   async updatePost(
     @Param('id') id: string,
-    @Body() input: UpdatePostInputModel,
+    @Body() postUpdateDto: UpdatePostInputModel,
   ) {
-    return await this.postsService.updatePost(
-      id,
-      input.title,
-      input.shortDescription,
-      input.content,
-      input.blogId,
-    );
+    return await this.postsService.updatePost(id, postUpdateDto);
   }
   @Delete(':id')
   @HttpCode(204)

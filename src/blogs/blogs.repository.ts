@@ -1,6 +1,6 @@
 import { BlogDb } from './blogs.types';
 import mongoose, { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument } from './blogs.schema';
 import { Post, PostDocument } from '../posts/posts.schema';
@@ -25,7 +25,7 @@ export class BlogsRepository {
     const blogInstance = await this.blogModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
     });
-    if (!blogInstance) return false;
+    if (!blogInstance) throw new NotFoundException();
     if (name) {
       blogInstance.name = name;
       await this.postModel.updateMany(
@@ -43,11 +43,9 @@ export class BlogsRepository {
     return true;
   }
   async deleteBlog(id: string): Promise<boolean> {
-    const blogInstance = await this.blogModel.findOne({
+    const result = await this.blogModel.deleteOne({
       _id: new mongoose.Types.ObjectId(id),
     });
-    if (!blogInstance) return false;
-    await blogInstance.deleteOne();
-    return true;
+    return result.deletedCount === 1;
   }
 }
