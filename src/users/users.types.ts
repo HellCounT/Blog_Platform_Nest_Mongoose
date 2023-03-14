@@ -1,10 +1,15 @@
 import mongoose from 'mongoose';
+import { IsEmail, Length, Matches } from 'class-validator';
 
-export type CreateUserInputModelType = {
+export class CreateUserInputModelType {
+  @Length(3, 10, { message: 'Incorrect login length' })
+  @Matches(/^[a-zA-Z0-9_-]*$/, { message: 'Incorrect login pattern' })
   login: string;
+  @Length(6, 20, { message: 'Incorrect password length' })
   password: string;
+  @IsEmail({}, { message: 'Value is not a Email' })
   email: string;
-};
+}
 
 export type UserViewModelType = {
   id: string;
