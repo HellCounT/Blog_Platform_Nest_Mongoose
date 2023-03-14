@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
-import { IsUrl, Length, MaxLength } from 'class-validator';
+import { IsOptional, IsUrl, Length, MaxLength } from 'class-validator';
 
-export class CreateBlogInputModelType {
+export class CreateBlogInputModel {
   @Length(1, 15, { message: 'Incorrect name length' })
   name: string;
   @Length(1, 500, { message: 'Incorrect description length' })
@@ -11,7 +11,20 @@ export class CreateBlogInputModelType {
   websiteUrl: string;
 }
 
-export class CreatePostForBlogModelType {
+export class UpdateBlogInputModel {
+  @IsOptional()
+  @Length(1, 15, { message: 'Incorrect name length' })
+  name: string;
+  @IsOptional()
+  @Length(1, 500, { message: 'Incorrect description length' })
+  description: string;
+  @IsOptional()
+  @IsUrl({}, { message: 'Value is not an URL' })
+  @MaxLength(100, { message: 'Max URL length exceeded' })
+  websiteUrl: string;
+}
+
+export class CreatePostForBlogModel {
   @Length(1, 30, { message: 'Incorrect title length' })
   title: string;
   @Length(1, 100, { message: 'Incorrect short description length' })

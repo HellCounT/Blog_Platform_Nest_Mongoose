@@ -1,8 +1,4 @@
-import {
-  BlogDb,
-  BlogViewModelType,
-  CreateBlogInputModelType,
-} from './blogs.types';
+import { BlogDb, BlogViewModelType, CreateBlogInputModel } from './blogs.types';
 import mongoose from 'mongoose';
 import { BlogsRepository } from './blogs.repository';
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -11,7 +7,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 export class BlogsService {
   constructor(protected blogsRepo: BlogsRepository) {}
   async createBlog(
-    blogCreateDto: CreateBlogInputModelType,
+    blogCreateDto: CreateBlogInputModel,
   ): Promise<BlogViewModelType> {
     const newBlog = new BlogDb(
       new mongoose.Types.ObjectId(),
@@ -31,7 +27,7 @@ export class BlogsService {
       isMembership: result.isMembership,
     };
   }
-  async updateBlog(id: string, blogDataDto: CreateBlogInputModelType) {
+  async updateBlog(id: string, blogDataDto: CreateBlogInputModel) {
     return await this.blogsRepo.updateBlog(
       id,
       blogDataDto.name,

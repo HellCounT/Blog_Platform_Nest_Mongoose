@@ -10,7 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { CreatePostInputModelType, UpdatePostInputModel } from './posts.types';
+import { CreatePostInputModel, UpdatePostInputModel } from './posts.types';
 import { PostsQuery } from './posts.query';
 import { parseQueryPagination, QueryParser } from '../application/query.parser';
 import { CommentsQuery } from '../comments/comments.query';
@@ -23,7 +23,7 @@ export class PostsController {
     protected readonly commentsQueryRepo: CommentsQuery,
   ) {}
   @Post()
-  async createPost(@Body() postCreateDto: CreatePostInputModelType) {
+  async createPost(@Body() postCreateDto: CreatePostInputModel) {
     return await this.postsService.createPost(postCreateDto);
   }
   @Put(':id')

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
-  CreatePostInputModelType,
+  CreatePostInputModel,
   PostDb,
   PostViewModelType,
   UpdatePostInputModel,
@@ -16,7 +16,7 @@ export class PostsService {
     protected readonly blogsQueryRepo: BlogsQuery,
   ) {}
   async createPost(
-    postCreateDto: CreatePostInputModelType,
+    postCreateDto: CreatePostInputModel,
   ): Promise<PostViewModelType | null> {
     const foundBlog = await this.blogsQueryRepo.findBlogById(
       postCreateDto.blogId,
