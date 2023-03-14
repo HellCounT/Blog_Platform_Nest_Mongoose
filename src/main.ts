@@ -1,9 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-// core
 import { createWriteStream } from 'fs';
 import { get } from 'http';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './http-exception.filter';
 
 const port = process.env.port || 3000;
 const serverUrl = `http://localhost:3000`;
@@ -11,10 +12,30 @@ const serverUrl = `http://localhost:3000`;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
+  app.useGlobalPipes(
+    new ValidationPipe({
+      stopAtFirstError: true,
+      exceptionFactory: (errors) => {
+        const errorsForResponse = [];
+        errors.forEach((e) => {
+          const constraintsKeys = Object.keys(e.constraints);
+          constraintsKeys.forEach((cKey) => {
+            errorsForResponse.push({
+              message: e.constraints[cKey],
+              field: e.property,
+            });
+          });
+        });
+
+        throw new BadRequestException(errorsForResponse);
+      },
+    }),
+  );
+  app.useGlobalFilters(new HttpExceptionFilter());
   const config = new DocumentBuilder()
     .setTitle('Blog Platform')
     .setDescription('API created with NestJS')
-    .setVersion('1.0')
+    .setVersion('2.0')
     .addTag('blog-platform')
     .build();
   const document = SwaggerModule.createDocument(app, config);
