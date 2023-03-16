@@ -32,6 +32,9 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  // USELESS SWAGGER SHIT
+
   const config = new DocumentBuilder()
     .setTitle('Blog Platform')
     .setDescription('API created with NestJS')
@@ -41,7 +44,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
 
-  await app.listen(port);
   // get the swagger json file (if app is running in development mode)
   if (process.env.NODE_ENV === 'development') {
     // write swagger ui files
@@ -78,5 +80,9 @@ async function bootstrap() {
       );
     });
   }
+
+  // END OF USELESS SWAGGER SHIT
+
+  await app.listen(port);
 }
 bootstrap();
