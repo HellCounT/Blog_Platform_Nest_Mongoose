@@ -5,9 +5,10 @@ import { get } from 'http';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './http-exception.filter';
+import { settings } from './settings';
 
-const port = process.env.port || 3000;
-const serverUrl = `http://localhost:3000`;
+const port = settings.PORT || 3000;
+const serverUrl = `http://localhost:${port}`;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -45,7 +46,7 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, document);
 
   // get the swagger json file (if app is running in development mode)
-  if (process.env.NODE_ENV === 'development') {
+  if (settings.ENV === 'development') {
     // write swagger ui files
     get(`${serverUrl}/swagger/swagger-ui-bundle.js`, function (response) {
       response.pipe(createWriteStream('swagger-static/swagger-ui-bundle.js'));

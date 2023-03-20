@@ -7,4 +7,6 @@ export const settings = {
   MONGO_URI: process.env.MONGO_URL || 'fake',
   EMAIL_LOGIN: process.env.EMAIL_LOGIN || 'fake',
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD || 'fake',
+  ENV: process.env.NODE_ENV || 'fake',
+  PORT: process.env.PORT || 'fake',
 };
