@@ -25,8 +25,11 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { settings } from './settings';
 import { AuthController } from './auth/auth.controller';
-import { Device, DeviceSchema } from './devices/devices.schema';
-import { ExpiredToken, ExpiredTokenSchema } from './auth/expired.token.schema';
+import { Device, DeviceSchema } from './security/devices/devices.schema';
+import {
+  ExpiredToken,
+  ExpiredTokenSchema,
+} from './security/tokens/expiredTokenSchema';
 
 const mongoUri = settings.MONGO_URI;
 

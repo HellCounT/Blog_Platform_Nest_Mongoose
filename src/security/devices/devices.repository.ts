@@ -2,6 +2,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Device, DeviceDocument } from './devices.schema';
 import mongoose, { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
+import { DeviceDb } from './devices.types';
 
 @Injectable()
 export class DevicesRepository {
@@ -13,7 +14,7 @@ export class DevicesRepository {
   ): Promise<DeviceDocument> {
     return this.deviceModel.findOne({ _id: deviceId });
   }
-  async addSessionToDb(newSession: DeviceDocument): Promise<void> {
+  async addSessionToDb(newSession: DeviceDb): Promise<void> {
     const newSessionInstance = new this.deviceModel(newSession);
     await newSessionInstance.save();
   }

@@ -15,7 +15,7 @@ import {
   UserNewPasswordInputModelType,
 } from '../users/users.types';
 import { Response } from 'express';
-import { DevicesService } from '../devices/devices.service';
+import { DevicesService } from '../security/devices/devices.service';
 
 const refreshTokenCookieOptions = {
   httpOnly: true,
