@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,6 +12,8 @@ import bcrypt from 'bcrypt';
 import {
   CreateUserInputModelType,
   UserDb,
+  UserLoginInputModelType,
+  UserNewPasswordInputModelType,
   UserViewModelType,
 } from './users.types';
 import { emailManager } from '../email/email-manager';
@@ -79,20 +86,23 @@ export class UsersService {
     } catch (error) {
       console.error(error);
       await this.usersRepo.deleteUser(createUserResult.id);
-      return null;
+      throw new ServiceUnavailableException();
     }
     return createUserResult;
   }
 
   async checkCredentials(
-    loginOrEmail: string,
-    password: string,
+    userLoginDto: UserLoginInputModelType,
   ): Promise<UserDb | null> {
-    const foundUser = await this.usersRepo.findByLoginOrEmail(loginOrEmail);
+    const foundUser = await this.usersRepo.findByLoginOrEmail(
+      userLoginDto.loginOrEmail,
+    );
     if (!foundUser) return null;
     if (!foundUser.emailConfirmationData.isConfirmed) return null;
     else {
-      if (await bcrypt.compare(password, foundUser.accountData.hash))
+      if (
+        await bcrypt.compare(userLoginDto.password, foundUser.accountData.hash)
+      )
         return foundUser;
       else return null;
     }
@@ -101,17 +111,19 @@ export class UsersService {
   async confirmUserEmail(code: string): Promise<boolean> {
     const foundUser = await this.usersRepo.findByConfirmationCode(code);
     if (!foundUser) return false;
-    if (foundUser.emailConfirmationData.isConfirmed) return false;
-    if (foundUser.emailConfirmationData.confirmationCode !== code) return false;
-    if (new Date(foundUser.emailConfirmationData.expirationDate) < new Date())
-      return false;
+    if (
+      foundUser.emailConfirmationData.isConfirmed ||
+      foundUser.emailConfirmationData.confirmationCode !== code ||
+      new Date(foundUser.emailConfirmationData.expirationDate) < new Date()
+    )
+      throw new BadRequestException();
     return await this.usersRepo.confirmationSetUser(foundUser._id.toString());
   }
 
   async resendActivationCode(email: string): Promise<boolean> {
     const foundUser = await this.usersRepo.findByLoginOrEmail(email);
-    if (!foundUser) return false;
-    if (foundUser.emailConfirmationData.isConfirmed) return false;
+    if (!foundUser || foundUser.emailConfirmationData.isConfirmed)
+      throw new BadRequestException();
     const newCode = uuidv4();
     await this.usersRepo.updateConfirmationCode(foundUser._id, newCode);
     try {
@@ -122,33 +134,43 @@ export class UsersService {
       return true;
     } catch (error) {
       console.error(error);
-      return false;
+      throw new ServiceUnavailableException();
     }
   }
 
   async sendPasswordRecoveryCode(email: string) {
     const newCode = uuidv4();
     const foundUser = await this.usersRepo.findByLoginOrEmail(email);
-    if (foundUser) {
-      await this.usersRepo.updateRecoveryCode(foundUser._id, newCode);
-    }
+    if (!foundUser) throw new BadRequestException();
+    await this.usersRepo.updateRecoveryCode(foundUser._id, newCode);
     try {
       await emailManager.sendRecoveryCode(email, newCode);
       return true;
     } catch (error) {
       console.error(error);
-      return false;
+      throw new ServiceUnavailableException();
     }
   }
 
   async updatePasswordByRecoveryCode(
-    recoveryCode: string,
-    newPassword: string,
+    newPasswordDto: UserNewPasswordInputModelType,
   ) {
-    const foundUser = await this.usersRepo.findByRecoveryCode(recoveryCode);
-    if (!foundUser) return false;
+    const foundUser = await this.usersRepo.findByRecoveryCode(
+      newPasswordDto.recoveryCode,
+    );
+    if (!foundUser)
+      throw new BadRequestException({
+        errorsMessages: [
+          {
+            message: 'Incorrect recovery code',
+            field: 'recoveryCode',
+          },
+        ],
+      });
     else {
-      const newPasswordHash = await this._generateHash(newPassword);
+      const newPasswordHash = await this._generateHash(
+        newPasswordDto.newPassword,
+      );
       await this.usersRepo.updateHashByRecoveryCode(
         foundUser._id,
         newPasswordHash,
