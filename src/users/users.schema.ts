@@ -38,7 +38,7 @@ class RecoveryCodeData {
   @Prop({ required: false })
   recoveryCode: string;
   @Prop({ required: false })
-  expirationDate: string;
+  expirationDate: Date;
 }
 
 const RecoveryCodeDataSchema = SchemaFactory.createForClass(RecoveryCodeData);
