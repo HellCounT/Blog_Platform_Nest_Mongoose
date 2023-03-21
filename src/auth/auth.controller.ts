@@ -16,6 +16,7 @@ import {
 } from '../users/users.types';
 import { Response } from 'express';
 import { DevicesService } from '../security/devices/devices.service';
+import { AuthService } from './auth.service';
 
 const refreshTokenCookieOptions = {
   httpOnly: true,
@@ -27,6 +28,7 @@ export class AuthController {
   constructor(
     protected usersService: UsersService,
     protected devicesService: DevicesService,
+    protected authService: AuthService,
   ) {}
   @Post('/login')
   async login(
@@ -35,21 +37,24 @@ export class AuthController {
     @Headers('user-agent') deviceName: string,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const checkResult = await this.usersService.checkCredentials;
+    const checkResult = await this.authService.validateUser(userLoginDto);
     if (!checkResult) throw new UnauthorizedException();
-    const accessToken = { accessToken: 'temporary token' }; // !!!!!!!!!!!!!
-    const newRefreshToken = 'temporary token'; // !!!!!!!!!!!!!
+    const tokenPair = this.authService.login(checkResult);
     await this.devicesService.startNewSession(
-      newRefreshToken.refreshToken,
-      newRefreshToken.userId,
-      newRefreshToken.deviceId,
+      tokenPair.refreshTokenMeta.refreshToken,
+      tokenPair.refreshTokenMeta.userId,
+      tokenPair.refreshTokenMeta.deviceId,
       deviceName,
       ip,
-      newRefreshToken.issueDate,
-      newRefreshToken.expDate,
+      tokenPair.refreshTokenMeta.issueDate,
+      tokenPair.refreshTokenMeta.expDate,
     );
-    response.cookie('refreshToken', newRefreshToken, refreshTokenCookieOptions);
-    return accessToken;
+    response.cookie(
+      'refreshToken',
+      tokenPair.refreshTokenMeta.refreshToken,
+      refreshTokenCookieOptions,
+    );
+    return { accessToken: tokenPair.accessToken };
   }
   @Post('/logout')
   async logout() {

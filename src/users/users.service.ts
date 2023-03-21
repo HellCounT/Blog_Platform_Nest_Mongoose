@@ -12,7 +12,6 @@ import bcrypt from 'bcrypt';
 import {
   CreateUserInputModelType,
   UserDb,
-  UserLoginInputModelType,
   UserNewPasswordInputModelType,
   UserViewModelType,
 } from './users.types';
@@ -21,6 +20,9 @@ import { emailManager } from '../email/email-manager';
 @Injectable()
 export class UsersService {
   constructor(protected usersRepo: UsersRepository) {}
+  async findByLoginOrEmail(loginOrEmail: string): Promise<UserDb> {
+    return await this.usersRepo.findByLoginOrEmail(loginOrEmail);
+  }
   async createUser(
     userCreateDto: CreateUserInputModelType,
   ): Promise<UserViewModelType | null> {
@@ -89,23 +91,6 @@ export class UsersService {
       throw new ServiceUnavailableException();
     }
     return createUserResult;
-  }
-
-  async checkCredentials(
-    userLoginDto: UserLoginInputModelType,
-  ): Promise<UserDb | null> {
-    const foundUser = await this.usersRepo.findByLoginOrEmail(
-      userLoginDto.loginOrEmail,
-    );
-    if (!foundUser) return null;
-    if (!foundUser.emailConfirmationData.isConfirmed) return null;
-    else {
-      if (
-        await bcrypt.compare(userLoginDto.password, foundUser.accountData.hash)
-      )
-        return foundUser;
-      else return null;
-    }
   }
 
   async confirmUserEmail(code: string): Promise<boolean> {

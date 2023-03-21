@@ -30,6 +30,7 @@ import {
   ExpiredToken,
   ExpiredTokenSchema,
 } from './security/tokens/expiredTokenSchema';
+import { AuthModule } from './auth/auth.module';
 
 const mongoUri = settings.MONGO_URI;
 
@@ -49,6 +50,7 @@ const mongoUri = settings.MONGO_URI;
       rootPath: join(__dirname, '..', 'swagger-static'),
       serveRoot: process.env.NODE_ENV === 'development' ? '/' : '/swagger',
     }),
+    AuthModule,
   ],
   controllers: [
     AppController,
