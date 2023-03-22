@@ -25,12 +25,12 @@ export class RefreshJwtGuard implements CanActivate {
   private async _authCheckerPayloadParser(refreshToken: string): Promise<any> {
     if (!this.jwtAdapter.checkRefreshTokenExpiration(refreshToken)) return null;
     const payload = this.jwtAdapter.parseTokenPayload(refreshToken);
-    if (!(await this._isActiveSession(payload.deviceId))) return null;
+    if (
+      !(await this.devicesRepo.findSessionByDeviceId(
+        new mongoose.Types.ObjectId(payload.deviceId),
+      ))
+    )
+      return null;
     return payload;
-  }
-  private async _isActiveSession(deviceId: string): Promise<boolean> {
-    return !!(await this.devicesRepo.findSessionByDeviceId(
-      new mongoose.Types.ObjectId(deviceId),
-    ));
   }
 }
