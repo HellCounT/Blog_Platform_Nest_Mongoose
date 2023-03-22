@@ -7,6 +7,7 @@ import {
   Res,
   HttpCode,
   UseGuards,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import {
@@ -39,8 +40,11 @@ export class AuthController {
     @Headers('user-agent') deviceName: string,
     @Res({ passthrough: true }) response: Response,
   ) {
-    // const checkResult = await this.authService.validateUser(userLoginDto);
-    // if (!checkResult) throw new UnauthorizedException();
+    const checkResult = await this.authService.validateUser(
+      userLoginDto.loginOrEmail,
+      userLoginDto.password,
+    );
+    if (!checkResult) throw new UnauthorizedException();
     const tokenPair = this.authService.login(checkResult);
     await this.devicesService.startNewSession(
       tokenPair.refreshTokenMeta.refreshToken,
