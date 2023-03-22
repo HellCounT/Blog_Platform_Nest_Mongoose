@@ -4,9 +4,9 @@ import {
   Ip,
   Post,
   Headers,
-  UnauthorizedException,
   Res,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import {
@@ -17,6 +17,7 @@ import {
 import { Response } from 'express';
 import { DevicesService } from '../security/devices/devices.service';
 import { AuthService } from './auth.service';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 const refreshTokenCookieOptions = {
   httpOnly: true,
@@ -30,6 +31,7 @@ export class AuthController {
     protected devicesService: DevicesService,
     protected authService: AuthService,
   ) {}
+  @UseGuards(LocalAuthGuard)
   @Post('/login')
   async login(
     @Body() userLoginDto: UserLoginInputModelType,
@@ -37,8 +39,8 @@ export class AuthController {
     @Headers('user-agent') deviceName: string,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const checkResult = await this.authService.validateUser(userLoginDto);
-    if (!checkResult) throw new UnauthorizedException();
+    // const checkResult = await this.authService.validateUser(userLoginDto);
+    // if (!checkResult) throw new UnauthorizedException();
     const tokenPair = this.authService.login(checkResult);
     await this.devicesService.startNewSession(
       tokenPair.refreshTokenMeta.refreshToken,

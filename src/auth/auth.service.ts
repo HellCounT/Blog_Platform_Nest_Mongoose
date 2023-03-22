@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { UserDb, UserLoginInputModelType } from '../users/users.types';
+import { UserDb } from '../users/users.types';
 import bcrypt from 'bcrypt';
 import { settings } from '../settings';
 import mongoose from 'mongoose';
@@ -14,17 +14,14 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
   async validateUser(
-    userLoginDto: UserLoginInputModelType,
+    loginOrEmail: string,
+    password: string,
   ): Promise<UserDb | null> {
-    const foundUser = await this.usersService.findByLoginOrEmail(
-      userLoginDto.loginOrEmail,
-    );
+    const foundUser = await this.usersService.findByLoginOrEmail(loginOrEmail);
     if (!foundUser) return null;
     if (!foundUser.emailConfirmationData.isConfirmed) return null;
     else {
-      if (
-        await bcrypt.compare(userLoginDto.password, foundUser.accountData.hash)
-      )
+      if (await bcrypt.compare(password, foundUser.accountData.hash))
         return foundUser;
       else return null;
     }
