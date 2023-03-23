@@ -7,6 +7,7 @@ import {
 import { DevicesRepository } from '../../security/devices/devices.repository';
 import mongoose from 'mongoose';
 import { JwtAdapter } from '../jwt.adapter';
+import { TokenPayloadType } from '../auth.types';
 
 @Injectable()
 export class RefreshJwtGuard implements CanActivate {
@@ -17,12 +18,16 @@ export class RefreshJwtGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const refreshToken = request.cookies.refreshToken;
-    const payload = await this._authCheckerPayloadParser(refreshToken);
+    const payload: TokenPayloadType = await this._authCheckerPayloadParser(
+      refreshToken,
+    );
     if (!payload) throw new UnauthorizedException();
     request.payload = payload;
     return true;
   }
-  private async _authCheckerPayloadParser(refreshToken: string): Promise<any> {
+  private async _authCheckerPayloadParser(
+    refreshToken: string,
+  ): Promise<TokenPayloadType> {
     if (!this.jwtAdapter.checkRefreshTokenExpiration(refreshToken)) return null;
     const payload = this.jwtAdapter.parseTokenPayload(refreshToken);
     if (

@@ -1,6 +1,7 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { settings } from '../../settings';
+import { TokenPayloadType } from '../auth.types';
 
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
@@ -10,7 +11,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKey: settings.JWT_SECRET,
     });
   }
-  async validate(payload: any) {
-    return { userId: payload.sub };
+  async validate(payload: TokenPayloadType) {
+    return { userId: payload.userId };
   }
 }

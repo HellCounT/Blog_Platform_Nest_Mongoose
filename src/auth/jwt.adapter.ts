@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserDb } from '../users/users.types';
 import { settings } from '../settings';
-import { RefreshTokenResult } from './auth.types';
+import { RefreshTokenResult, TokenPayloadType } from './auth.types';
 import mongoose from 'mongoose';
 
 @Injectable()
@@ -52,7 +52,7 @@ export class JwtAdapter {
       return false;
     }
   }
-  parseTokenPayload(token: string): any {
-    return this.jwtService.decode(token);
+  parseTokenPayload(token: string): TokenPayloadType {
+    return this.jwtService.decode(token) as TokenPayloadType;
   }
 }

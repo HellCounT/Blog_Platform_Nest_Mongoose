@@ -11,4 +11,6 @@ export const settings = {
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD || 'fake',
   ENV: process.env.NODE_ENV || 'fake',
   PORT: process.env.PORT || 'fake',
+  BASIC_AUTH_LOGIN: 'admin',
+  BASIC_AUTH_PASSWORD: 'qwerty',
 };

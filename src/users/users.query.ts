@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { UserQueryParser } from '../application/query.parser';
-import { UserPaginatorType, UserViewModelType } from './users.types';
+import { UserDb, UserPaginatorType, UserViewModelType } from './users.types';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './users.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 @Injectable()
 export class UsersQuery {
@@ -38,6 +38,11 @@ export class UsersQuery {
       totalCount: allUsersCount,
       items: pageUsers,
     };
+  }
+  async findUserById(userId: string): Promise<UserDb> {
+    return this.userModel.findOne({
+      _id: new mongoose.Types.ObjectId(userId),
+    });
   }
   _mapUserToViewType(user: UserDocument): UserViewModelType {
     return {

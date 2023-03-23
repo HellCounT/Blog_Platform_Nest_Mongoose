@@ -8,6 +8,7 @@ import {
   HttpCode,
   UseGuards,
   UnauthorizedException,
+  Get,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import {
@@ -18,7 +19,13 @@ import {
 import { Response } from 'express';
 import { DevicesService } from '../security/devices/devices.service';
 import { AuthService } from './auth.service';
-import { LocalAuthGuard } from './guards/local-auth.guard';
+import { CurrentUser } from './decorators/current-user-id.param.decorator';
+import { UsersQuery } from '../users/users.query';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { RefreshJwtGuard } from './guards/refresh-jwt.guard';
+import { GetRefreshTokenPayload } from './decorators/get-refresh-token-payload.decorator';
+import { TokenPayloadType } from './auth.types';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 const refreshTokenCookieOptions = {
   httpOnly: true,
@@ -31,9 +38,11 @@ export class AuthController {
     protected usersService: UsersService,
     protected devicesService: DevicesService,
     protected authService: AuthService,
+    protected usersQueryRepo: UsersQuery,
   ) {}
-  @UseGuards(LocalAuthGuard)
-  @Post('/login')
+  @UseGuards(ThrottlerGuard)
+  @Post('login')
+  @HttpCode(200)
   async login(
     @Body() userLoginDto: UserLoginInputModelType,
     @Ip() ip: string,
@@ -45,7 +54,7 @@ export class AuthController {
       userLoginDto.password,
     );
     if (!checkResult) throw new UnauthorizedException();
-    const tokenPair = this.authService.login(checkResult);
+    const tokenPair = this.authService.getTokenPair(checkResult);
     await this.devicesService.startNewSession(
       tokenPair.refreshTokenMeta.refreshToken,
       tokenPair.refreshTokenMeta.userId,
@@ -62,36 +71,76 @@ export class AuthController {
     );
     return { accessToken: tokenPair.accessToken };
   }
-  @Post('/logout')
-  async logout() {
+  @UseGuards(RefreshJwtGuard)
+  @Post('logout')
+  @HttpCode(204)
+  async logout(
+    @GetRefreshTokenPayload() payload: TokenPayloadType,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    await this.devicesService.logoutSession(payload.deviceId);
+    response.clearCookie('refreshToken');
     return;
   }
-  @Post('/refresh-token')
-  async updateRefreshToken() {
-    return;
+  @UseGuards(RefreshJwtGuard)
+  @Post('refresh-token')
+  @HttpCode(200)
+  async updateRefreshToken(
+    @GetRefreshTokenPayload() payload: TokenPayloadType,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const user = await this.usersQueryRepo.findUserById(
+      payload.userId.toString(),
+    );
+    if (!user) throw new UnauthorizedException();
+    const tokenPair = this.authService.getTokenPair(user);
+    await this.devicesService.updateSessionWithDeviceId(
+      tokenPair.refreshTokenMeta.refreshToken,
+      payload.deviceId,
+      tokenPair.refreshTokenMeta.issueDate,
+      tokenPair.refreshTokenMeta.expDate,
+    );
+    response.cookie(
+      'refreshToken',
+      tokenPair.refreshTokenMeta.refreshToken,
+      refreshTokenCookieOptions,
+    );
+    return { accessToken: tokenPair.accessToken };
   }
-  @Post('/registration')
+  @UseGuards(ThrottlerGuard)
+  @Post('registration')
+  @HttpCode(204)
   async registerUser(@Body() userCreateDto: CreateUserInputModelType) {
     return await this.usersService.registerUser(userCreateDto);
   }
-  @Post('/registration-confirmation')
+  @UseGuards(ThrottlerGuard)
+  @Post('registration-confirmation')
   @HttpCode(204)
   async confirmUserEmail(@Body('code') code: string) {
     return await this.usersService.confirmUserEmail(code);
   }
-  @Post('/registration-email-resending')
+  @UseGuards(ThrottlerGuard)
+  @Post('registration-email-resending')
   @HttpCode(204)
   async resendActivationCode(@Body('email') email: string) {
     return await this.usersService.resendActivationCode(email);
   }
-  @Post('/password-recovery')
+  @UseGuards(ThrottlerGuard)
+  @Post('password-recovery')
   @HttpCode(204)
   async passwordRecovery(@Body('email') email: string) {
     return await this.usersService.sendPasswordRecoveryCode(email);
   }
-  @Post('/new-password')
+  @UseGuards(ThrottlerGuard)
+  @Post('new-password')
   @HttpCode(204)
   async setNewPassword(@Body() newPasswordDto: UserNewPasswordInputModelType) {
     return await this.usersService.updatePasswordByRecoveryCode(newPasswordDto);
+  }
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(204)
+  @Get('me')
+  async me(@CurrentUser() userId: string) {
+    return await this.usersQueryRepo.findUserById(userId);
   }
 }

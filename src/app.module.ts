@@ -31,6 +31,7 @@ import {
   ExpiredTokenSchema,
 } from './security/tokens/expiredTokenSchema';
 import { AuthModule } from './auth/auth.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 const mongoUri = settings.MONGO_URI;
 
@@ -51,6 +52,10 @@ const mongoUri = settings.MONGO_URI;
       serveRoot: process.env.NODE_ENV === 'development' ? '/' : '/swagger',
     }),
     AuthModule,
+    ThrottlerModule.forRoot({
+      ttl: parseInt(process.env.THROTTLE_TTL, 10),
+      limit: parseInt(process.env.THROTTLE_LIMIT, 10),
+    }),
   ],
   controllers: [
     AppController,

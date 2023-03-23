@@ -12,3 +12,9 @@ export type RefreshTokenResult = {
   issueDate: Date;
   expDate: Date;
 };
+
+export type TokenPayloadType = {
+  userId: mongoose.Types.ObjectId;
+  deviceId?: string;
+  exp?: number;
+};

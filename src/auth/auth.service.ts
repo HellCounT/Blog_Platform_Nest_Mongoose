@@ -24,7 +24,7 @@ export class AuthService {
       else return null;
     }
   }
-  login(user: UserDb): TokenPairType {
+  getTokenPair(user: UserDb): TokenPairType {
     return {
       accessToken: this.jwtAdapter.createJwt(user),
       refreshTokenMeta: this.jwtAdapter.createRefreshJwt(user),
