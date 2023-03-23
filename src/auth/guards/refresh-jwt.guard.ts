@@ -8,12 +8,14 @@ import { DevicesRepository } from '../../security/devices/devices.repository';
 import mongoose from 'mongoose';
 import { JwtAdapter } from '../jwt.adapter';
 import { TokenPayloadType } from '../auth.types';
+import { ExpiredTokensRepository } from '../../security/tokens/expired.tokens.repository';
 
 @Injectable()
 export class RefreshJwtGuard implements CanActivate {
   constructor(
     private readonly devicesRepo: DevicesRepository,
     private readonly jwtAdapter: JwtAdapter,
+    private readonly expiredTokensRepo: ExpiredTokensRepository,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -22,6 +24,8 @@ export class RefreshJwtGuard implements CanActivate {
       refreshToken,
     );
     if (!payload) throw new UnauthorizedException();
+    if (await this.expiredTokensRepo.findToken(refreshToken))
+      throw new UnauthorizedException();
     request.payload = payload;
     return true;
   }

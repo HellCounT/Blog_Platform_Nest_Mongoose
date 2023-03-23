@@ -6,32 +6,31 @@ import {
   Length,
   Matches,
 } from 'class-validator';
+import { Trim } from '../auth/decorators/validation-decorators/trim.decorator';
+import { IsNewLogin } from '../auth/decorators/validation-decorators/is-new-login.decorator';
+import { IsUniqueEmail } from '../auth/decorators/validation-decorators/is-unique-email.decorator';
 
 export class CreateUserInputModelType {
-  @Length(3, 10, { message: 'Incorrect login length' })
+  @IsNewLogin({ message: 'Login is not valid' })
   @Matches(/^[a-zA-Z0-9_-]*$/, { message: 'Incorrect login pattern' })
+  @Length(3, 10, { message: 'Incorrect login length' })
+  @IsString({ message: 'Invalid format' })
+  @IsNotEmpty({ message: 'Login is not provided' })
+  @Trim()
   login: string;
-  @Length(6, 20, { message: 'Incorrect password length' })
+
+  @Length(6, 20)
+  @IsString({ message: 'Invalid format' })
+  @IsNotEmpty({ message: 'Password is not provided' })
+  @Trim()
   password: string;
-  @IsEmail({}, { message: 'Value is not a Email' })
+
+  @IsUniqueEmail({ message: 'Email is not valid' })
+  @IsEmail({}, { message: 'Invalid email address format' })
+  @IsString({ message: 'Invalid format' })
+  @IsNotEmpty({ message: 'Email is not provided' })
+  @Trim()
   email: string;
-}
-
-export class UserLoginInputModelType {
-  @IsString({ message: 'invalid format' })
-  @IsNotEmpty({ message: 'login or email has not been provided' })
-  loginOrEmail: string;
-  @IsString({ message: 'invalid format' })
-  @IsNotEmpty({ message: 'password has not been provided' })
-  password: string;
-}
-
-export class UserNewPasswordInputModelType {
-  @IsString({ message: 'invalid format' })
-  @IsNotEmpty({ message: 'recovery code has not been provided' })
-  recoveryCode: string;
-  @Length(6, 20, { message: 'Incorrect password length' })
-  newPassword: string;
 }
 
 export type UserViewModelType = {

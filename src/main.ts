@@ -6,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './http-exception.filter';
 import { settings } from './settings';
+import cookieParser from 'cookie-parser';
 
 const port = settings.PORT || 3000;
 const serverUrl = `http://localhost:${port}`;
@@ -33,6 +34,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.use(cookieParser());
 
   // USELESS SWAGGER SHIT
 

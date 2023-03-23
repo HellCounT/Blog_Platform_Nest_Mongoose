@@ -12,10 +12,10 @@ import bcrypt from 'bcrypt';
 import {
   CreateUserInputModelType,
   UserDb,
-  UserNewPasswordInputModelType,
   UserViewModelType,
 } from './users.types';
 import { emailManager } from '../email/email-manager';
+import { InputNewPasswordDto } from '../auth/dto/input.newpassword.dto';
 
 @Injectable()
 export class UsersService {
@@ -95,7 +95,7 @@ export class UsersService {
 
   async confirmUserEmail(code: string): Promise<boolean> {
     const foundUser = await this.usersRepo.findByConfirmationCode(code);
-    if (!foundUser) return false;
+    if (!foundUser) new BadRequestException();
     if (
       foundUser.emailConfirmationData.isConfirmed ||
       foundUser.emailConfirmationData.confirmationCode !== code ||
@@ -137,9 +137,7 @@ export class UsersService {
     }
   }
 
-  async updatePasswordByRecoveryCode(
-    newPasswordDto: UserNewPasswordInputModelType,
-  ) {
+  async updatePasswordByRecoveryCode(newPasswordDto: InputNewPasswordDto) {
     const foundUser = await this.usersRepo.findByRecoveryCode(
       newPasswordDto.recoveryCode,
     );

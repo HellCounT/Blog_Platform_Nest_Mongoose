@@ -7,10 +7,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { DeviceDb } from './devices.types';
+import { ExpiredTokensRepository } from '../tokens/expired.tokens.repository';
 
 @Injectable()
 export class DevicesService {
-  constructor(protected devicesRepo: DevicesRepository) {}
+  constructor(
+    protected devicesRepo: DevicesRepository,
+    protected expiredTokensRepo: ExpiredTokensRepository,
+  ) {}
   async startNewSession(
     refreshToken: string,
     userId: mongoose.Types.ObjectId,
@@ -81,6 +85,12 @@ export class DevicesService {
       );
       return true;
     } else throw new UnauthorizedException();
+  }
+  async banRefreshToken(
+    refreshToken: string,
+    userId: mongoose.Types.ObjectId,
+  ): Promise<void> {
+    await this.expiredTokensRepo.addTokenToDb(refreshToken, userId);
   }
   _createMeta(refreshToken: string): string {
     const header = refreshToken.split('.')[0];
