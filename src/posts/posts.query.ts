@@ -5,14 +5,20 @@ import { PostDb, PostPaginatorType, PostViewModelType } from './posts.types';
 import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from './posts.schema';
 import { Blog, BlogDocument } from '../blogs/blogs.schema';
+import { LikeStatus } from '../likes/likes.types';
+import { LikePostDocument, LikesPost } from '../likes/likes-post.schema';
 
 @Injectable()
 export class PostsQuery {
   constructor(
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
     @InjectModel(Blog.name) private blogModel: Model<BlogDocument>,
+    @InjectModel(LikesPost.name) private likePostModel: Model<LikePostDocument>,
   ) {}
-  async viewAllPosts(q: QueryParser): Promise<PostPaginatorType> {
+  async viewAllPosts(
+    q: QueryParser,
+    activeUserId: string,
+  ): Promise<PostPaginatorType> {
     const allPostsCount = await this.postModel.countDocuments();
     const reqPageDbPosts = await this.postModel
       .find()
@@ -22,7 +28,7 @@ export class PostsQuery {
       .lean();
     const items = [];
     for await (const p of reqPageDbPosts) {
-      const post = await this._mapPostToViewType(p);
+      const post = await this._mapPostToViewType(p, activeUserId);
       items.push(post);
     }
     return {
@@ -33,16 +39,21 @@ export class PostsQuery {
       items: items,
     };
   }
-  async findPostById(id: string): Promise<PostViewModelType | null> {
+  async findPostById(
+    id: string,
+    activeUserId: string,
+  ): Promise<PostViewModelType | null> {
     const foundPostInstance = await this.postModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
     });
-    if (foundPostInstance) return this._mapPostToViewType(foundPostInstance);
+    if (foundPostInstance)
+      return this._mapPostToViewType(foundPostInstance, activeUserId);
     else throw new NotFoundException();
   }
   async findPostsByBlogId(
     blogId: string,
     q: QueryParser,
+    activeUserId: string,
   ): Promise<PostPaginatorType | null> {
     if (
       await this.blogModel
@@ -64,7 +75,7 @@ export class PostsQuery {
       else {
         const items = [];
         for await (const p of reqPageDbPosts) {
-          const post = await this._mapPostToViewType(p);
+          const post = await this._mapPostToViewType(p, activeUserId);
           items.push(post);
         }
         return {
@@ -77,7 +88,37 @@ export class PostsQuery {
       }
     } else throw new NotFoundException();
   }
-  async _mapPostToViewType(post: PostDb): Promise<PostViewModelType> {
+  async getUserLikeForPost(userId: string, postId: string) {
+    return this.likePostModel.findOne({
+      postId: postId,
+      userId: userId,
+    });
+  }
+  private async _getNewestLikes(
+    postId: string,
+  ): Promise<Array<LikePostDocument>> {
+    return this.likePostModel
+      .find({
+        postId: postId,
+        likeStatus: LikeStatus.like,
+      })
+      .sort({ addedAt: -1 })
+      .limit(3)
+      .lean();
+  }
+  async _mapPostToViewType(
+    post: PostDb,
+    userId: string,
+  ): Promise<PostViewModelType> {
+    const userLike = await this.getUserLikeForPost(userId, post._id.toString());
+    const newestLikes = await this._getNewestLikes(post._id.toString());
+    const mappedLikes = newestLikes.map((e) => {
+      return {
+        addedAt: new Date(e.addedAt).toISOString(),
+        userId: e.userId,
+        login: e.userLogin,
+      };
+    });
     return {
       id: post._id.toString(),
       title: post.title,
@@ -89,8 +130,8 @@ export class PostsQuery {
       extendedLikesInfo: {
         likesCount: post.likesInfo?.likesCount,
         dislikesCount: post.likesInfo?.dislikesCount,
-        myStatus: 'None',
-        newestLikes: [],
+        myStatus: userLike?.likeStatus || LikeStatus.none,
+        newestLikes: mappedLikes,
       },
     };
   }

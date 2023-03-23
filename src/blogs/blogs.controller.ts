@@ -20,6 +20,7 @@ import { BlogsQuery } from './blogs.query';
 import { PostsService } from '../posts/posts.service';
 import { PostsQuery } from '../posts/posts.query';
 import { CreatePostInputModel } from '../posts/posts.types';
+import { CurrentUser } from '../auth/decorators/get-decorators/current-user-id.param.decorator';
 
 @Controller('blogs')
 export class BlogsController {
@@ -70,8 +71,9 @@ export class BlogsController {
   async getPostsForBlogId(
     @Param('id') id: string,
     @Query() query: QueryParser,
+    @CurrentUser() userId: string,
   ) {
     const queryParams = parseQueryPagination(query);
-    return this.postsQueryRepo.findPostsByBlogId(id, queryParams);
+    return this.postsQueryRepo.findPostsByBlogId(id, queryParams, userId);
   }
 }

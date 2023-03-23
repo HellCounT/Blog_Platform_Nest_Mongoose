@@ -32,6 +32,7 @@ import {
 } from './security/tokens/expiredTokenSchema';
 import { AuthModule } from './auth/auth.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { DevicesController } from './security/devices/devices.controller';
 
 const mongoUri = settings.MONGO_URI;
 
@@ -64,6 +65,7 @@ const mongoUri = settings.MONGO_URI;
     PostsController,
     CommentsController,
     UsersController,
+    DevicesController,
   ],
   providers: [
     AppService,
