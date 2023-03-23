@@ -33,6 +33,13 @@ import {
 import { AuthModule } from './auth/auth.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { DevicesController } from './security/devices/devices.controller';
+import { LikeForPost, LikesForPostsSchema } from './likes/likes-post.schema';
+import {
+  LikeForComment,
+  LikesForCommentsSchema,
+} from './likes/likes-comments.schema';
+import { LikesForCommentsRepository } from './likes/likes-comments.repository';
+import { LikesForPostsRepository } from './likes/likes-posts.repository';
 
 const mongoUri = settings.MONGO_URI;
 
@@ -44,6 +51,8 @@ const mongoUri = settings.MONGO_URI;
       { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostSchema },
       { name: Comment.name, schema: CommentSchema },
+      { name: LikeForPost.name, schema: LikesForPostsSchema },
+      { name: LikeForComment.name, schema: LikesForCommentsSchema },
       { name: User.name, schema: UserSchema },
       { name: Device.name, schema: DeviceSchema },
       { name: ExpiredToken.name, schema: ExpiredTokenSchema },
@@ -79,6 +88,8 @@ const mongoUri = settings.MONGO_URI;
     UsersService,
     UsersRepository,
     UsersQuery,
+    LikesForCommentsRepository,
+    LikesForPostsRepository,
   ],
 })
 export class AppModule {}
