@@ -18,9 +18,12 @@ import { CommentsQuery } from '../comments/comments.query';
 import { BasicAuthGuard } from '../auth/guards/basic-auth.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/get-decorators/current-user-id.param.decorator';
-import { InputCreateCommentDto } from '../comments/dto/input.create-comment.dto';
+import { InputCommentDto } from '../comments/dto/input-comment.dto';
 import { CommentsService } from '../comments/comments.service';
 import { CommentPaginatorDto } from '../comments/dto/output.comment-paginator.dto';
+import { RefreshJwtGuard } from '../auth/guards/refresh-jwt.guard';
+import { GetRefreshTokenPayload } from '../auth/decorators/get-decorators/get-refresh-token-payload.decorator';
+import { TokenPayloadType } from '../auth/auth.types';
 
 @Controller('posts')
 export class PostsController {
@@ -51,17 +54,28 @@ export class PostsController {
   async deletePost(@Param('id') id: string) {
     return await this.postsService.deletePost(id);
   }
+  @UseGuards(RefreshJwtGuard)
   @Get()
   async getAllPosts(
     @Query() query: QueryParser,
-    @CurrentUser() userId: string,
+    @GetRefreshTokenPayload() payload: TokenPayloadType,
   ) {
     const queryParams = parseQueryPagination(query);
-    return await this.postsQueryRepo.viewAllPosts(queryParams, userId);
+    return await this.postsQueryRepo.viewAllPosts(
+      queryParams,
+      payload.userId.toString(),
+    );
   }
+  @UseGuards(RefreshJwtGuard)
   @Get(':id')
-  async getPostById(@Param('id') id: string, @CurrentUser() userId: string) {
-    return await this.postsQueryRepo.findPostById(id, userId);
+  async getPostById(
+    @Param('id') id: string,
+    @GetRefreshTokenPayload() payload: TokenPayloadType,
+  ) {
+    return await this.postsQueryRepo.findPostById(
+      id,
+      payload.userId.toString(),
+    );
   }
   @Get(':postId/comments')
   async getCommentsByPostId(
@@ -78,7 +92,7 @@ export class PostsController {
   @Post(':postId/comments')
   @HttpCode(201)
   async createComment(
-    @Body() createCommentDto: InputCreateCommentDto,
+    @Body() createCommentDto: InputCommentDto,
     @CurrentUser() userId: string,
     @Param('postId') postId: string,
   ) {
