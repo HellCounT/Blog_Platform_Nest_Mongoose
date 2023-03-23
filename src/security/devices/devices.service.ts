@@ -57,7 +57,6 @@ export class DevicesService {
     );
   }
   async deleteSession(
-    refreshToken: string,
     userId: mongoose.Types.ObjectId,
     deviceId: string,
   ): Promise<boolean> {

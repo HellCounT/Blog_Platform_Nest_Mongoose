@@ -158,6 +158,7 @@ export class AuthController {
   @Get('me')
   async me(@CurrentUser() userId: string): Promise<OutputUserMeDto> {
     const user = await this.usersQueryRepo.findUserById(userId);
+    if (!user) throw new UnauthorizedException();
     return {
       email: user.accountData.email,
       login: user.accountData.login,
