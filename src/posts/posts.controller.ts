@@ -20,6 +20,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/get-decorators/current-user-id.param.decorator';
 import { InputCreateCommentDto } from '../comments/dto/input.create-comment.dto';
 import { CommentsService } from '../comments/comments.service';
+import { CommentPaginatorDto } from '../comments/dto/output.comment-paginator.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -66,7 +67,7 @@ export class PostsController {
   async getCommentsByPostId(
     @Param('postId') postId: string,
     @Query() query: QueryParser,
-  ) {
+  ): Promise<CommentPaginatorDto> {
     const queryParams = parseQueryPagination(query);
     return await this.commentsQueryRepo.findCommentsByPostId(
       postId,

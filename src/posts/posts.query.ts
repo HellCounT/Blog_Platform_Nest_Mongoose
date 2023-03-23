@@ -6,14 +6,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from './posts.schema';
 import { Blog, BlogDocument } from '../blogs/blogs.schema';
 import { LikeStatus } from '../likes/likes.types';
-import { LikePostDocument, LikesPost } from '../likes/likes-post.schema';
+import { LikeForPostDocument, LikeForPost } from '../likes/likes-post.schema';
 
 @Injectable()
 export class PostsQuery {
   constructor(
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
     @InjectModel(Blog.name) private blogModel: Model<BlogDocument>,
-    @InjectModel(LikesPost.name) private likePostModel: Model<LikePostDocument>,
+    @InjectModel(LikeForPost.name)
+    private likePostModel: Model<LikeForPostDocument>,
   ) {}
   async viewAllPosts(
     q: QueryParser,
@@ -96,7 +97,7 @@ export class PostsQuery {
   }
   private async _getNewestLikes(
     postId: string,
-  ): Promise<Array<LikePostDocument>> {
+  ): Promise<Array<LikeForPostDocument>> {
     return this.likePostModel
       .find({
         postId: postId,

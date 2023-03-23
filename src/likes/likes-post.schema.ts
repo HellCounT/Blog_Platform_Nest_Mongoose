@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { LikeStatus } from './likes.types';
 
-export type LikePostDocument = HydratedDocument<LikesPost>;
+export type LikeForPostDocument = HydratedDocument<LikeForPost>;
 
 @Schema()
-export class LikesPost {
+export class LikeForPost {
   @Prop({ required: true })
   _id: mongoose.Types.ObjectId;
   @Prop({ required: true })
@@ -20,4 +20,4 @@ export class LikesPost {
   likeStatus: LikeStatus;
 }
 
-export const LikesPostSchema = SchemaFactory.createForClass(LikesPost);
+export const LikesForPostsSchema = SchemaFactory.createForClass(LikeForPost);

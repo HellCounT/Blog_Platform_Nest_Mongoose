@@ -1,16 +1,17 @@
 import mongoose, { Model } from 'mongoose';
-import { CommentPaginatorType, CommentViewModelType } from './comments.types';
 import { QueryParser } from '../application/query.parser';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from './comments.schema';
+import { CommentViewDto } from './dto/output.comment-view.dto';
+import { CommentPaginatorDto } from './dto/output.comment-paginator.dto';
 
 @Injectable()
 export class CommentsQuery {
   constructor(
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
   ) {}
-  async findCommentById(id: string): Promise<CommentViewModelType | null> {
+  async findCommentById(id: string): Promise<CommentViewDto | null> {
     const foundCommentInstance = await this.commentModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
     });
@@ -21,7 +22,7 @@ export class CommentsQuery {
   async findCommentsByPostId(
     postId: string,
     q: QueryParser,
-  ): Promise<CommentPaginatorType | null> {
+  ): Promise<CommentPaginatorDto | null> {
     const foundCommentsCount = await this.commentModel.countDocuments({
       postId: { $eq: postId },
     });
@@ -51,7 +52,7 @@ export class CommentsQuery {
   }
   async _mapCommentToViewType(
     comment: CommentDocument,
-  ): Promise<CommentViewModelType> {
+  ): Promise<CommentViewDto> {
     return {
       id: comment._id.toString(),
       content: comment.content,

@@ -3,7 +3,9 @@ import { PostsRepository } from '../posts/posts.repository';
 import { PostsQuery } from '../posts/posts.query';
 import { UsersQuery } from '../users/users.query';
 import mongoose from 'mongoose';
-import { CommentDb, CommentViewModelType } from './comments.types';
+import { CommentDb } from './comments.types';
+import { CommentsRepository } from './comments.repository';
+import { CommentViewDto } from './dto/output.comment-view.dto';
 
 @Injectable()
 export class CommentsService {
@@ -17,7 +19,7 @@ export class CommentsService {
     postId: string,
     userId: string,
     content: string,
-  ): Promise<CommentViewModelType | null> {
+  ): Promise<CommentViewDto | null> {
     const foundUser = await this.usersQueryRepo.findUserById(userId);
     const foundPost = await this.postsQueryRepo.findPostById(postId, userId);
     if (!foundUser || !foundPost) return null;

@@ -1,24 +1,4 @@
-import { LikesInfoViewModelType } from '../posts/posts.types';
 import mongoose from 'mongoose';
-
-export type CommentViewModelType = {
-  id: string;
-  content: string;
-  commentatorInfo: {
-    userId: string;
-    userLogin: string;
-  };
-  createdAt: string;
-  likesInfo: LikesInfoViewModelType;
-};
-
-export type CommentPaginatorType = {
-  pagesCount: number;
-  page: number;
-  pageSize: number;
-  totalCount: number;
-  items: CommentViewModelType[];
-};
 
 export class CommentDb {
   constructor(
