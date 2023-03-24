@@ -362,7 +362,7 @@ window.onload = function() {
             }
           },
           "responses": {
-            "200": {
+            "201": {
               "description": ""
             }
           }

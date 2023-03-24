@@ -39,7 +39,7 @@ export class PostsController {
   ) {}
   @UseGuards(BasicAuthGuard)
   @Post()
-  @HttpCode(200)
+  @HttpCode(201)
   async createPost(@Body() postCreateDto: InputCreatePostDto) {
     return await this.postsService.createPost(postCreateDto);
   }
