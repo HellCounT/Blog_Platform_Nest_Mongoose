@@ -8,9 +8,11 @@ import { HttpExceptionFilter } from './http-exception.filter';
 import cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from './configuration/configuration';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   const configService = app.get(ConfigService<ConfigurationType>);
   app.enableCors();
   app.useGlobalPipes(

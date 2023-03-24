@@ -7,10 +7,10 @@ import {
 } from 'class-validator';
 import { UsersRepository } from '../../../users/users.repository';
 
-@ValidatorConstraint({ async: true })
 @Injectable()
+@ValidatorConstraint({ async: true })
 export class IsUniqueEmailConstraint implements ValidatorConstraintInterface {
-  constructor(private readonly usersRepo: UsersRepository) {}
+  constructor(private usersRepo: UsersRepository) {}
 
   async validate(email: string) {
     return !(await this.usersRepo.findByLoginOrEmail(email));

@@ -17,7 +17,6 @@ import { parseQueryPagination, QueryParser } from '../application/query.parser';
 import { CommentsQuery } from '../comments/comments.query';
 import { BasicAuthGuard } from '../auth/guards/basic-auth.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser } from '../auth/decorators/get-decorators/current-user-id.param.decorator';
 import { InputCommentDto } from '../comments/dto/input-comment.dto';
 import { CommentsService } from '../comments/comments.service';
 import { CommentPaginatorDto } from '../comments/dto/output.comment-paginator.dto';

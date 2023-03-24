@@ -53,6 +53,10 @@ import { ExpiredTokensRepository } from './security/tokens/expired.tokens.reposi
 import { DevicesService } from './security/devices/devices.service';
 import { CommentsService } from './comments/comments.service';
 import { CommentsRepository } from './comments/comments.repository';
+import { IsUniqueEmailConstraint } from './auth/decorators/validation-decorators/is-unique-email.decorator';
+import { IsNewLoginConstraint } from './auth/decorators/validation-decorators/is-new-login.decorator';
+import { EmailIsNotConfirmedConstraint } from './auth/decorators/validation-decorators/email-is-not-confirmed.decorator';
+import { EmailConfirmationCodeIsCorrectConstraint } from './auth/decorators/validation-decorators/confirmation-code-is-correct.decorator';
 
 @Module({
   imports: [
@@ -113,6 +117,10 @@ import { CommentsRepository } from './comments/comments.repository';
     CommentsRepository,
     DevicesRepository,
     ExpiredTokensRepository,
+    IsUniqueEmailConstraint,
+    IsNewLoginConstraint,
+    EmailIsNotConfirmedConstraint,
+    EmailConfirmationCodeIsCorrectConstraint,
   ],
 })
 export class AppModule {}
