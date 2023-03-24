@@ -58,6 +58,7 @@ import { IsNewLoginConstraint } from './auth/decorators/validation-decorators/is
 import { EmailIsNotConfirmedConstraint } from './auth/decorators/validation-decorators/email-is-not-confirmed.decorator';
 import { EmailConfirmationCodeIsCorrectConstraint } from './auth/decorators/validation-decorators/confirmation-code-is-correct.decorator';
 import { EmailService } from './email/email.service';
+import { BlogExistsConstraint } from './blogs/decorators/validation-decorators/blog-exists.decorator';
 
 @Module({
   imports: [
@@ -128,6 +129,7 @@ import { EmailService } from './email/email.service';
     IsNewLoginConstraint,
     EmailIsNotConfirmedConstraint,
     EmailConfirmationCodeIsCorrectConstraint,
+    BlogExistsConstraint,
   ],
 })
 export class AppModule {}

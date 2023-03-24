@@ -20,9 +20,11 @@ import { parseQueryPagination, QueryParser } from '../application/query.parser';
 import { BlogsQuery } from './blogs.query';
 import { PostsService } from '../posts/posts.service';
 import { PostsQuery } from '../posts/posts.query';
-import { CurrentUser } from '../auth/decorators/get-decorators/current-user-id.param.decorator';
 import { InputCreatePostDto } from '../posts/dto/input.create-post.dto';
 import { BasicAuthGuard } from '../auth/guards/basic-auth.guard';
+import { GuestGuard } from '../auth/guards/guest.guard';
+import { GetRefreshTokenPayload } from '../auth/decorators/get-decorators/get-refresh-token-payload.decorator';
+import { TokenPayloadType } from '../auth/auth.types';
 
 @Controller('blogs')
 export class BlogsController {
@@ -77,14 +79,19 @@ export class BlogsController {
   async getBlogById(@Param('id') id: string) {
     return await this.blogsQueryRepo.findBlogById(id);
   }
+  @UseGuards(GuestGuard)
   @Get(':id/posts')
   @HttpCode(200)
   async getPostsForBlogId(
     @Param('id') id: string,
     @Query() query: QueryParser,
-    @CurrentUser() userId: string,
+    @GetRefreshTokenPayload() payload: TokenPayloadType,
   ) {
     const queryParams = parseQueryPagination(query);
-    return this.postsQueryRepo.findPostsByBlogId(id, queryParams, userId);
+    return this.postsQueryRepo.findPostsByBlogId(
+      id,
+      queryParams,
+      payload.userId.toString(),
+    );
   }
 }
