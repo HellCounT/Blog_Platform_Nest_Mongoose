@@ -32,7 +32,7 @@ export class UsersController {
   }
   @UseGuards(BasicAuthGuard)
   @Post()
-  @HttpCode(200)
+  @HttpCode(201)
   async createUser(@Body() userCreateDto: InputCreateUserDto) {
     return await this.usersService.createUser(userCreateDto);
   }
