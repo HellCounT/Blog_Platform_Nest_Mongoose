@@ -10,13 +10,16 @@ import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import bcrypt from 'bcrypt';
 import { UserDb, UserViewModelType } from './users.types';
-import { emailManager } from '../email/email-manager';
 import { InputNewPasswordDto } from '../auth/dto/input.newpassword.dto';
 import { InputCreateUserDto } from './dto/input.create-user.dto';
+import { EmailManager } from '../email/email-manager';
 
 @Injectable()
 export class UsersService {
-  constructor(protected usersRepo: UsersRepository) {}
+  constructor(
+    protected usersRepo: UsersRepository,
+    protected emailManager: EmailManager,
+  ) {}
   async findByLoginOrEmail(loginOrEmail: string): Promise<UserDb> {
     return await this.usersRepo.findByLoginOrEmail(loginOrEmail);
   }
@@ -78,7 +81,7 @@ export class UsersService {
     );
     const createUserResult = await this.usersRepo.createUser(newUser);
     try {
-      await emailManager.sendEmailRegistrationCode(
+      await this.emailManager.sendEmailRegistrationCode(
         newUser.accountData.email,
         newUser.emailConfirmationData.confirmationCode,
       );
@@ -109,7 +112,7 @@ export class UsersService {
     const newCode = uuidv4();
     await this.usersRepo.updateConfirmationCode(foundUser._id, newCode);
     try {
-      await emailManager.resendEmailRegistrationCode(
+      await this.emailManager.resendEmailRegistrationCode(
         foundUser.accountData.email,
         newCode,
       );
@@ -126,7 +129,7 @@ export class UsersService {
     if (!foundUser) throw new BadRequestException();
     await this.usersRepo.updateRecoveryCode(foundUser._id, newCode);
     try {
-      await emailManager.sendRecoveryCode(email, newCode);
+      await this.emailManager.sendRecoveryCode(email, newCode);
       return true;
     } catch (error) {
       console.error(error);

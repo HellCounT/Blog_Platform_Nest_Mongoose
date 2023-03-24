@@ -1,19 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserDb } from '../users/users.types';
-import { settings } from '../settings';
 import { RefreshTokenResult, TokenPayloadType } from './auth.types';
 import mongoose from 'mongoose';
+import { ConfigService } from '@nestjs/config';
+import { ConfigurationType } from '../configuration/configuration';
 
 @Injectable()
 export class JwtAdapter {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService<ConfigurationType>,
+  ) {}
   createJwt(user: UserDb): string {
     return this.jwtService.sign(
       { userId: user._id },
       {
-        secret: settings.JWT_SECRET,
-        expiresIn: settings.JWT_LIFETIME * 60000,
+        secret: this.configService.get('JWT_SECRET'),
+        expiresIn: this.configService.get('JWT_LIFETIME') * 60000,
       },
     );
   }
@@ -22,7 +26,7 @@ export class JwtAdapter {
     const issueDate = new Date();
     const expDateSec =
       Math.floor(issueDate.getTime() / 1000) +
-      settings.JWT_REFRESH_LIFETIME * 60;
+      this.configService.get('JWT_REFRESH_LIFETIME') * 60;
     const expDate = new Date(expDateSec * 1000);
     const refreshToken = this.jwtService.sign(
       {
@@ -31,7 +35,7 @@ export class JwtAdapter {
         exp: expDateSec,
       },
       {
-        secret: settings.JWT_REFRESH_SECRET,
+        secret: this.configService.get('JWT_REFRESH_SECRET'),
       },
     );
     return {
@@ -45,7 +49,7 @@ export class JwtAdapter {
   checkRefreshTokenExpiration(token: string): boolean {
     try {
       this.jwtService.verify(token, {
-        secret: settings.JWT_REFRESH_SECRET,
+        secret: this.configService.get('JWT_REFRESH_SECRET'),
       });
       return true;
     } catch {

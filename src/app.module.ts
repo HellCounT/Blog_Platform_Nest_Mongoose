@@ -1,3 +1,4 @@
+import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -20,10 +21,8 @@ import { Blog, BlogSchema } from './blogs/blogs.schema';
 import { Post, PostSchema } from './posts/posts.schema';
 import { Comment, CommentSchema } from './comments/comments.schema';
 import { User, UserSchema } from './users/users.schema';
-import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { settings } from './settings';
 import { AuthController } from './auth/auth.controller';
 import { Device, DeviceSchema } from './security/devices/devices.schema';
 import {
@@ -43,13 +42,21 @@ import {
 } from './likes/likes-for-comments.schema';
 import { LikesForCommentsRepository } from './likes/likes-for-comments.repository';
 import { LikesForPostsRepository } from './likes/likes-for-posts.repository';
-
-const mongoUri = settings.MONGO_URI;
+import { JwtAdapter } from './auth/jwt.adapter';
+import { LikesForPostsService } from './likes/likes-for-posts.service';
+import { LikesForCommentsService } from './likes/likes-for-comments.service';
+import { EmailManager } from './email/email-manager';
+import { JwtService } from '@nestjs/jwt';
+import { DevicesRepository } from './security/devices/devices.repository';
+import { ExpiredTokensRepository } from './security/tokens/expired.tokens.repository';
+import { DevicesService } from './security/devices/devices.service';
+import { CommentsService } from './comments/comments.service';
+import { CommentsRepository } from './comments/comments.repository';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(mongoUri),
+    MongooseModule.forRoot(process.env.MONGO_URL),
     MongooseModule.forFeature([
       { name: Blog.name, schema: BlogSchema },
       { name: Post.name, schema: PostSchema },
@@ -88,11 +95,21 @@ const mongoUri = settings.MONGO_URI;
     PostsRepository,
     PostsQuery,
     CommentsQuery,
+    CommentsService,
     UsersService,
     UsersRepository,
     UsersQuery,
+    LikesForPostsService,
+    LikesForCommentsService,
     LikesForCommentsRepository,
     LikesForPostsRepository,
+    JwtAdapter,
+    EmailManager,
+    JwtService,
+    DevicesService,
+    CommentsRepository,
+    DevicesRepository,
+    ExpiredTokensRepository,
   ],
 })
 export class AppModule {}

@@ -5,14 +5,13 @@ import { get } from 'http';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './http-exception.filter';
-import { settings } from './settings';
-import cookieParser from 'cookie-parser';
-
-const port = settings.PORT || 3000;
-const serverUrl = `http://localhost:${port}`;
+import * as cookieParser from 'cookie-parser';
+import { ConfigService } from '@nestjs/config';
+import { ConfigurationType } from './configuration/configuration';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService<ConfigurationType>);
   app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
@@ -47,8 +46,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
 
+  const port = configService.get('PORT');
+  const serverUrl = `http://localhost:${port}`;
+
   // get the swagger json file (if app is running in development mode)
-  if (settings.ENV === 'development') {
+  if (configService.get('ENV') === 'development') {
     // write swagger ui files
     get(`${serverUrl}/swagger/swagger-ui-bundle.js`, function (response) {
       response.pipe(createWriteStream('swagger-static/swagger-ui-bundle.js'));

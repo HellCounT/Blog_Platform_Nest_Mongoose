@@ -1,8 +1,9 @@
-import { transport } from './email-adapter';
+import { EmailService } from './email.service';
 
-export const emailManager = {
-  async sendEmailRegistrationCode(email: string, code: string) {
-    await transport.sendMail({
+export class EmailManager {
+  constructor(private readonly emailService: EmailService) {}
+  async sendEmailRegistrationCode(email: string, code: string): Promise<void> {
+    await this.emailService.sendMail({
       from: 'Blog Platform <hellcount.test@gmail.com>',
       to: email,
       subject: 'Your email confirmation code',
@@ -12,9 +13,12 @@ export const emailManager = {
         `          <a href='https://somesite.com/confirm-email?code=${code}'>complete registration</a>\n` +
         '      </p>',
     });
-  },
-  async resendEmailRegistrationCode(email: string, code: string) {
-    await transport.sendMail({
+  }
+  async resendEmailRegistrationCode(
+    email: string,
+    code: string,
+  ): Promise<void> {
+    await this.emailService.sendMail({
       from: 'Blog Platform <hellcount.test@gmail.com>',
       to: email,
       subject: 'Resending your email confirmation code',
@@ -24,9 +28,9 @@ export const emailManager = {
         `          <a href='https://somesite.com/confirm-email?code=${code}'>complete registration</a>\n` +
         '      </p>',
     });
-  },
-  async sendRecoveryCode(email: string, code: string) {
-    await transport.sendMail({
+  }
+  async sendRecoveryCode(email: string, code: string): Promise<void> {
+    await this.emailService.sendMail({
       from: 'Blog Platform <hellcount.test@gmail.com>',
       to: email,
       subject: 'Password Recovery',
@@ -36,5 +40,5 @@ export const emailManager = {
         `          <a href='https://somesite.com/password-recovery?recoveryCode=${code}'>recovery password</a>\n` +
         '      </p>',
     });
-  },
-};
+  }
+}
