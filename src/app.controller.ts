@@ -6,6 +6,14 @@ import { Model } from 'mongoose';
 import { Post, PostDocument } from './posts/posts.schema';
 import { User, UserDocument } from './users/users.schema';
 import { Comment, CommentDocument } from './comments/comments.schema';
+import {
+  LikeForPost,
+  LikeForPostDocument,
+} from './likes/likes-for-post.schema';
+import {
+  LikeForComment,
+  LikeForCommentDocument,
+} from './likes/likes-for-comments.schema';
 
 @Controller()
 export class AppController {
@@ -15,6 +23,10 @@ export class AppController {
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
+    @InjectModel(LikeForPost.name)
+    private likesForPostsModel: Model<LikeForPostDocument>,
+    @InjectModel(LikeForComment.name)
+    private likesForCommentsModel: Model<LikeForCommentDocument>,
   ) {}
 
   @Get()
@@ -28,6 +40,8 @@ export class AppController {
     await this.postModel.deleteMany({});
     await this.commentModel.deleteMany({});
     await this.userModel.deleteMany({});
+    await this.likesForPostsModel.deleteMany({});
+    await this.likesForCommentsModel.deleteMany({});
     return;
   }
 }

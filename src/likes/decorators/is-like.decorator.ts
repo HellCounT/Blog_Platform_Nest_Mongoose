@@ -8,12 +8,8 @@ import { LikeStatus } from '../likes.types';
 
 @ValidatorConstraint()
 export class IsLikeConstraint implements ValidatorConstraintInterface {
-  validate(likeInput: LikeStatus) {
-    return (
-      likeInput === LikeStatus.like ||
-      likeInput === LikeStatus.dislike ||
-      likeInput === LikeStatus.none
-    );
+  validate(likeStatus: LikeStatus) {
+    return Object.values(LikeStatus).includes(likeStatus);
   }
   defaultMessage() {
     return `Incorrect LikeStatus format`;

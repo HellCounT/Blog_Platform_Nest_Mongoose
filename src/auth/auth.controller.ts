@@ -154,10 +154,10 @@ export class AuthController {
     return await this.usersService.updatePasswordByRecoveryCode(newPasswordDto);
   }
   @UseGuards(JwtAuthGuard)
-  @HttpCode(204)
+  @HttpCode(200)
   @Get('me')
-  async me(@CurrentUser() userId: string): Promise<OutputUserMeDto> {
-    const user = await this.usersQueryRepo.findUserById(userId);
+  async me(@Req() req): Promise<OutputUserMeDto> {
+    const user = await this.usersQueryRepo.findUserById(req.user.userId);
     if (!user) throw new UnauthorizedException();
     return {
       email: user.accountData.email,

@@ -195,7 +195,7 @@ window.onload = function() {
           "operationId": "AuthController_me",
           "parameters": [],
           "responses": {
-            "204": {
+            "200": {
               "description": ""
             }
           }

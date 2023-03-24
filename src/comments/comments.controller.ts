@@ -6,6 +6,7 @@ import {
   HttpCode,
   Param,
   Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { CommentsQuery } from './comments.query';
@@ -41,11 +42,11 @@ export class CommentsController {
   async updateComment(
     @Param('commentId') commentId: string,
     @Body() updateCommentDto: InputCommentDto,
-    @CurrentUser() userId: string,
+    @Req() req,
   ) {
     return this.commentsService.updateComment(
       commentId,
-      userId,
+      req.user.userId,
       updateCommentDto.content,
     );
   }
@@ -61,12 +62,12 @@ export class CommentsController {
   @Put('commentId/like-status')
   async updateLikeStatus(
     @Param('commentId') commentId: string,
-    @CurrentUser() userId: string,
+    @Req() req,
     @Body() likeStatusDto: InputLikeStatusDto,
   ) {
     return await this.commentsService.updateLikeStatus(
       commentId,
-      userId,
+      req.user.userId,
       likeStatusDto.likeStatus,
     );
   }

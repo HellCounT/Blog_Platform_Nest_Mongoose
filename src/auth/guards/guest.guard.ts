@@ -12,7 +12,12 @@ export class GuestGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const refreshToken = request.cookies.refreshToken;
-    if (!refreshToken) return true;
+    if (!refreshToken) {
+      request.payload = {
+        userId: '',
+      };
+      return true;
+    }
     request.payload = await this._authCheckerPayloadParser(refreshToken);
     return true;
   }

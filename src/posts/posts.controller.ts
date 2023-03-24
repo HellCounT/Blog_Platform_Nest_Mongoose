@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostsQuery } from './posts.query';
@@ -97,12 +98,12 @@ export class PostsController {
   @HttpCode(201)
   async createComment(
     @Body() createCommentDto: InputCommentDto,
-    @CurrentUser() userId: string,
+    @Req() req,
     @Param('postId') postId: string,
   ) {
     return await this.commentsService.createComment(
       createCommentDto.content,
-      userId,
+      req.user.userId,
       postId,
     );
   }
@@ -110,14 +111,15 @@ export class PostsController {
   @Put(':postId/like-status')
   @HttpCode(204)
   async updateLikeStatus(
+    @Req() req,
     @Body() likeStatusDto: InputLikeStatusDto,
-    @CurrentUser() userId: string,
     @Param('postId') postId: string,
   ) {
-    const foundUser = await this.usersQueryRepo.findUserById(userId);
+    console.log(req.user.userId);
+    const foundUser = await this.usersQueryRepo.findUserById(req.user.userId);
     return await this.postsService.updateLikeStatus(
       postId,
-      userId,
+      req.user.userId,
       foundUser.accountData.login,
       likeStatusDto.likeStatus,
     );
