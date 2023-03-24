@@ -108,7 +108,7 @@ export class UsersService {
   async resendActivationCode(email: string): Promise<boolean> {
     const foundUser = await this.usersRepo.findByLoginOrEmail(email);
     if (!foundUser || foundUser.emailConfirmationData.isConfirmed)
-      throw new BadRequestException();
+      throw new BadRequestException('eMail is already confirmed');
     const newCode = uuidv4();
     await this.usersRepo.updateConfirmationCode(foundUser._id, newCode);
     try {

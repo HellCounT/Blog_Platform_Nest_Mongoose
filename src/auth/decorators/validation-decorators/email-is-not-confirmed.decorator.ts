@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   registerDecorator,
   ValidationOptions,
@@ -16,13 +16,10 @@ export class EmailIsNotConfirmedConstraint
 
   async validate(email: string) {
     const user = await this.usersRepo.findByLoginOrEmail(email);
-    if (!user) {
-      throw new BadRequestException();
-    }
-    if (user.emailConfirmationData.isConfirmed) {
-      throw new BadRequestException();
-    }
-    return true;
+    if (!user || user.emailConfirmationData.isConfirmed) return false;
+  }
+  defaultMessage() {
+    return `email is already confirmed or not exists`;
   }
 }
 
