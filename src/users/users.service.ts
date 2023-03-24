@@ -9,13 +9,10 @@ import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 import bcrypt from 'bcrypt';
-import {
-  CreateUserInputModelType,
-  UserDb,
-  UserViewModelType,
-} from './users.types';
+import { UserDb, UserViewModelType } from './users.types';
 import { emailManager } from '../email/email-manager';
 import { InputNewPasswordDto } from '../auth/dto/input.newpassword.dto';
+import { InputCreateUserDto } from './dto/input.create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -24,7 +21,7 @@ export class UsersService {
     return await this.usersRepo.findByLoginOrEmail(loginOrEmail);
   }
   async createUser(
-    userCreateDto: CreateUserInputModelType,
+    userCreateDto: InputCreateUserDto,
   ): Promise<UserViewModelType | null> {
     const passwordHash = await this._generateHash(userCreateDto.password);
     const currentDate = new Date();
@@ -57,7 +54,7 @@ export class UsersService {
   }
 
   async registerUser(
-    userCreateDto: CreateUserInputModelType,
+    userCreateDto: InputCreateUserDto,
   ): Promise<UserViewModelType | null> {
     const passwordHash = await this._generateHash(userCreateDto.password);
     const currentDate = new Date();

@@ -19,8 +19,8 @@ import { parseQueryPagination, QueryParser } from '../application/query.parser';
 import { BlogsQuery } from './blogs.query';
 import { PostsService } from '../posts/posts.service';
 import { PostsQuery } from '../posts/posts.query';
-import { CreatePostInputModel } from '../posts/posts.types';
 import { CurrentUser } from '../auth/decorators/get-decorators/current-user-id.param.decorator';
+import { InputCreatePostDto } from '../posts/dto/input.create-post.dto';
 
 @Controller('blogs')
 export class BlogsController {
@@ -39,7 +39,7 @@ export class BlogsController {
     @Body() postCreateForBlogDto: CreatePostForBlogModel,
     @Param('blogId') blogId: string,
   ) {
-    const postCreateDto: CreatePostInputModel = {
+    const postCreateDto: InputCreatePostDto = {
       ...postCreateForBlogDto,
       blogId: blogId,
     };

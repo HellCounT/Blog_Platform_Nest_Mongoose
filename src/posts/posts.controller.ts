@@ -11,7 +11,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { CreatePostInputModel, UpdatePostInputModel } from './posts.types';
 import { PostsQuery } from './posts.query';
 import { parseQueryPagination, QueryParser } from '../application/query.parser';
 import { CommentsQuery } from '../comments/comments.query';
@@ -26,6 +25,8 @@ import { GetRefreshTokenPayload } from '../auth/decorators/get-decorators/get-re
 import { TokenPayloadType } from '../auth/auth.types';
 import { InputLikeStatusDto } from '../likes/dto/input.like-status.dto';
 import { UsersQuery } from '../users/users.query';
+import { InputCreatePostDto } from './dto/input.create-post.dto';
+import { InputUpdatePostDto } from './dto/input.update-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -39,7 +40,7 @@ export class PostsController {
   @UseGuards(BasicAuthGuard)
   @Post()
   @HttpCode(200)
-  async createPost(@Body() postCreateDto: CreatePostInputModel) {
+  async createPost(@Body() postCreateDto: InputCreatePostDto) {
     return await this.postsService.createPost(postCreateDto);
   }
   @UseGuards(BasicAuthGuard)
@@ -47,7 +48,7 @@ export class PostsController {
   @HttpCode(204)
   async updatePost(
     @Param('id') id: string,
-    @Body() postUpdateDto: UpdatePostInputModel,
+    @Body() postUpdateDto: InputUpdatePostDto,
   ) {
     return await this.postsService.updatePost(id, postUpdateDto);
   }

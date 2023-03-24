@@ -1,30 +1,4 @@
 import { Types } from 'mongoose';
-import { IsMongoId, IsOptional, Length } from 'class-validator';
-
-export class CreatePostInputModel {
-  @Length(1, 30, { message: 'Incorrect title length' })
-  title: string;
-  @Length(1, 100, { message: 'Incorrect short description length' })
-  shortDescription: string;
-  @Length(1, 1000, { message: 'Incorrect content length' })
-  content: string;
-  @IsMongoId({ message: 'Invalid id pattern' })
-  blogId: string;
-}
-
-export class UpdatePostInputModel {
-  @IsOptional()
-  @Length(1, 30, { message: 'Incorrect title length' })
-  title: string;
-  @IsOptional()
-  @Length(1, 100, { message: 'Incorrect short description length' })
-  shortDescription: string;
-  @IsOptional()
-  @Length(1, 1000, { message: 'Incorrect content length' })
-  content: string;
-  @IsMongoId({ message: 'Invalid id pattern' })
-  blogId: string;
-}
 
 export type PostViewModelType = {
   id: string;

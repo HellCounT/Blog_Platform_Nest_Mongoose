@@ -1,16 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  CreatePostInputModel,
-  PostDb,
-  PostViewModelType,
-  UpdatePostInputModel,
-} from './posts.types';
+import { PostDb, PostViewModelType } from './posts.types';
 import mongoose from 'mongoose';
 import { BlogsQuery } from '../blogs/blogs.query';
 import { PostsRepository } from './posts.repository';
 import { LikeStatus } from '../likes/likes.types';
 import { PostsQuery } from './posts.query';
 import { LikesForPostsService } from '../likes/likes-for-posts.service';
+import { InputCreatePostDto } from './dto/input.create-post.dto';
+import { InputUpdatePostDto } from './dto/input.update-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -21,7 +18,7 @@ export class PostsService {
     protected readonly postsQueryRepo: PostsQuery,
   ) {}
   async createPost(
-    postCreateDto: CreatePostInputModel,
+    postCreateDto: InputCreatePostDto,
   ): Promise<PostViewModelType | null> {
     const foundBlog = await this.blogsQueryRepo.findBlogById(
       postCreateDto.blogId,
@@ -44,7 +41,7 @@ export class PostsService {
   }
   async updatePost(
     inputId: string,
-    postUpdateDto: UpdatePostInputModel,
+    postUpdateDto: InputUpdatePostDto,
   ): Promise<boolean> {
     const updateResult = await this.postsRepo.updatePost(
       inputId,

@@ -5,7 +5,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { BlogsQuery } from '../blogs.query';
+import { BlogsQuery } from '../../blogs.query';
 
 @ValidatorConstraint({ async: true })
 @Injectable()

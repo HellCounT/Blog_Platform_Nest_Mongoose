@@ -13,8 +13,8 @@ import {
   parseUserQueryPagination,
   UserQueryParser,
 } from '../application/query.parser';
-import { CreateUserInputModelType } from './users.types';
 import { UsersQuery } from './users.query';
+import { InputCreateUserDto } from './dto/input.create-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -29,7 +29,7 @@ export class UsersController {
     return this.usersQueryRepo.viewAllUsers(queryParams);
   }
   @Post()
-  async createUser(@Body() userCreateDto: CreateUserInputModelType) {
+  async createUser(@Body() userCreateDto: InputCreateUserDto) {
     return await this.usersService.createUser(userCreateDto);
   }
   @Delete(':id')
