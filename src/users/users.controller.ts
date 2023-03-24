@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -15,6 +16,7 @@ import {
 } from '../application/query.parser';
 import { UsersQuery } from './users.query';
 import { InputCreateUserDto } from './dto/input.create-user.dto';
+import { BasicAuthGuard } from '../auth/guards/basic-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -28,10 +30,13 @@ export class UsersController {
     console.log(queryParams);
     return this.usersQueryRepo.viewAllUsers(queryParams);
   }
+  @UseGuards(BasicAuthGuard)
   @Post()
+  @HttpCode(200)
   async createUser(@Body() userCreateDto: InputCreateUserDto) {
     return await this.usersService.createUser(userCreateDto);
   }
+  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   @HttpCode(204)
   async deleteUser(@Param('id') id: string) {

@@ -645,7 +645,7 @@ window.onload = function() {
             }
           },
           "responses": {
-            "201": {
+            "200": {
               "description": ""
             }
           }
