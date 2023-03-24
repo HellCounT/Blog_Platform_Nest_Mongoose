@@ -23,9 +23,9 @@ export class CommentsService {
     protected likesForCommentsService: LikesForCommentsService,
   ) {}
   async createComment(
-    postId: string,
-    userId: string,
     content: string,
+    userId: string,
+    postId: string,
   ): Promise<CommentViewDto | null> {
     const foundUser = await this.usersQueryRepo.findUserById(userId);
     const foundPost = await this.postsQueryRepo.findPostById(postId, userId);

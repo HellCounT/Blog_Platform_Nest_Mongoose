@@ -210,7 +210,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateBlogInputModel"
+                  "$ref": "#/components/schemas/InputBlogCreateDto"
                 }
               }
             }
@@ -249,7 +249,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreatePostForBlogModel"
+                  "$ref": "#/components/schemas/InputCreatePostForBlogDto"
                 }
               }
             }
@@ -279,7 +279,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UpdateBlogInputModel"
+                  "$ref": "#/components/schemas/InputUpdateBlogDto"
                 }
               }
             }
@@ -751,15 +751,15 @@ window.onload = function() {
           "type": "object",
           "properties": {}
         },
-        "CreateBlogInputModel": {
+        "InputBlogCreateDto": {
           "type": "object",
           "properties": {}
         },
-        "CreatePostForBlogModel": {
+        "InputCreatePostForBlogDto": {
           "type": "object",
           "properties": {}
         },
-        "UpdateBlogInputModel": {
+        "InputUpdateBlogDto": {
           "type": "object",
           "properties": {}
         },

@@ -10,11 +10,6 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import {
-  CreateBlogInputModel,
-  CreatePostForBlogModel,
-  UpdateBlogInputModel,
-} from './blogs.types';
 import { BlogsService } from './blogs.service';
 import { parseQueryPagination, QueryParser } from '../application/query.parser';
 import { BlogsQuery } from './blogs.query';
@@ -25,6 +20,9 @@ import { BasicAuthGuard } from '../auth/guards/basic-auth.guard';
 import { GuestGuard } from '../auth/guards/guest.guard';
 import { GetRefreshTokenPayload } from '../auth/decorators/get-decorators/get-refresh-token-payload.decorator';
 import { TokenPayloadType } from '../auth/auth.types';
+import { InputBlogCreateDto } from './dto/input.create-blog.dto';
+import { InputUpdateBlogDto } from './dto/input.update-blog.dto';
+import { InputCreatePostForBlogDto } from './dto/input.create-post-for-blog.dto';
 
 @Controller('blogs')
 export class BlogsController {
@@ -37,14 +35,14 @@ export class BlogsController {
   @UseGuards(BasicAuthGuard)
   @Post()
   @HttpCode(201)
-  async createBlog(@Body() blogCreateDto: CreateBlogInputModel) {
+  async createBlog(@Body() blogCreateDto: InputBlogCreateDto) {
     return await this.blogsService.createBlog(blogCreateDto);
   }
   @UseGuards(BasicAuthGuard)
   @Post(':blogId/posts')
   @HttpCode(201)
   async createPostForBlogId(
-    @Body() postCreateForBlogDto: CreatePostForBlogModel,
+    @Body() postCreateForBlogDto: InputCreatePostForBlogDto,
     @Param('blogId') blogId: string,
   ) {
     const postCreateDto: InputCreatePostDto = {
@@ -57,7 +55,7 @@ export class BlogsController {
   @Put(':id')
   @HttpCode(204)
   async updateBlog(
-    @Body() blogDataDto: UpdateBlogInputModel,
+    @Body() blogDataDto: InputUpdateBlogDto,
     @Param('id') id: string,
   ) {
     return await this.blogsService.updateBlog(id, blogDataDto);
