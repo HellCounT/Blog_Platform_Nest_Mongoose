@@ -48,6 +48,7 @@ async function bootstrap() {
 
   const port = configService.get('PORT');
   const serverUrl = `http://localhost:${port}`;
+  console.log(port);
 
   // get the swagger json file (if app is running in development mode)
   if (configService.get('ENV') === 'development') {

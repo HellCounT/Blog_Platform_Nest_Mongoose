@@ -33,6 +33,174 @@ window.onload = function() {
           }
         }
       },
+      "/auth/login": {
+        "post": {
+          "operationId": "AuthController_login",
+          "parameters": [
+            {
+              "name": "user-agent",
+              "required": true,
+              "in": "header",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InputLoginUserDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/logout": {
+        "post": {
+          "operationId": "AuthController_logout",
+          "parameters": [],
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/refresh-token": {
+        "post": {
+          "operationId": "AuthController_updateRefreshToken",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/registration": {
+        "post": {
+          "operationId": "AuthController_registerUser",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InputRegistrationUserDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/registration-confirmation": {
+        "post": {
+          "operationId": "AuthController_confirmUserEmail",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InputConfirmationCodeDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/registration-email-resending": {
+        "post": {
+          "operationId": "AuthController_resendActivationCode",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InputEmailDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/password-recovery": {
+        "post": {
+          "operationId": "AuthController_passwordRecovery",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InputEmailPasswordRecoveryDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/new-password": {
+        "post": {
+          "operationId": "AuthController_setNewPassword",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InputNewPasswordDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/auth/me": {
+        "get": {
+          "operationId": "AuthController_me",
+          "parameters": [],
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
       "/blogs": {
         "post": {
           "operationId": "BlogsController_createBlog",
@@ -188,13 +356,13 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreatePostInputModel"
+                  "$ref": "#/components/schemas/InputCreatePostDto"
                 }
               }
             }
           },
           "responses": {
-            "201": {
+            "200": {
               "description": ""
             }
           }
@@ -227,7 +395,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UpdatePostInputModel"
+                  "$ref": "#/components/schemas/InputUpdatePostDto"
                 }
               }
             }
@@ -293,6 +461,64 @@ window.onload = function() {
               "description": ""
             }
           }
+        },
+        "post": {
+          "operationId": "PostsController_createComment",
+          "parameters": [
+            {
+              "name": "postId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InputCommentDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/posts/{postId}/like-status": {
+        "put": {
+          "operationId": "PostsController_updateLikeStatus",
+          "parameters": [
+            {
+              "name": "postId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InputLikeStatusDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
         }
       },
       "/comments/{id}": {
@@ -308,6 +534,86 @@ window.onload = function() {
               }
             }
           ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/comments/{commentId} ": {
+        "put": {
+          "operationId": "CommentsController_updateComment",
+          "parameters": [
+            {
+              "name": "commentId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InputCommentDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/comments/{commentId}": {
+        "delete": {
+          "operationId": "CommentsController_deleteComment",
+          "parameters": [
+            {
+              "name": "commentId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/comments/commentId/like-status": {
+        "put": {
+          "operationId": "CommentsController_updateLikeStatus",
+          "parameters": [
+            {
+              "name": "commentId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InputLikeStatusDto"
+                }
+              }
+            }
+          },
           "responses": {
             "200": {
               "description": ""
@@ -333,7 +639,7 @@ window.onload = function() {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateUserInputModelType"
+                  "$ref": "#/components/schemas/InputCreateUserDto"
                 }
               }
             }
@@ -364,6 +670,46 @@ window.onload = function() {
             }
           }
         }
+      },
+      "/security/devices": {
+        "get": {
+          "operationId": "DevicesController_getAllSessions",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          }
+        },
+        "delete": {
+          "operationId": "DevicesController_deleteAllOtherSessions",
+          "parameters": [],
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/security/devices/{deviceId}": {
+        "delete": {
+          "operationId": "DevicesController_deleteSession",
+          "parameters": [
+            {
+              "name": "deviceId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
       }
     },
     "info": {
@@ -381,6 +727,30 @@ window.onload = function() {
     "servers": [],
     "components": {
       "schemas": {
+        "InputLoginUserDto": {
+          "type": "object",
+          "properties": {}
+        },
+        "InputRegistrationUserDto": {
+          "type": "object",
+          "properties": {}
+        },
+        "InputConfirmationCodeDto": {
+          "type": "object",
+          "properties": {}
+        },
+        "InputEmailDto": {
+          "type": "object",
+          "properties": {}
+        },
+        "InputEmailPasswordRecoveryDto": {
+          "type": "object",
+          "properties": {}
+        },
+        "InputNewPasswordDto": {
+          "type": "object",
+          "properties": {}
+        },
         "CreateBlogInputModel": {
           "type": "object",
           "properties": {}
@@ -393,15 +763,23 @@ window.onload = function() {
           "type": "object",
           "properties": {}
         },
-        "CreatePostInputModel": {
+        "InputCreatePostDto": {
           "type": "object",
           "properties": {}
         },
-        "UpdatePostInputModel": {
+        "InputUpdatePostDto": {
           "type": "object",
           "properties": {}
         },
-        "CreateUserInputModelType": {
+        "InputCommentDto": {
+          "type": "object",
+          "properties": {}
+        },
+        "InputLikeStatusDto": {
+          "type": "object",
+          "properties": {}
+        },
+        "InputCreateUserDto": {
           "type": "object",
           "properties": {}
         }

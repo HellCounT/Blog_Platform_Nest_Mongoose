@@ -14,7 +14,7 @@ export type ConfigurationType = {
 
 export default (): ConfigurationType => ({
   MONGO_URL: process.env.MONGO_URL || 'mongodb://127.0.0.1:27017',
-  PORT: parseInt(process.env.PORT, 10) || 5000,
+  PORT: parseInt(process.env.PORT, 10) || 3000,
   BASIC_AUTH_LOGIN: process.env.BASIC_AUTH_LOGIN,
   BASIC_AUTH_PASSWORD: process.env.BASIC_AUTH_PASSWORD,
   JWT_SECRET: process.env.JWT_SECRET,
