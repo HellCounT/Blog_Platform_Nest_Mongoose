@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   registerDecorator,
   ValidationOptions,
@@ -18,21 +18,17 @@ export class EmailConfirmationCodeIsCorrectConstraint
     const foundUser = await this.usersRepo.findByConfirmationCode(
       emailConfirmationCode,
     );
-    if (!foundUser) {
-      throw new BadRequestException();
-    }
     if (
-      foundUser.emailConfirmationData.confirmationCode !== emailConfirmationCode
-    ) {
-      throw new BadRequestException();
-    }
-    if (foundUser.emailConfirmationData.isConfirmed) {
-      throw new BadRequestException();
-    }
-    if (new Date(foundUser.emailConfirmationData.expirationDate) < new Date()) {
-      throw new BadRequestException();
-    }
-    return true;
+      !foundUser ||
+      foundUser.emailConfirmationData.confirmationCode !==
+        emailConfirmationCode ||
+      foundUser.emailConfirmationData.isConfirmed ||
+      new Date(foundUser.emailConfirmationData.expirationDate) < new Date()
+    )
+      return false;
+  }
+  defaultMessage() {
+    return `email is already confirmed or not exists`;
   }
 }
 
