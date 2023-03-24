@@ -16,7 +16,7 @@ export class EmailIsNotConfirmedConstraint
 
   async validate(email: string) {
     const user = await this.usersRepo.findByLoginOrEmail(email);
-    if (!user || user.emailConfirmationData.isConfirmed) return false;
+    return !(!user || user.emailConfirmationData.isConfirmed);
   }
   defaultMessage() {
     return `email is already confirmed or not exists`;
