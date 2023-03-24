@@ -33,13 +33,16 @@ import {
 import { AuthModule } from './auth/auth.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { DevicesController } from './security/devices/devices.controller';
-import { LikeForPost, LikesForPostsSchema } from './likes/likes-post.schema';
+import {
+  LikeForPost,
+  LikesForPostsSchema,
+} from './likes/likes-for-post.schema';
 import {
   LikeForComment,
   LikesForCommentsSchema,
-} from './likes/likes-comments.schema';
-import { LikesForCommentsRepository } from './likes/likes-comments.repository';
-import { LikesForPostsRepository } from './likes/likes-posts.repository';
+} from './likes/likes-for-comments.schema';
+import { LikesForCommentsRepository } from './likes/likes-for-comments.repository';
+import { LikesForPostsRepository } from './likes/likes-for-posts.repository';
 
 const mongoUri = settings.MONGO_URI;
 

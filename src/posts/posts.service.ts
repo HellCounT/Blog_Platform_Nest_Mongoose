@@ -10,6 +10,7 @@ import { BlogsQuery } from '../blogs/blogs.query';
 import { PostsRepository } from './posts.repository';
 import { LikeStatus } from '../likes/likes.types';
 import { PostsQuery } from './posts.query';
+import { LikesForPostsService } from '../likes/likes-for-posts.service';
 
 @Injectable()
 export class PostsService {
@@ -57,6 +58,7 @@ export class PostsService {
     else return true;
   }
   async deletePost(id: string): Promise<boolean | null> {
+    await this.likesForPostsService.deleteAllLikesWhenPostIsDeleted(id);
     const deleteResult = await this.postsRepo.deletePost(id);
     if (deleteResult === false) {
       throw new NotFoundException();
@@ -64,19 +66,19 @@ export class PostsService {
   }
   async updateLikeStatus(
     postId: string,
-    activeUserId: mongoose.Types.ObjectId,
+    activeUserId: string,
     activeUserLogin: string,
     inputLikeStatus: LikeStatus,
   ): Promise<boolean> {
     const foundPost = await this.postsQueryRepo.findPostById(
       postId,
-      activeUserId.toString(),
+      activeUserId,
     );
     if (!foundPost) {
       throw new NotFoundException();
     } else {
       const foundUserLike = await this.postsQueryRepo.getUserLikeForPost(
-        activeUserId.toString(),
+        activeUserId,
         postId,
       );
       let currentLikesCount = foundPost.extendedLikesInfo.likesCount;
@@ -118,7 +120,7 @@ export class PostsService {
       if (!foundUserLike) {
         await this.likesForPostsService.createNewLike(
           postId,
-          activeUserId.toString(),
+          activeUserId,
           activeUserLogin,
           inputLikeStatus,
         );
@@ -131,7 +133,7 @@ export class PostsService {
       } else {
         await this.likesForPostsService.updateLikeStatus(
           postId,
-          activeUserId.toString(),
+          activeUserId,
           inputLikeStatus,
         );
         await this.postsRepo.updateLikesCounters(

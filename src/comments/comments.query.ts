@@ -5,23 +5,28 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from './comments.schema';
 import { CommentViewDto } from './dto/output.comment-view.dto';
 import { CommentPaginatorDto } from './dto/output.comment-paginator.dto';
+import { CommentLikeDb, LikeStatus } from '../likes/likes.types';
 
 @Injectable()
 export class CommentsQuery {
   constructor(
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
   ) {}
-  async findCommentById(id: string): Promise<CommentViewDto | null> {
+  async findCommentById(
+    id: string,
+    activeUserId: string,
+  ): Promise<CommentViewDto | null> {
     const foundCommentInstance = await this.commentModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
     });
     if (foundCommentInstance)
-      return this._mapCommentToViewType(foundCommentInstance);
+      return this._mapCommentToViewType(foundCommentInstance, activeUserId);
     else return null;
   }
   async findCommentsByPostId(
     postId: string,
     q: QueryParser,
+    activeUserId = '',
   ): Promise<CommentPaginatorDto | null> {
     const foundCommentsCount = await this.commentModel.countDocuments({
       postId: { $eq: postId },
@@ -38,7 +43,7 @@ export class CommentsQuery {
     else {
       const items = [];
       for await (const c of reqPageDbComments) {
-        const comment = await this._mapCommentToViewType(c);
+        const comment = await this._mapCommentToViewType(c, activeUserId);
         items.push(comment);
       }
       return {
@@ -50,21 +55,35 @@ export class CommentsQuery {
       };
     }
   }
+  async getUserLikeForComment(
+    userId: string,
+    commentId: string,
+  ): Promise<CommentLikeDb | null> {
+    return this.commentModel.findOne({
+      commentId: commentId,
+      userId: userId,
+    });
+  }
   async _mapCommentToViewType(
     comment: CommentDocument,
+    activeUserId: string,
   ): Promise<CommentViewDto> {
+    const like = await this.getUserLikeForComment(
+      activeUserId,
+      comment._id.toString(),
+    );
     return {
       id: comment._id.toString(),
       content: comment.content,
       commentatorInfo: {
-        userId: 'userId', //comment.commentatorInfo.userId,
-        userLogin: 'userId', //comment.commentatorInfo.userLogin,
+        userId: comment.commentatorInfo.userId,
+        userLogin: comment.commentatorInfo.userLogin,
       },
       createdAt: comment.createdAt,
       likesInfo: {
         likesCount: comment.likesInfo.likesCount,
         dislikesCount: comment.likesInfo.dislikesCount,
-        myStatus: 'None',
+        myStatus: like?.likeStatus || LikeStatus.none,
       },
     };
   }

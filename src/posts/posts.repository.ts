@@ -61,4 +61,19 @@ export class PostsRepository {
     });
     return deleteResult.deletedCount === 1;
   }
+  async updateLikesCounters(
+    newLikesCount: number,
+    newDislikesCount: number,
+    postId: string,
+  ) {
+    const postInstance = await this.postModel.findOne({
+      _id: new mongoose.Types.ObjectId(postId),
+    });
+    if (postInstance) {
+      postInstance.likesInfo.likesCount = newLikesCount;
+      postInstance.likesInfo.dislikesCount = newDislikesCount;
+      await postInstance.save();
+      return;
+    } else return;
+  }
 }

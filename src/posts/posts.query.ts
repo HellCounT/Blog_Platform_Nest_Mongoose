@@ -6,7 +6,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Post, PostDocument } from './posts.schema';
 import { Blog, BlogDocument } from '../blogs/blogs.schema';
 import { LikeStatus } from '../likes/likes.types';
-import { LikeForPostDocument, LikeForPost } from '../likes/likes-post.schema';
+import {
+  LikeForPostDocument,
+  LikeForPost,
+} from '../likes/likes-for-post.schema';
 
 @Injectable()
 export class PostsQuery {

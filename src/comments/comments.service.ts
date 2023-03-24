@@ -11,6 +11,7 @@ import { CommentsRepository } from './comments.repository';
 import { CommentViewDto } from './dto/output.comment-view.dto';
 import { LikeStatus } from '../likes/likes.types';
 import { CommentsQuery } from './comments.query';
+import { LikesForCommentsService } from '../likes/likes-for-comments.service';
 
 @Injectable()
 export class CommentsService {
@@ -47,7 +48,7 @@ export class CommentsService {
   }
   async updateComment(
     commentId: string,
-    userId: mongoose.Types.ObjectId,
+    userId: string,
     content: string,
   ): Promise<boolean> {
     const foundComment = await this.commentsQueryRepo.findCommentById(
@@ -55,7 +56,7 @@ export class CommentsService {
       userId.toString(),
     );
     if (!foundComment) throw new NotFoundException();
-    if (foundComment.commentatorInfo.userId === userId.toString()) {
+    if (foundComment.commentatorInfo.userId === userId) {
       await this.commentsRepo.updateComment(commentId, content);
       return true;
     } else
@@ -63,16 +64,13 @@ export class CommentsService {
         "User is not allowed to edit other user's comment",
       ]);
   }
-  async deleteComment(
-    commentId: string,
-    userId: mongoose.Types.ObjectId,
-  ): Promise<boolean> {
+  async deleteComment(commentId: string, userId: string): Promise<boolean> {
     const foundComment = await this.commentsQueryRepo.findCommentById(
       commentId,
       userId.toString(),
     );
     if (!foundComment) throw new NotFoundException();
-    if (foundComment.commentatorInfo.userId === userId.toString()) {
+    if (foundComment.commentatorInfo.userId === userId) {
       await this.commentsRepo.deleteComment(commentId);
       await this.likesForCommentsService.deleteAllLikesWhenCommentIsDeleted(
         commentId,
@@ -85,18 +83,18 @@ export class CommentsService {
   }
   async updateLikeStatus(
     commentId: string,
-    activeUserId: mongoose.Types.ObjectId,
+    activeUserId: string,
     inputLikeStatus: LikeStatus,
   ): Promise<boolean> {
     const foundComment = await this.commentsQueryRepo.findCommentById(
       commentId,
-      activeUserId.toString(),
+      activeUserId,
     );
     if (!foundComment) {
       throw new NotFoundException();
     } else {
       const foundUserLike = await this.commentsQueryRepo.getUserLikeForComment(
-        activeUserId.toString(),
+        activeUserId,
         commentId,
       );
       let currentLikesCount = foundComment.likesInfo.likesCount;
@@ -138,7 +136,7 @@ export class CommentsService {
       if (!foundUserLike) {
         await this.likesForCommentsService.createNewLike(
           commentId,
-          activeUserId.toString(),
+          activeUserId,
           inputLikeStatus,
         );
         await this.commentsRepo.updateLikesCounters(
@@ -150,7 +148,7 @@ export class CommentsService {
       } else {
         await this.likesForCommentsService.updateLikeStatus(
           commentId,
-          activeUserId.toString(),
+          activeUserId,
           inputLikeStatus,
         );
         await this.commentsRepo.updateLikesCounters(

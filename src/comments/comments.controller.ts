@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Put,
   UseGuards,
@@ -13,6 +14,9 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/get-decorators/current-user-id.param.decorator';
 import { CommentsService } from './comments.service';
 import { InputLikeStatusDto } from '../likes/dto/input.like-status.dto';
+import { RefreshJwtGuard } from '../auth/guards/refresh-jwt.guard';
+import { GetRefreshTokenPayload } from '../auth/decorators/get-decorators/get-refresh-token-payload.decorator';
+import { TokenPayloadType } from '../auth/auth.types';
 
 @Controller('comments')
 export class CommentsController {
@@ -20,9 +24,17 @@ export class CommentsController {
     protected readonly commentsQueryRepo: CommentsQuery,
     protected commentsService: CommentsService,
   ) {}
+  @UseGuards(RefreshJwtGuard)
   @Get(':id')
-  async getCommentById(@Param('id') id: string) {
-    return await this.commentsQueryRepo.findCommentById(id);
+  @HttpCode(200)
+  async getCommentById(
+    @Param('id') id: string,
+    @GetRefreshTokenPayload() payload: TokenPayloadType,
+  ) {
+    return await this.commentsQueryRepo.findCommentById(
+      id,
+      payload.userId.toString(),
+    );
   }
   @UseGuards(JwtAuthGuard)
   @Put(':commentId ')

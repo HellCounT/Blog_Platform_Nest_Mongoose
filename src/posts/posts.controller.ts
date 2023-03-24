@@ -24,6 +24,8 @@ import { CommentPaginatorDto } from '../comments/dto/output.comment-paginator.dt
 import { RefreshJwtGuard } from '../auth/guards/refresh-jwt.guard';
 import { GetRefreshTokenPayload } from '../auth/decorators/get-decorators/get-refresh-token-payload.decorator';
 import { TokenPayloadType } from '../auth/auth.types';
+import { InputLikeStatusDto } from '../likes/dto/input.like-status.dto';
+import { UsersQuery } from '../users/users.query';
 
 @Controller('posts')
 export class PostsController {
@@ -32,6 +34,7 @@ export class PostsController {
     protected readonly postsQueryRepo: PostsQuery,
     protected commentsService: CommentsService,
     protected readonly commentsQueryRepo: CommentsQuery,
+    protected readonly usersQueryRepo: UsersQuery,
   ) {}
   @UseGuards(BasicAuthGuard)
   @Post()
@@ -100,6 +103,22 @@ export class PostsController {
       createCommentDto.content,
       userId,
       postId,
+    );
+  }
+  @UseGuards(JwtAuthGuard)
+  @Put(':postId/like-status')
+  @HttpCode(204)
+  async updateLikeStatus(
+    @Body() likeStatusDto: InputLikeStatusDto,
+    @CurrentUser() userId: string,
+    @Param('postId') postId: string,
+  ) {
+    const foundUser = await this.usersQueryRepo.findUserById(userId);
+    return await this.postsService.updateLikeStatus(
+      postId,
+      userId,
+      foundUser.accountData.login,
+      likeStatusDto.likeStatus,
     );
   }
 }
