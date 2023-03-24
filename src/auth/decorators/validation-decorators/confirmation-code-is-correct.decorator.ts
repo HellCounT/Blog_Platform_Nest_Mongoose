@@ -14,18 +14,17 @@ export class EmailConfirmationCodeIsCorrectConstraint
 {
   constructor(private readonly usersRepo: UsersRepository) {}
 
-  async validate(emailConfirmationCode: string) {
+  async validate(emailConfirmationCode: string): Promise<boolean> {
     const foundUser = await this.usersRepo.findByConfirmationCode(
       emailConfirmationCode,
     );
-    if (
+    return !(
       !foundUser ||
       foundUser.emailConfirmationData.confirmationCode !==
         emailConfirmationCode ||
       foundUser.emailConfirmationData.isConfirmed ||
       new Date(foundUser.emailConfirmationData.expirationDate) < new Date()
-    )
-      return false;
+    );
   }
   defaultMessage() {
     return `email is already confirmed or not exists`;
