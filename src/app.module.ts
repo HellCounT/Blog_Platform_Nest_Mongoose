@@ -57,6 +57,7 @@ import { IsUniqueEmailConstraint } from './auth/decorators/validation-decorators
 import { IsNewLoginConstraint } from './auth/decorators/validation-decorators/is-new-login.decorator';
 import { EmailIsNotConfirmedConstraint } from './auth/decorators/validation-decorators/email-is-not-confirmed.decorator';
 import { EmailConfirmationCodeIsCorrectConstraint } from './auth/decorators/validation-decorators/confirmation-code-is-correct.decorator';
+import { EmailService } from './email/email.service';
 
 @Module({
   imports: [
@@ -112,6 +113,7 @@ import { EmailConfirmationCodeIsCorrectConstraint } from './auth/decorators/vali
     LikesForPostsRepository,
     JwtAdapter,
     EmailManager,
+    EmailService,
     JwtService,
     DevicesService,
     CommentsRepository,
