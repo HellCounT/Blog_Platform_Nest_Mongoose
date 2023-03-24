@@ -20,13 +20,13 @@ import { CurrentUser } from '../auth/decorators/get-decorators/current-user-id.p
 import { InputCommentDto } from '../comments/dto/input-comment.dto';
 import { CommentsService } from '../comments/comments.service';
 import { CommentPaginatorDto } from '../comments/dto/output.comment-paginator.dto';
-import { RefreshJwtGuard } from '../auth/guards/refresh-jwt.guard';
 import { GetRefreshTokenPayload } from '../auth/decorators/get-decorators/get-refresh-token-payload.decorator';
 import { TokenPayloadType } from '../auth/auth.types';
 import { InputLikeStatusDto } from '../likes/dto/input.like-status.dto';
 import { UsersQuery } from '../users/users.query';
 import { InputCreatePostDto } from './dto/input.create-post.dto';
 import { InputUpdatePostDto } from './dto/input.update-post.dto';
+import { GuestGuard } from '../auth/guards/guest.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -58,7 +58,7 @@ export class PostsController {
   async deletePost(@Param('id') id: string) {
     return await this.postsService.deletePost(id);
   }
-  @UseGuards(RefreshJwtGuard)
+  @UseGuards(GuestGuard)
   @Get()
   async getAllPosts(
     @Query() query: QueryParser,
@@ -70,7 +70,7 @@ export class PostsController {
       payload.userId.toString(),
     );
   }
-  @UseGuards(RefreshJwtGuard)
+  @UseGuards(GuestGuard)
   @Get(':id')
   async getPostById(
     @Param('id') id: string,
