@@ -1,5 +1,7 @@
 import { EmailService } from './email.service';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class EmailManager {
   constructor(private readonly emailService: EmailService) {}
   async sendEmailRegistrationCode(email: string, code: string): Promise<void> {

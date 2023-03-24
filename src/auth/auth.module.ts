@@ -12,6 +12,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../users/users.schema';
 import { ConfigService } from '@nestjs/config';
 import { BasicStrategy } from './strategies/basic.strategy';
+import { EmailService } from '../email/email.service';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { BasicStrategy } from './strategies/basic.strategy';
     JwtAdapter,
     UsersRepository,
     EmailManager,
+    EmailService,
     ConfigService,
   ],
   exports: [AuthService],
