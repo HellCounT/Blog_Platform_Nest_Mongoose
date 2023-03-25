@@ -39,6 +39,7 @@ export class CommentsController {
   }
   @UseGuards(JwtAuthGuard)
   @Put(':commentId ')
+  @HttpCode(204)
   async updateComment(
     @Param('commentId') commentId: string,
     @Body() updateCommentDto: InputCommentDto,
@@ -52,6 +53,7 @@ export class CommentsController {
   }
   @UseGuards(JwtAuthGuard)
   @Delete(':commentId')
+  @HttpCode(204)
   async deleteComment(
     @Param('commentId') commentId: string,
     @CurrentUser() userId: string,
@@ -59,7 +61,8 @@ export class CommentsController {
     return await this.commentsService.deleteComment(commentId, userId);
   }
   @UseGuards(JwtAuthGuard)
-  @Put('commentId/like-status')
+  @Put(':commentId/like-status')
+  @HttpCode(204)
   async updateLikeStatus(
     @Param('commentId') commentId: string,
     @Req() req,
