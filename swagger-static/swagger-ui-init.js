@@ -541,7 +541,7 @@ window.onload = function() {
           }
         }
       },
-      "/comments/{commentId} ": {
+      "/comments/{commentId}": {
         "put": {
           "operationId": "CommentsController_updateComment",
           "parameters": [
@@ -569,9 +569,7 @@ window.onload = function() {
               "description": ""
             }
           }
-        }
-      },
-      "/comments/{commentId}": {
+        },
         "delete": {
           "operationId": "CommentsController_deleteComment",
           "parameters": [

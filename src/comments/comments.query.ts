@@ -45,7 +45,7 @@ export class CommentsQuery {
       .skip((q.pageNumber - 1) * q.pageSize)
       .limit(q.pageSize)
       .lean();
-    if (!reqPageDbComments) return null;
+    if (!reqPageDbComments) throw new NotFoundException();
     else {
       const items = [];
       for await (const c of reqPageDbComments) {

@@ -30,7 +30,7 @@ export class CommentsController {
     return await this.commentsQueryRepo.findCommentById(id, req.user.userId);
   }
   @UseGuards(JwtAuthGuard)
-  @Put(':commentId ')
+  @Put(':commentId')
   @HttpCode(204)
   async updateComment(
     @Param('commentId') commentId: string,
