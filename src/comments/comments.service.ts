@@ -29,7 +29,7 @@ export class CommentsService {
   ): Promise<CommentViewDto | null> {
     const foundUser = await this.usersQueryRepo.findUserById(userId);
     const foundPost = await this.postsQueryRepo.findPostById(postId, userId);
-    if (!foundUser || !foundPost) return null;
+    if (!foundUser || !foundPost) throw new NotFoundException();
     const newComment = new CommentDb(
       new mongoose.Types.ObjectId(),
       content,

@@ -1,6 +1,5 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { UsersQuery } from '../../users/users.query';
 import { TokenPayloadType } from '../auth.types';
 
 export class JwtStrategy extends PassportStrategy(Strategy) {
