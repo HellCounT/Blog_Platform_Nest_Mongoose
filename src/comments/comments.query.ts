@@ -45,21 +45,18 @@ export class CommentsQuery {
       .skip((q.pageNumber - 1) * q.pageSize)
       .limit(q.pageSize)
       .lean();
-    if (!reqPageDbComments) throw new NotFoundException();
-    else {
-      const items = [];
-      for await (const c of reqPageDbComments) {
-        const comment = await this._mapCommentToViewType(c, activeUserId);
-        items.push(comment);
-      }
-      return {
-        pagesCount: Math.ceil(foundCommentsCount / q.pageSize),
-        page: q.pageNumber,
-        pageSize: q.pageSize,
-        totalCount: foundCommentsCount,
-        items: items,
-      };
+    const items = [];
+    for await (const c of reqPageDbComments) {
+      const comment = await this._mapCommentToViewType(c, activeUserId);
+      items.push(comment);
     }
+    return {
+      pagesCount: Math.ceil(foundCommentsCount / q.pageSize),
+      page: q.pageNumber,
+      pageSize: q.pageSize,
+      totalCount: foundCommentsCount,
+      items: items,
+    };
   }
   async getUserLikeForComment(
     userId: string,
