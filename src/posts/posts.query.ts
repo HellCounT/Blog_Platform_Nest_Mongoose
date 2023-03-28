@@ -17,7 +17,7 @@ export class PostsQuery {
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
     @InjectModel(Blog.name) private blogModel: Model<BlogDocument>,
     @InjectModel(LikeForPost.name)
-    private likePostModel: Model<LikeForPostDocument>,
+    private likeForPostModel: Model<LikeForPostDocument>,
   ) {}
   async viewAllPosts(
     q: QueryParser,
@@ -93,7 +93,7 @@ export class PostsQuery {
     } else throw new NotFoundException();
   }
   async getUserLikeForPost(userId: string, postId: string) {
-    return this.likePostModel.findOne({
+    return this.likeForPostModel.findOne({
       postId: postId,
       userId: userId,
     });
@@ -101,7 +101,7 @@ export class PostsQuery {
   private async _getNewestLikes(
     postId: string,
   ): Promise<Array<LikeForPostDocument>> {
-    return this.likePostModel
+    return this.likeForPostModel
       .find({
         postId: postId,
         likeStatus: LikeStatus.like,

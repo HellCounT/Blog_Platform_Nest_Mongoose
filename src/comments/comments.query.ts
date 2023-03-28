@@ -6,11 +6,17 @@ import { Comment, CommentDocument } from './comments.schema';
 import { CommentViewDto } from './dto/output.comment-view.dto';
 import { CommentPaginatorDto } from './dto/output.comment-paginator.dto';
 import { CommentLikeDb, LikeStatus } from '../likes/likes.types';
+import {
+  LikeForComment,
+  LikeForCommentDocument,
+} from '../likes/likes-for-comments.schema';
 
 @Injectable()
 export class CommentsQuery {
   constructor(
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
+    @InjectModel(LikeForComment.name)
+    private likeForCommentModel: Model<LikeForCommentDocument>,
   ) {}
   async findCommentById(
     id: string,
@@ -59,7 +65,7 @@ export class CommentsQuery {
     userId: string,
     commentId: string,
   ): Promise<CommentLikeDb | null> {
-    return this.commentModel.findOne({
+    return this.likeForCommentModel.findOne({
       commentId: commentId,
       userId: userId,
     });
