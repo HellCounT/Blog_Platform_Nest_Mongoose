@@ -1,6 +1,6 @@
 import mongoose, { Model } from 'mongoose';
 import { QueryParser } from '../application/query.parser';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from './comments.schema';
 import { CommentViewDto } from './dto/output.comment-view.dto';
@@ -27,7 +27,7 @@ export class CommentsQuery {
     });
     if (foundCommentInstance)
       return this._mapCommentToViewType(foundCommentInstance, activeUserId);
-    else return null;
+    else throw new NotFoundException();
   }
   async findCommentsByPostId(
     postId: string,

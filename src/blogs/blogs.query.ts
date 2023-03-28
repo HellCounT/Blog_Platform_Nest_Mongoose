@@ -1,7 +1,7 @@
 import { QueryParser } from '../application/query.parser';
 import { BlogDb, BlogPaginatorType, BlogViewModelType } from './blogs.types';
 import mongoose, { Model } from 'mongoose';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument } from './blogs.schema';
 
@@ -38,7 +38,7 @@ export class BlogsQuery {
       })
       .lean();
     if (foundBlogInstance) return this._mapBlogToViewType(foundBlogInstance);
-    else throw new NotFoundException();
+    else return null;
   }
   _mapBlogToViewType(blog: BlogDb): BlogViewModelType {
     return {
