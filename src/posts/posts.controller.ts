@@ -20,8 +20,6 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { InputCommentDto } from '../comments/dto/input-comment.dto';
 import { CommentsService } from '../comments/comments.service';
 import { CommentPaginatorDto } from '../comments/dto/output.comment-paginator.dto';
-import { GetRefreshTokenPayload } from '../auth/decorators/get-decorators/get-refresh-token-payload.decorator';
-import { TokenPayloadType } from '../auth/auth.types';
 import { InputLikeStatusDto } from '../likes/dto/input.like-status.dto';
 import { UsersQuery } from '../users/users.query';
 import { InputCreatePostDto } from './dto/input.create-post.dto';
@@ -60,36 +58,27 @@ export class PostsController {
   }
   @UseGuards(GuestGuard)
   @Get()
-  async getAllPosts(
-    @Query() query: QueryParser,
-    @GetRefreshTokenPayload() payload: TokenPayloadType,
-  ) {
+  async getAllPosts(@Query() query: QueryParser, @Req() req) {
     const queryParams = parseQueryPagination(query);
-    return await this.postsQueryRepo.viewAllPosts(
-      queryParams,
-      payload.userId.toString(),
-    );
+    return await this.postsQueryRepo.viewAllPosts(queryParams, req.user.userId);
   }
   @UseGuards(GuestGuard)
   @Get(':id')
-  async getPostById(
-    @Param('id') id: string,
-    @GetRefreshTokenPayload() payload: TokenPayloadType,
-  ) {
-    return await this.postsQueryRepo.findPostById(
-      id,
-      payload.userId.toString(),
-    );
+  async getPostById(@Param('id') id: string, @Req() req) {
+    return await this.postsQueryRepo.findPostById(id, req.user.userId);
   }
+  @UseGuards(GuestGuard)
   @Get(':postId/comments')
   async getCommentsByPostId(
     @Param('postId') postId: string,
     @Query() query: QueryParser,
+    @Req() req,
   ): Promise<CommentPaginatorDto> {
     const queryParams = parseQueryPagination(query);
     return await this.commentsQueryRepo.findCommentsByPostId(
       postId,
       queryParams,
+      req.user.userId,
     );
   }
   @UseGuards(JwtAuthGuard)
@@ -114,7 +103,6 @@ export class PostsController {
     @Body() likeStatusDto: InputLikeStatusDto,
     @Param('postId') postId: string,
   ) {
-    console.log(req.user.userId);
     const foundUser = await this.usersQueryRepo.findUserById(req.user.userId);
     return await this.postsService.updateLikeStatus(
       postId,

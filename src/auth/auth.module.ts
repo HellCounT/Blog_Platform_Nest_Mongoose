@@ -13,12 +13,17 @@ import { User, UserSchema } from '../users/users.schema';
 import { ConfigService } from '@nestjs/config';
 import { BasicStrategy } from './strategies/basic.strategy';
 import { EmailService } from '../email/email.service';
+import { UsersQuery } from '../users/users.query';
+import { Device, DeviceSchema } from '../security/devices/devices.schema';
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({}),
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: Device.name, schema: DeviceSchema },
+    ]),
   ],
   providers: [
     AuthService,
@@ -28,6 +33,7 @@ import { EmailService } from '../email/email.service';
     UsersService,
     JwtAdapter,
     UsersRepository,
+    UsersQuery,
     EmailManager,
     EmailService,
     ConfigService,

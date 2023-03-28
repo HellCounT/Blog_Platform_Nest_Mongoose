@@ -15,9 +15,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/get-decorators/current-user-id.param.decorator';
 import { CommentsService } from './comments.service';
 import { InputLikeStatusDto } from '../likes/dto/input.like-status.dto';
-import { RefreshJwtGuard } from '../auth/guards/refresh-jwt.guard';
-import { GetRefreshTokenPayload } from '../auth/decorators/get-decorators/get-refresh-token-payload.decorator';
-import { TokenPayloadType } from '../auth/auth.types';
+import { GuestGuard } from '../auth/guards/guest.guard';
 
 @Controller('comments')
 export class CommentsController {
@@ -25,17 +23,11 @@ export class CommentsController {
     protected readonly commentsQueryRepo: CommentsQuery,
     protected commentsService: CommentsService,
   ) {}
-  @UseGuards(RefreshJwtGuard)
+  @UseGuards(GuestGuard)
   @Get(':id')
   @HttpCode(200)
-  async getCommentById(
-    @Param('id') id: string,
-    @GetRefreshTokenPayload() payload: TokenPayloadType,
-  ) {
-    return await this.commentsQueryRepo.findCommentById(
-      id,
-      payload.userId.toString(),
-    );
+  async getCommentById(@Param('id') id: string, @Req() req) {
+    return await this.commentsQueryRepo.findCommentById(id, req.user.userId);
   }
   @UseGuards(JwtAuthGuard)
   @Put(':commentId ')
