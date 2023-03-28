@@ -53,7 +53,7 @@ export class CommentsService {
   ): Promise<boolean> {
     const foundComment = await this.commentsQueryRepo.findCommentById(
       commentId,
-      userId.toString(),
+      userId,
     );
     if (!foundComment) throw new NotFoundException();
     if (foundComment.commentatorInfo.userId === userId) {
@@ -67,7 +67,7 @@ export class CommentsService {
   async deleteComment(commentId: string, userId: string): Promise<boolean> {
     const foundComment = await this.commentsQueryRepo.findCommentById(
       commentId,
-      userId.toString(),
+      userId,
     );
     if (!foundComment) throw new NotFoundException();
     if (foundComment.commentatorInfo.userId === userId) {
