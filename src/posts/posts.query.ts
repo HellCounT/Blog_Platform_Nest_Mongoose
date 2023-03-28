@@ -47,7 +47,6 @@ export class PostsQuery {
     id: string,
     activeUserId: string,
   ): Promise<PostViewModelType | null> {
-    console.log(id);
     const foundPostInstance = await this.postModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
     });
