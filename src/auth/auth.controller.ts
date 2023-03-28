@@ -15,7 +15,6 @@ import { UsersService } from '../users/users.service';
 import { Request, Response } from 'express';
 import { DevicesService } from '../security/devices/devices.service';
 import { AuthService } from './auth.service';
-import { CurrentUser } from './decorators/get-decorators/current-user-id.param.decorator';
 import { UsersQuery } from '../users/users.query';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RefreshJwtGuard } from './guards/refresh-jwt.guard';
@@ -44,7 +43,7 @@ export class AuthController {
     protected authService: AuthService,
     protected usersQueryRepo: UsersQuery,
   ) {}
-  //@UseGuards(ThrottlerGuard)
+  @UseGuards(ThrottlerGuard)
   @Post('login')
   @HttpCode(200)
   async login(
@@ -117,13 +116,13 @@ export class AuthController {
     );
     return { accessToken: tokenPair.accessToken };
   }
-  //@UseGuards(ThrottlerGuard)
+  @UseGuards(ThrottlerGuard)
   @Post('registration')
   @HttpCode(204)
   async registerUser(@Body() userCreateDto: InputRegistrationUserDto) {
     return await this.usersService.registerUser(userCreateDto);
   }
-  //@UseGuards(ThrottlerGuard)
+  @UseGuards(ThrottlerGuard)
   @Post('registration-confirmation')
   @HttpCode(204)
   async confirmUserEmail(
@@ -131,13 +130,13 @@ export class AuthController {
   ) {
     return await this.usersService.confirmUserEmail(confirmationCodeDto.code);
   }
-  //@UseGuards(ThrottlerGuard)
+  @UseGuards(ThrottlerGuard)
   @Post('registration-email-resending')
   @HttpCode(204)
   async resendActivationCode(@Body() emailDto: InputEmailDto) {
     return await this.usersService.resendActivationCode(emailDto.email);
   }
-  //@UseGuards(ThrottlerGuard)
+  @UseGuards(ThrottlerGuard)
   @Post('password-recovery')
   @HttpCode(204)
   async passwordRecovery(
@@ -147,7 +146,7 @@ export class AuthController {
       passwordRecoveryDto.email,
     );
   }
-  //@UseGuards(ThrottlerGuard)
+  @UseGuards(ThrottlerGuard)
   @Post('new-password')
   @HttpCode(204)
   async setNewPassword(@Body() newPasswordDto: InputNewPasswordDto) {
