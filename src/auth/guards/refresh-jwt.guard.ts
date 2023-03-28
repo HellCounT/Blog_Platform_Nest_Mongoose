@@ -13,7 +13,7 @@ import { DevicesService } from '../../security/devices/devices.service';
 @Injectable()
 export class RefreshJwtGuard implements CanActivate {
   constructor(
-    private readonly devicesRepo: DevicesRepository,
+    // private readonly devicesRepo: DevicesRepository,
     private readonly devicesService: DevicesService,
     private readonly jwtAdapter: JwtAdapter,
   ) {}
@@ -34,12 +34,12 @@ export class RefreshJwtGuard implements CanActivate {
   ): Promise<TokenPayloadType> {
     if (!this.jwtAdapter.checkRefreshTokenExpiration(refreshToken)) return null;
     const payload = this.jwtAdapter.parseTokenPayload(refreshToken);
-    if (
-      !(await this.devicesRepo.findSessionByDeviceId(
-        new mongoose.Types.ObjectId(payload.deviceId),
-      ))
-    )
-      return null;
+    // if (
+    //   !(await this.devicesRepo.findSessionByDeviceId(
+    //     new mongoose.Types.ObjectId(payload.deviceId),
+    //   ))
+    // )
+    //   return null;
     return payload;
   }
 }
