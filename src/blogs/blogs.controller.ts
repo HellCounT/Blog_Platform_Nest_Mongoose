@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -74,7 +75,9 @@ export class BlogsController {
   @Get(':id')
   @HttpCode(200)
   async getBlogById(@Param('id') id: string) {
-    return await this.blogsQueryRepo.findBlogById(id);
+    const result = await this.blogsQueryRepo.findBlogById(id);
+    if (!result) throw new NotFoundException();
+    return result;
   }
   @UseGuards(GuestGuard)
   @Get(':id/posts')
