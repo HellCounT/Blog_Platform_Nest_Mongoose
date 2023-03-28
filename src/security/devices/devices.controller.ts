@@ -25,6 +25,7 @@ export class DevicesController {
   async getAllSessions(
     @GetRefreshTokenPayload() payload: TokenPayloadType,
   ): Promise<Array<OutputDeviceDto>> {
+    console.log(payload);
     return await this.usersQueryRepo.getAllSessionsForCurrentUser(
       payload.userId,
     );

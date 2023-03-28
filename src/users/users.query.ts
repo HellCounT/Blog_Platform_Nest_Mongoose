@@ -53,7 +53,7 @@ export class UsersQuery {
     userId: mongoose.Types.ObjectId,
   ): Promise<Array<OutputDeviceDto>> {
     const sessions: Array<DeviceDocument> = await this.deviceModel
-      .find({ userId: { $eq: userId } })
+      .find({ userId: new mongoose.Types.ObjectId(userId) })
       .lean();
     return sessions.map((e) => this._mapDevicesToViewType(e));
   }

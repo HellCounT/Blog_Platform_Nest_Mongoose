@@ -17,7 +17,7 @@ export class JwtAdapter {
       { userId: user._id },
       {
         secret: this.configService.get('JWT_SECRET'),
-        expiresIn: this.configService.get('JWT_LIFETIME') * 60000,
+        expiresIn: this.configService.get('JWT_LIFETIME') + 's',
       },
     );
   }
@@ -26,7 +26,7 @@ export class JwtAdapter {
     const issueDate = new Date();
     const expDateSec =
       Math.floor(issueDate.getTime() / 1000) +
-      this.configService.get('JWT_REFRESH_LIFETIME') * 60;
+      this.configService.get('JWT_REFRESH_LIFETIME');
     const expDate = new Date(expDateSec * 1000);
     const refreshToken = this.jwtService.sign(
       {

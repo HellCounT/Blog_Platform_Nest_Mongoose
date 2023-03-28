@@ -32,7 +32,7 @@ import { OutputAccessTokenDto } from './dto/output.token.dto';
 
 const refreshTokenCookieOptions = {
   httpOnly: true,
-  secure: true,
+  secure: false,
 };
 
 @Controller('auth')
