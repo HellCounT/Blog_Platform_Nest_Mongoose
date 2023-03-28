@@ -10,7 +10,6 @@ import {
   Query,
   UseGuards,
   Req,
-  NotFoundException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostsQuery } from './posts.query';
@@ -76,8 +75,7 @@ export class PostsController {
     @Req() req,
   ): Promise<CommentPaginatorDto> {
     const queryParams = parseQueryPagination(query);
-    const foundPost = this.postsQueryRepo.findPostById(postId, req.user.userId);
-    if (!foundPost) throw new NotFoundException();
+    await this.postsQueryRepo.findPostById(postId, req.user.userId);
     return await this.commentsQueryRepo.findCommentsByPostId(
       postId,
       queryParams,
