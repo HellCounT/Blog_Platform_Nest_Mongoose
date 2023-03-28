@@ -5,6 +5,6 @@ export const CurrentUser = createParamDecorator(
     const request = context.switchToHttp().getRequest();
     if (!request.user.userId)
       throw new Error('No user id in request or payload');
-    return request.userId as string;
+    return request.user.userId as string;
   },
 );
