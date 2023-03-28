@@ -19,7 +19,7 @@ export default (): ConfigurationType => ({
   BASIC_AUTH_PASSWORD: process.env.BASIC_AUTH_PASSWORD,
   JWT_SECRET: process.env.JWT_SECRET,
   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
-  JWT_LIFETIME: 0.17, //In minutes
+  JWT_LIFETIME: 0.16, //In minutes
   JWT_REFRESH_LIFETIME: 0.33, //In minutes
   EMAIL_LOGIN: process.env.EMAIL_LOGIN,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
