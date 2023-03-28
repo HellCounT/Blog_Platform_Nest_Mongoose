@@ -16,7 +16,6 @@ export class DevicesRepository {
   }
   async addSessionToDb(newSession: DeviceDb): Promise<void> {
     const newSessionInstance = new this.deviceModel(newSession);
-    console.log(newSessionInstance);
     await newSessionInstance.save();
   }
   async updateSessionWithDeviceId(

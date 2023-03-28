@@ -79,9 +79,14 @@ export class AuthController {
   @HttpCode(204)
   async logout(
     @GetRefreshTokenPayload() payload: TokenPayloadType,
+    @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ) {
     await this.devicesService.logoutSession(payload.deviceId);
+    await this.devicesService.banRefreshToken(
+      request.cookies.refreshToken,
+      payload.userId,
+    );
     response.clearCookie('refreshToken');
     return;
   }

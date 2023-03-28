@@ -9,16 +9,19 @@ export class ExpiredTokensRepository {
     @InjectModel(ExpiredToken.name)
     private expiredTokenModel: Model<ExpiredTokenDocument>,
   ) {}
-  async addTokenToDb(token: string, userId: mongoose.Types.ObjectId) {
+  async addTokenToDb(
+    refreshTokenMeta: string,
+    userId: mongoose.Types.ObjectId,
+  ) {
     const expiredToken: ExpiredToken = {
       userId: userId,
-      refreshToken: token,
+      refreshTokenMeta: refreshTokenMeta,
     };
     const expiredTokenInstance = new this.expiredTokenModel(expiredToken);
     await expiredTokenInstance.save();
     return;
   }
-  async findToken(token: string): Promise<ExpiredToken | null> {
-    return this.expiredTokenModel.findOne({ refreshToken: token });
+  async findToken(tokenMeta: string): Promise<ExpiredToken | null> {
+    return this.expiredTokenModel.findOne({ refreshTokenMeta: tokenMeta });
   }
 }

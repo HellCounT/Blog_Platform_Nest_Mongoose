@@ -8,7 +8,7 @@ export class ExpiredToken {
   @Prop({ required: true })
   userId: mongoose.Types.ObjectId;
   @Prop({ required: true })
-  refreshToken: string;
+  refreshTokenMeta: string;
 }
 
 export const ExpiredTokenSchema = SchemaFactory.createForClass(ExpiredToken);

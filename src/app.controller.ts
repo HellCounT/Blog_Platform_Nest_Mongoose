@@ -14,6 +14,10 @@ import {
   LikeForComment,
   LikeForCommentDocument,
 } from './likes/likes-for-comments.schema';
+import {
+  ExpiredToken,
+  ExpiredTokenDocument,
+} from './security/tokens/expiredTokenSchema';
 
 @Controller()
 export class AppController {
@@ -27,6 +31,8 @@ export class AppController {
     private likesForPostsModel: Model<LikeForPostDocument>,
     @InjectModel(LikeForComment.name)
     private likesForCommentsModel: Model<LikeForCommentDocument>,
+    @InjectModel(ExpiredToken.name)
+    private expiredTokensModel: Model<ExpiredTokenDocument>,
   ) {}
 
   @Get()
@@ -42,6 +48,7 @@ export class AppController {
     await this.userModel.deleteMany({});
     await this.likesForPostsModel.deleteMany({});
     await this.likesForCommentsModel.deleteMany({});
+    await this.expiredTokensModel.deleteMany({});
     return;
   }
 }

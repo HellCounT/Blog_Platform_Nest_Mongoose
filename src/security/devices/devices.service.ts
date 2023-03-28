@@ -89,9 +89,14 @@ export class DevicesService {
     refreshToken: string,
     userId: mongoose.Types.ObjectId,
   ): Promise<void> {
-    await this.expiredTokensRepo.addTokenToDb(refreshToken, userId);
+    const refreshTokenMeta = this._createMeta(refreshToken);
+    await this.expiredTokensRepo.addTokenToDb(refreshTokenMeta, userId);
   }
-  _createMeta(refreshToken: string): string {
+  async refreshTokenIsBanned(refreshToken: string): Promise<boolean> {
+    const refreshTokenMeta = this._createMeta(refreshToken);
+    return !!(await this.expiredTokensRepo.findToken(refreshTokenMeta));
+  }
+  private _createMeta(refreshToken: string): string {
     const header = refreshToken.split('.')[0];
     const payload = refreshToken.split('.')[1];
     return header + '.' + payload;
