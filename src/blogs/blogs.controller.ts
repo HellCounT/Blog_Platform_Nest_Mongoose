@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
@@ -18,8 +19,6 @@ import { PostsQuery } from '../posts/posts.query';
 import { InputCreatePostDto } from '../posts/dto/input.create-post.dto';
 import { BasicAuthGuard } from '../auth/guards/basic-auth.guard';
 import { GuestGuard } from '../auth/guards/guest.guard';
-import { GetRefreshTokenPayload } from '../auth/decorators/get-decorators/get-refresh-token-payload.decorator';
-import { TokenPayloadType } from '../auth/auth.types';
 import { InputBlogCreateDto } from './dto/input.create-blog.dto';
 import { InputUpdateBlogDto } from './dto/input.update-blog.dto';
 import { InputCreatePostForBlogDto } from './dto/input.create-post-for-blog.dto';
@@ -83,13 +82,13 @@ export class BlogsController {
   async getPostsForBlogId(
     @Param('id') id: string,
     @Query() query: QueryParser,
-    @GetRefreshTokenPayload() payload: TokenPayloadType,
+    @Req() req,
   ) {
     const queryParams = parseQueryPagination(query);
     return this.postsQueryRepo.findPostsByBlogId(
       id,
       queryParams,
-      payload.userId.toString(),
+      req.user.userId,
     );
   }
 }
