@@ -1,0 +1,14 @@
+previewsEnabled: true
+previewsExpireAfterDays: 1
+
+services:
+  - type: web
+    name: blog-platform-nestjs
+    env: docker
+    region: frankfurt
+    plan: free
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./
+    # domains:
+    #   - api.blog-platform-nestjs.dev
