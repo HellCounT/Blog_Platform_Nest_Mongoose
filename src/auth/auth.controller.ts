@@ -29,6 +29,7 @@ import { InputConfirmationCodeDto } from './dto/input.confirmationcode.dto';
 import { InputEmailDto } from './dto/input.email.dto';
 import { OutputUserMeDto } from './dto/output.user.me.dto';
 import { OutputAccessTokenDto } from './dto/output.token.dto';
+import mongoose from 'mongoose';
 
 const refreshTokenCookieOptions = {
   httpOnly: true,
@@ -107,7 +108,10 @@ export class AuthController {
       request.cookies.refreshToken,
       user._id,
     );
-    const tokenPair = this.authService.getTokenPair(user);
+    const tokenPair = this.authService.getRefreshedTokenPair(
+      user,
+      new mongoose.Types.ObjectId(payload.deviceId),
+    );
     await this.devicesService.updateSessionWithDeviceId(
       tokenPair.refreshTokenMeta.refreshToken,
       payload.deviceId,

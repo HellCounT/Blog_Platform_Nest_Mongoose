@@ -4,6 +4,7 @@ import { UserDb } from '../users/users.types';
 import bcrypt from 'bcrypt';
 import { TokenPairType } from './auth.types';
 import { JwtAdapter } from './jwt.adapter';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +28,13 @@ export class AuthService {
   getTokenPair(user: UserDb): TokenPairType {
     return {
       accessToken: this.jwtAdapter.createJwt(user),
-      refreshTokenMeta: this.jwtAdapter.createRefreshJwt(user),
+      refreshTokenMeta: this.jwtAdapter.createNewRefreshJwt(user),
+    };
+  }
+  getRefreshedTokenPair(user: UserDb, deviceId: mongoose.Types.ObjectId) {
+    return {
+      accessToken: this.jwtAdapter.createJwt(user),
+      refreshTokenMeta: this.jwtAdapter.updateRefreshJwt(user, deviceId),
     };
   }
 }

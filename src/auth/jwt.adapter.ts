@@ -21,8 +21,32 @@ export class JwtAdapter {
       },
     );
   }
-  createRefreshJwt(user: UserDb): RefreshTokenResult {
+  createNewRefreshJwt(user: UserDb): RefreshTokenResult {
     const deviceId = new mongoose.Types.ObjectId();
+    const issueDate = new Date();
+    const expDateSec =
+      Math.floor(issueDate.getTime() / 1000) +
+      this.configService.get('JWT_REFRESH_LIFETIME');
+    const expDate = new Date(expDateSec * 1000);
+    const refreshToken = this.jwtService.sign(
+      {
+        userId: user._id,
+        deviceId: deviceId.toString(),
+        exp: expDateSec,
+      },
+      {
+        secret: this.configService.get('JWT_REFRESH_SECRET'),
+      },
+    );
+    return {
+      refreshToken: refreshToken,
+      userId: user._id,
+      deviceId: deviceId,
+      issueDate: issueDate,
+      expDate: expDate,
+    };
+  }
+  updateRefreshJwt(user: UserDb, deviceId: mongoose.Types.ObjectId) {
     const issueDate = new Date();
     const expDateSec =
       Math.floor(issueDate.getTime() / 1000) +
