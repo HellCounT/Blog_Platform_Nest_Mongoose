@@ -60,7 +60,6 @@ export class DevicesService {
     userId: mongoose.Types.ObjectId,
     deviceId: string,
   ): Promise<boolean> {
-    console.log(deviceId);
     const foundSession = await this.devicesRepo.findSessionByDeviceId(
       new mongoose.Types.ObjectId(deviceId),
     );
@@ -80,7 +79,7 @@ export class DevicesService {
   ): Promise<boolean> {
     if (deviceId) {
       await this.devicesRepo.deleteAllOtherSessions(
-        userId,
+        new mongoose.Types.ObjectId(userId),
         new mongoose.Types.ObjectId(deviceId),
       );
       return true;
