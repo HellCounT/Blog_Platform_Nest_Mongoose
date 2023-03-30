@@ -12,6 +12,7 @@ import { useContainer } from 'class-validator';
 
 export async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  module.exports = app;
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   const configService = app.get(ConfigService<ConfigurationType>);
   app.enableCors();
