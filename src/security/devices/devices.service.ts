@@ -60,6 +60,7 @@ export class DevicesService {
     userId: mongoose.Types.ObjectId,
     deviceId: string,
   ): Promise<boolean> {
+    console.log(deviceId);
     const foundSession = await this.devicesRepo.findSessionByDeviceId(
       new mongoose.Types.ObjectId(deviceId),
     );

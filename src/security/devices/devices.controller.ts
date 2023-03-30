@@ -48,9 +48,6 @@ export class DevicesController {
     @Param('deviceId') deviceId: string,
     @GetRefreshTokenPayload() payload: TokenPayloadType,
   ) {
-    return await this.devicesService.deleteSession(
-      payload.userId,
-      payload.deviceId,
-    );
+    return await this.devicesService.deleteSession(payload.userId, deviceId);
   }
 }
