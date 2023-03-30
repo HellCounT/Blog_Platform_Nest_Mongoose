@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from './configuration/configuration';
 import { useContainer } from 'class-validator';
 
-async function bootstrap() {
+export async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   const configService = app.get(ConfigService<ConfigurationType>);
@@ -94,4 +94,4 @@ async function bootstrap() {
 
   await app.listen(port);
 }
-export bootstrap();
+bootstrap();
