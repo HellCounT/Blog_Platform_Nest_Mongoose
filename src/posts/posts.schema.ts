@@ -5,6 +5,17 @@ import { LikesInfo, LikesInfoSchema } from '../likes/likes-info.schema';
 export type PostDocument = HydratedDocument<Post>;
 
 @Schema()
+class PostOwnerInfo {
+  @Prop({ required: true, maxlength: 50 })
+  userId: string;
+
+  @Prop({ required: true })
+  isBanned: boolean;
+}
+
+export const PostOwnerInfoSchema = SchemaFactory.createForClass(PostOwnerInfo);
+
+@Schema()
 export class Post {
   @Prop({ required: true })
   _id: mongoose.Types.ObjectId;
@@ -29,6 +40,9 @@ export class Post {
 
   @Prop({ required: true, type: LikesInfoSchema })
   likesInfo: LikesInfo;
+
+  @Prop({ required: true, type: PostOwnerInfoSchema })
+  postOwnerInfo: PostOwnerInfo;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

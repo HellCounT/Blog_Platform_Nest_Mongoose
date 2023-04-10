@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({ _id: false })
 class AccountData {
   @Prop({ required: true })
   login: string;
@@ -19,7 +19,7 @@ class AccountData {
 
 const AccountDataSchema = SchemaFactory.createForClass(AccountData);
 
-@Schema()
+@Schema({ _id: false })
 class EmailConfirmationData {
   @Prop({ required: true })
   confirmationCode: string;
@@ -33,7 +33,7 @@ const EmailConfirmationDataSchema = SchemaFactory.createForClass(
   EmailConfirmationData,
 );
 
-@Schema()
+@Schema({ _id: false })
 class RecoveryCodeData {
   @Prop({ required: false })
   recoveryCode: string;
@@ -43,7 +43,7 @@ class RecoveryCodeData {
 
 const RecoveryCodeDataSchema = SchemaFactory.createForClass(RecoveryCodeData);
 
-@Schema()
+@Schema({ _id: false })
 export class GlobalBanInfo {
   @Prop({ required: true })
   isBanned: boolean;

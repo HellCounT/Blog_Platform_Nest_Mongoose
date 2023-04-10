@@ -95,4 +95,23 @@ export class UsersRepository {
       return;
     }
   }
+  async banUserById(
+    userId: string,
+    isBanned: boolean,
+    banReason: string,
+  ): Promise<void> {
+    const userInstance = await this.userModel.findOne({
+      _id: new mongoose.Types.ObjectId(userId),
+    });
+    if (isBanned) {
+      userInstance.globalBanInfo.isBanned = isBanned;
+      userInstance.globalBanInfo.banDate = new Date();
+      userInstance.globalBanInfo.banReason = banReason;
+    } else {
+      userInstance.globalBanInfo.isBanned = isBanned;
+      userInstance.globalBanInfo.banDate = null;
+      userInstance.globalBanInfo.banReason = null;
+    }
+    return;
+  }
 }

@@ -76,4 +76,14 @@ export class PostsRepository {
       return;
     } else return;
   }
+  // async getByUserId(userId: string): Promise<PostDb[]> {
+  //   return this.postModel.find({ 'postOwnerInfo.userId': userId });
+  // }
+  async banByUserId(userId: string, isBanned: boolean): Promise<void> {
+    await this.postModel.updateMany(
+      { 'postOwnerInfo.userId': userId },
+      { 'postOwnerInfo.isBanned': isBanned },
+    );
+    return;
+  }
 }

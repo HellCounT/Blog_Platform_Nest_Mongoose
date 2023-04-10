@@ -34,4 +34,14 @@ export class LikesForCommentsRepository {
     await this.likesForCommentsModel.deleteMany({ commentId: commentId });
     return;
   }
+  // async getByUserId(userId: string): Promise<CommentLikeDb[]> {
+  //   return this.likesForCommentsModel.find({ userId: userId });
+  // }
+  async banByUserId(userId: string, isBanned: boolean): Promise<void> {
+    await this.likesForCommentsModel.updateMany(
+      { userId: userId },
+      { isBanned: isBanned },
+    );
+    return;
+  }
 }

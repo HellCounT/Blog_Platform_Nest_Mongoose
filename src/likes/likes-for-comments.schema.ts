@@ -13,6 +13,8 @@ export class LikeForComment {
   @Prop({ required: true })
   userId: string;
   @Prop({ required: true })
+  isBanned: boolean;
+  @Prop({ required: true })
   likeStatus: LikeStatus;
 }
 

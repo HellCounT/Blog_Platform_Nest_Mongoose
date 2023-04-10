@@ -4,12 +4,14 @@ import { LikesInfo, LikesInfoSchema } from '../likes/likes-info.schema';
 
 export type CommentDocument = HydratedDocument<Comment>;
 
-@Schema()
+@Schema({ _id: false })
 class CommentatorInfo {
   @Prop({ required: true })
   userId: string;
   @Prop({ required: true })
   userLogin: string;
+  @Prop({ required: true })
+  isBanned: boolean;
 }
 
 const CommentatorInfoSchema = SchemaFactory.createForClass(CommentatorInfo);

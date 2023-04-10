@@ -15,6 +15,8 @@ export class LikeForPost {
   @Prop({ required: true })
   userLogin: string;
   @Prop({ required: true })
+  isBanned: boolean;
+  @Prop({ required: true })
   addedAt: Date;
   @Prop({ required: true })
   likeStatus: LikeStatus;

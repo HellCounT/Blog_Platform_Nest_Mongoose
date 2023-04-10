@@ -71,4 +71,16 @@ export class CommentsRepository {
     }
     return;
   }
+
+  async getByUserId(userId: string): Promise<CommentDb[]> {
+    return this.commentModel.find({ 'commentatorInfo.userId': userId });
+  }
+
+  async banByUserId(userId: string, isBanned: boolean): Promise<void> {
+    await this.commentModel.updateMany(
+      { 'commentatorInfo.userId': userId },
+      { 'commentatorInfo.isBanned': isBanned },
+    );
+    return;
+  }
 }

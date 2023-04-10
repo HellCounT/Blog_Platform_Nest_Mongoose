@@ -27,5 +27,24 @@ export class BanUserUseCase {
   async execute(command: BanUserCommand): Promise<boolean> {
     const user = this.usersRepo.getUserById(command.id);
     if (!user) throw new NotFoundException();
+    await this.usersRepo.banUserById(
+      command.id,
+      command.banUserDto.isBanned,
+      command.banUserDto.banReason,
+    );
+    await this.blogsRepo.banByUserId(command.id, command.banUserDto.isBanned);
+    await this.postsRepo.banByUserId(command.id, command.banUserDto.isBanned);
+    await this.commentsRepo.banByUserId(
+      command.id,
+      command.banUserDto.isBanned,
+    );
+    await this.likesForPostsRepo.banByUserId(
+      command.id,
+      command.banUserDto.isBanned,
+    );
+    await this.likesForCommentsRepo.banByUserId(
+      command.id,
+      command.banUserDto.isBanned,
+    );
   }
 }

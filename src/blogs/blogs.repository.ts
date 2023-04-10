@@ -48,4 +48,14 @@ export class BlogsRepository {
     });
     return result.deletedCount === 1;
   }
+  // async getByUserId(userId: string): Promise<BlogDocument[]> {
+  //   return this.blogModel.find({ 'blogOwnerInfo.userId': userId });
+  // }
+  async banByUserId(userId: string, isBanned: boolean): Promise<void> {
+    await this.blogModel.updateMany(
+      { 'blogOwnerInfo.userId': userId },
+      { 'blogOwnerInfo.isBanned': isBanned },
+    );
+    return;
+  }
 }
