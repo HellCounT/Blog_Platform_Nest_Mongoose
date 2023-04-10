@@ -86,4 +86,12 @@ export class PostsRepository {
     );
     return;
   }
+  async recalculateLikeCountersOnUserBan(
+    posts: PostDocument[],
+    isBanned: boolean,
+  ) {
+    for (let i = 0; i < posts.length; i++) {
+      const post = await this.postModel.findById(posts[i]._id);
+    }
+  }
 }
