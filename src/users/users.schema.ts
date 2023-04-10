@@ -44,6 +44,20 @@ class RecoveryCodeData {
 const RecoveryCodeDataSchema = SchemaFactory.createForClass(RecoveryCodeData);
 
 @Schema()
+export class GlobalBanInfo {
+  @Prop({ required: true })
+  isBanned: boolean;
+
+  @Prop()
+  banDate: Date;
+
+  @Prop({ minlength: 20, maxlength: 100 })
+  banReason: string;
+}
+
+const GlobalBanInfoSchema = SchemaFactory.createForClass(GlobalBanInfo);
+
+@Schema()
 export class User {
   @Prop({ required: true, type: AccountDataSchema })
   accountData: AccountData;
@@ -53,6 +67,9 @@ export class User {
 
   @Prop({ required: false, type: RecoveryCodeDataSchema })
   recoveryCodeData: RecoveryCodeData;
+
+  @Prop({ required: true, type: GlobalBanInfoSchema })
+  globalBanInfo: GlobalBanInfo;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

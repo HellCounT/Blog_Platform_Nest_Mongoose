@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
@@ -11,7 +10,7 @@ import add from 'date-fns/add';
 import bcrypt from 'bcrypt';
 import { UserDb, UserViewModelType } from './users.types';
 import { InputNewPasswordDto } from '../auth/dto/input.newpassword.dto';
-import { InputCreateUserDto } from './dto/input.create-user.dto';
+import { InputCreateUserDto } from '../superadmin/users/dto/input.create-user.dto';
 import { EmailManager } from '../email/email-manager';
 
 @Injectable()
@@ -22,38 +21,6 @@ export class UsersService {
   ) {}
   async findByLoginOrEmail(loginOrEmail: string): Promise<UserDb> {
     return await this.usersRepo.findByLoginOrEmail(loginOrEmail);
-  }
-  async createUser(
-    userCreateDto: InputCreateUserDto,
-  ): Promise<UserViewModelType | null> {
-    const passwordHash = await this._generateHash(userCreateDto.password);
-    const currentDate = new Date();
-    const newUser = new UserDb(
-      new mongoose.Types.ObjectId(),
-      {
-        login: userCreateDto.login,
-        email: userCreateDto.email,
-        hash: passwordHash,
-        createdAt: currentDate.toISOString(),
-      },
-      {
-        confirmationCode: 'User Created by SuperAdmin',
-        expirationDate: 'User Created by SuperAdmin',
-        isConfirmed: true,
-      },
-      {
-        recoveryCode: undefined,
-        expirationDate: undefined,
-      },
-    );
-    return await this.usersRepo.createUser(newUser);
-  }
-
-  async deleteUser(id: string) {
-    const deleteResult = await this.usersRepo.deleteUser(id);
-    if (!deleteResult) {
-      throw new NotFoundException();
-    } else return;
   }
 
   async registerUser(

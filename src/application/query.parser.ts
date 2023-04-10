@@ -6,6 +6,7 @@ export type QueryParser = {
   pageSize: number;
 };
 export type UserQueryParser = {
+  banStatus: BanStatus;
   sortBy: string;
   sortDirection: 1 | -1;
   pageNumber: number;
@@ -34,6 +35,7 @@ export const parseQueryPagination = (query): QueryParser => {
 
 export const parseUserQueryPagination = (query): UserQueryParser => {
   const queryUserParamsParser: UserQueryParser = {
+    banStatus: BanStatus.all,
     sortBy: 'createdAt',
     sortDirection: -1,
     pageNumber: 1,
@@ -50,5 +52,12 @@ export const parseUserQueryPagination = (query): UserQueryParser => {
     queryUserParamsParser.sortDirection = 1;
   if (query.pageNumber) queryUserParamsParser.pageNumber = +query.pageNumber;
   if (query.pageSize) queryUserParamsParser.pageSize = +query.pageSize;
+  if (query.banStatus) queryUserParamsParser.banStatus = query.banStatus;
   return queryUserParamsParser;
 };
+
+export enum BanStatus {
+  all = 'all',
+  banned = 'banned',
+  notBanned = 'notBanned',
+}

@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from './configuration/configuration';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 import { UsersRepository } from './users/users.repository';
 import { BlogsService } from './blogs/blogs.service';
@@ -92,7 +91,6 @@ import { BlogExistsConstraint } from './blogs/decorators/validation-decorators/b
     BlogsController,
     PostsController,
     CommentsController,
-    UsersController,
     DevicesController,
   ],
   providers: [

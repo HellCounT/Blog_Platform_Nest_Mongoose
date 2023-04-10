@@ -1,4 +1,4 @@
-import { IsNewLogin } from '../../auth/decorators/validation-decorators/is-new-login.decorator';
+import { IsNewLogin } from '../../../auth/decorators/validation-decorators/is-new-login.decorator';
 import {
   IsEmail,
   IsNotEmpty,
@@ -6,8 +6,8 @@ import {
   Length,
   Matches,
 } from 'class-validator';
-import { Trim } from '../../auth/decorators/validation-decorators/trim.decorator';
-import { IsUniqueEmail } from '../../auth/decorators/validation-decorators/is-unique-email.decorator';
+import { Trim } from '../../../auth/decorators/validation-decorators/trim.decorator';
+import { IsUniqueEmail } from '../../../auth/decorators/validation-decorators/is-unique-email.decorator';
 
 export class InputCreateUserDto {
   @IsNewLogin({ message: 'Login is not valid' })
