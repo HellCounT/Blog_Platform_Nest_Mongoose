@@ -9,7 +9,7 @@ class PostOwnerInfo {
   @Prop({ required: true, maxlength: 50 })
   userId: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, default: false })
   isBanned: boolean;
 }
 

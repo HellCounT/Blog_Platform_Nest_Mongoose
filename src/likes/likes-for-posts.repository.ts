@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LikeForPost } from './likes-for-post.schema';
+import { LikeForPost, LikeForPostDocument } from './likes-for-post.schema';
 import { Model } from 'mongoose';
 import { LikeStatus } from './likes.types';
 
@@ -34,9 +34,9 @@ export class LikesForPostsRepository {
     await this.likesForPostsModel.deleteMany({ postId: postId });
     return;
   }
-  // async getByUserId(userId: string): Promise<PostLikeDb[]> {
-  //   return this.likesForPostsModel.find({ userId: userId });
-  // }
+  async getByUserId(userId: string): Promise<LikeForPostDocument[]> {
+    return this.likesForPostsModel.find({ userId: userId });
+  }
   async banByUserId(userId: string, isBanned: boolean): Promise<void> {
     this.likesForPostsModel.updateMany(
       { userId: userId },

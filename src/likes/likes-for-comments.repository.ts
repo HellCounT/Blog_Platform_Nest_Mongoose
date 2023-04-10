@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { LikeForComment } from './likes-for-comments.schema';
+import {
+  LikeForComment,
+  LikeForCommentDocument,
+} from './likes-for-comments.schema';
 import { Model } from 'mongoose';
 import { LikeStatus } from './likes.types';
 
@@ -34,9 +37,9 @@ export class LikesForCommentsRepository {
     await this.likesForCommentsModel.deleteMany({ commentId: commentId });
     return;
   }
-  // async getByUserId(userId: string): Promise<CommentLikeDb[]> {
-  //   return this.likesForCommentsModel.find({ userId: userId });
-  // }
+  async getByUserId(userId: string): Promise<LikeForCommentDocument[]> {
+    return this.likesForCommentsModel.find({ userId: userId });
+  }
   async banByUserId(userId: string, isBanned: boolean): Promise<void> {
     await this.likesForCommentsModel.updateMany(
       { userId: userId },

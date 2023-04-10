@@ -27,6 +27,10 @@ export class BanUserUseCase {
   async execute(command: BanUserCommand): Promise<boolean> {
     const user = this.usersRepo.getUserById(command.id);
     if (!user) throw new NotFoundException();
+    const posts = this.postsRepo.getByUserId(command.id);
+    const comments = this.commentsRepo.getByUserId(command.id);
+    const likesForPosts = this.likesForPostsRepo.getByUserId(command.id);
+    const likesForComments = this.likesForCommentsRepo.getByUserId(command.id);
     await this.usersRepo.banUserById(
       command.id,
       command.banUserDto.isBanned,
@@ -46,5 +50,12 @@ export class BanUserUseCase {
       command.id,
       command.banUserDto.isBanned,
     );
+
+    return;
+
+    //get all posts for user
+    //change ban status
+    //for each found post id decrease likes/dislikes counters (likes/dislikes to remove: find each like/dislike for user and count)
+    //decrease by counted amount
   }
 }

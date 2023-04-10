@@ -11,7 +11,7 @@ class BlogOwnerInfo {
   @Prop({ required: true, maxlength: 50 })
   userLogin: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, default: false })
   isBanned: boolean;
 }
 

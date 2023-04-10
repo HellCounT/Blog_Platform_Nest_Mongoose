@@ -13,6 +13,7 @@ class AccountData {
 
   @Prop({ required: true })
   hash: string;
+
   @Prop({ required: true })
   createdAt: string;
 }
@@ -45,14 +46,14 @@ const RecoveryCodeDataSchema = SchemaFactory.createForClass(RecoveryCodeData);
 
 @Schema({ _id: false })
 export class GlobalBanInfo {
-  @Prop({ required: true })
+  @Prop({ required: true, default: false })
   isBanned: boolean;
 
-  @Prop()
-  banDate: Date;
+  @Prop({ required: false })
+  banDate: Date | null;
 
   @Prop({ minlength: 20, maxlength: 100 })
-  banReason: string;
+  banReason: string | null;
 }
 
 const GlobalBanInfoSchema = SchemaFactory.createForClass(GlobalBanInfo);
