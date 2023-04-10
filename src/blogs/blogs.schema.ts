@@ -4,6 +4,20 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 export type BlogDocument = HydratedDocument<Blog>;
 
 @Schema()
+class BlogOwnerInfo {
+  @Prop({ required: true, maxlength: 50 })
+  userId: string;
+
+  @Prop({ required: true, maxlength: 50 })
+  userLogin: string;
+
+  // @Prop({ required: true })
+  // isBanned: boolean;
+}
+
+export const BlogOwnerInfoSchema = SchemaFactory.createForClass(BlogOwnerInfo);
+
+@Schema()
 export class Blog {
   @Prop({ required: true })
   _id: mongoose.Types.ObjectId;
@@ -22,6 +36,9 @@ export class Blog {
 
   @Prop({ required: true })
   isMembership: boolean;
+
+  @Prop({ required: true, type: BlogOwnerInfoSchema })
+  blogOwnerInfo: BlogOwnerInfo;
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
