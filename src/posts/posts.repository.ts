@@ -76,7 +76,7 @@ export class PostsRepository {
       return;
     } else return;
   }
-  async getByUserId(userId: string): Promise<PostDb[]> {
+  async getByUserId(userId: string): Promise<PostDocument[]> {
     return this.postModel.find({ 'postOwnerInfo.userId': userId });
   }
   async banByUserId(userId: string, isBanned: boolean): Promise<void> {
@@ -85,13 +85,5 @@ export class PostsRepository {
       { 'postOwnerInfo.isBanned': isBanned },
     );
     return;
-  }
-  async recalculateLikeCountersOnUserBan(
-    posts: PostDocument[],
-    isBanned: boolean,
-  ) {
-    for (let i = 0; i < posts.length; i++) {
-      const post = await this.postModel.findById(posts[i]._id);
-    }
   }
 }

@@ -33,5 +33,10 @@ export class UserDb {
       recoveryCode?: string;
       expirationDate?: Date;
     },
+    public globalBanInfo: {
+      isBanned: boolean;
+      banDate?: Date | null;
+      banReason?: string | null;
+    },
   ) {}
 }

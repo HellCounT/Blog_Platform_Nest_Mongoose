@@ -14,6 +14,11 @@ export class DevicesRepository {
   ): Promise<DeviceDocument> {
     return this.deviceModel.findOne({ _id: deviceId });
   }
+  async getAllSessionsForUser(userId: string): Promise<DeviceDocument[]> {
+    return this.deviceModel.find({
+      userId: new mongoose.Types.ObjectId(userId),
+    });
+  }
   async addSessionToDb(newSession: DeviceDb): Promise<void> {
     const newSessionInstance = new this.deviceModel(newSession);
     await newSessionInstance.save();
@@ -52,5 +57,11 @@ export class DevicesRepository {
       _id: { $ne: deviceId },
     });
     return result.deletedCount >= 1;
+  }
+  async killAllSessionsForUser(userId: string): Promise<void> {
+    await this.deviceModel.deleteMany({
+      userId: new mongoose.Types.ObjectId(userId),
+    });
+    return;
   }
 }

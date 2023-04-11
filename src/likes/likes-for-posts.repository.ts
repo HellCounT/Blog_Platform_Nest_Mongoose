@@ -44,4 +44,18 @@ export class LikesForPostsRepository {
     );
     return;
   }
+  async getNewLikesCounter(postId: string): Promise<number> {
+    return this.likesForPostsModel.countDocuments({
+      postId: postId,
+      likeStatus: LikeStatus.like,
+      isBanned: false,
+    });
+  }
+  async getNewDislikesCounter(postId: string): Promise<number> {
+    return this.likesForPostsModel.countDocuments({
+      postId: postId,
+      likeStatus: LikeStatus.dislike,
+      isBanned: false,
+    });
+  }
 }

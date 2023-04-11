@@ -7,7 +7,7 @@ import { User, UserDocument } from './users.schema';
 @Injectable()
 export class UsersRepository {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
-  async getUserById(id: string): Promise<UserDb> {
+  async getUserById(id: string): Promise<UserDocument> {
     return this.userModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
     });

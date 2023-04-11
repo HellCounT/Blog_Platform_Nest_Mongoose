@@ -72,7 +72,7 @@ export class CommentsRepository {
     return;
   }
 
-  async getByUserId(userId: string): Promise<CommentDb[]> {
+  async getByUserId(userId: string): Promise<CommentDocument[]> {
     return this.commentModel.find({ 'commentatorInfo.userId': userId });
   }
 
