@@ -17,6 +17,11 @@ export class BlogDb {
     public websiteUrl: string,
     public createdAt: string,
     public isMembership: boolean,
+    public blogOwnerInfo: {
+      userId: string;
+      userLogin: string;
+      isBanned: boolean;
+    },
   ) {}
 }
 

@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UsersService } from '../users/users.service';
@@ -9,12 +8,15 @@ import { JwtAdapter } from './jwt.adapter';
 import { UsersRepository } from '../users/users.repository';
 import { EmailManager } from '../email/email-manager';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from '../users/users.schema';
+import { User, UserSchema } from '../users/entity/users.schema';
 import { ConfigService } from '@nestjs/config';
 import { BasicStrategy } from './strategies/basic.strategy';
 import { EmailService } from '../email/email.service';
 import { UsersQuery } from '../users/users.query';
-import { Device, DeviceSchema } from '../security/devices/devices.schema';
+import {
+  Device,
+  DeviceSchema,
+} from '../security/devices/entity/devices.schema';
 
 @Module({
   imports: [
@@ -26,7 +28,6 @@ import { Device, DeviceSchema } from '../security/devices/devices.schema';
     ]),
   ],
   providers: [
-    AuthService,
     LocalStrategy,
     JwtStrategy,
     BasicStrategy,
@@ -38,6 +39,5 @@ import { Device, DeviceSchema } from '../security/devices/devices.schema';
     EmailService,
     ConfigService,
   ],
-  exports: [AuthService],
 })
 export class AuthModule {}

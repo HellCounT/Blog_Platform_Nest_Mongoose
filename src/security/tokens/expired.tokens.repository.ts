@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ExpiredToken, ExpiredTokenDocument } from './expiredTokenSchema';
+import {
+  ExpiredToken,
+  ExpiredTokenDocument,
+} from './entity/expiredTokenSchema';
 import mongoose, { Model } from 'mongoose';
 
 @Injectable()

@@ -6,6 +6,7 @@ import {
   HttpCode,
   Param,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -19,6 +20,8 @@ import {
   UserQueryParser,
 } from '../../application/query.parser';
 import { SuperAdminUsersQuery } from './super-admin.users.query';
+import { InputBanUserDto } from './dto/input.ban-user.dto';
+import { BanUserCommand } from './use-cases/ban.user.use-case';
 
 @UseGuards(BasicAuthGuard)
 @Controller('sa/users')
@@ -41,10 +44,16 @@ export class SuperAdminUsersController {
     return await this.commandBus.execute(new CreateUserCommand(userCreateDto));
   }
 
-  @Post()
   @Delete(':id')
   @HttpCode(204)
   async deleteUser(@Param('id') id: string) {
     return await this.commandBus.execute(new DeleteUserCommand(id));
+  }
+
+  @Put(':id/ban')
+  @HttpCode(204)
+  async banUser(@Param('id') id: string, @Body() banUserDto: InputBanUserDto) {
+    await this.commandBus.execute(new BanUserCommand(banUserDto, id));
+    return;
   }
 }

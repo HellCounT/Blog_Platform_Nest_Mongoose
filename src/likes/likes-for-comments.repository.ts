@@ -3,9 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   LikeForComment,
   LikeForCommentDocument,
-} from './likes-for-comments.schema';
+} from './entity/likes-for-comments.schema';
 import { Model } from 'mongoose';
-import { LikeStatus } from './likes.types';
+import { LikeStatus } from './types/likes.types';
 
 @Injectable()
 export class LikesForCommentsRepository {

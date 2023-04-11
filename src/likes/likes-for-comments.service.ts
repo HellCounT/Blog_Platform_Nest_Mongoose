@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LikesForCommentsRepository } from './likes-for-comments.repository';
-import { CommentLikeDb, LikeStatus } from './likes.types';
+import { CommentLikeDb, LikeStatus } from './types/likes.types';
 import mongoose from 'mongoose';
 
 @Injectable()

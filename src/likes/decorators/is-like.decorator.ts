@@ -4,7 +4,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { LikeStatus } from '../likes.types';
+import { LikeStatus } from '../types/likes.types';
 
 @ValidatorConstraint()
 export class IsLikeConstraint implements ValidatorConstraintInterface {

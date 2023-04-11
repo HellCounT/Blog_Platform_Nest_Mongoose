@@ -1,4 +1,4 @@
-import { BlogDb, BlogViewModelType } from './blogs.types';
+import { BlogDb, BlogViewModelType } from './types/blogs.types';
 import mongoose from 'mongoose';
 import { BlogsRepository } from './blogs.repository';
 import { Injectable, NotFoundException } from '@nestjs/common';

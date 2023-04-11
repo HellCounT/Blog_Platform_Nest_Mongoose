@@ -2,14 +2,14 @@ import mongoose, { Model } from 'mongoose';
 import { QueryParser } from '../application/query.parser';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Comment, CommentDocument } from './comments.schema';
+import { Comment, CommentDocument } from './entity/comments.schema';
 import { CommentViewDto } from './dto/output.comment-view.dto';
 import { CommentPaginatorDto } from './dto/output.comment-paginator.dto';
-import { CommentLikeDb, LikeStatus } from '../likes/likes.types';
+import { CommentLikeDb, LikeStatus } from '../likes/types/likes.types';
 import {
   LikeForComment,
   LikeForCommentDocument,
-} from '../likes/likes-for-comments.schema';
+} from '../likes/entity/likes-for-comments.schema';
 
 @Injectable()
 export class CommentsQuery {

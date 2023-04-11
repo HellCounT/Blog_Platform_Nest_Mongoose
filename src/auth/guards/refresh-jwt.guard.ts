@@ -8,13 +8,13 @@ import { DevicesRepository } from '../../security/devices/devices.repository';
 import mongoose from 'mongoose';
 import { JwtAdapter } from '../jwt.adapter';
 import { TokenPayloadType } from '../auth.types';
-import { DevicesService } from '../../security/devices/devices.service';
+import { TokenBanService } from '../../security/tokens/token.ban.service';
 
 @Injectable()
 export class RefreshJwtGuard implements CanActivate {
   constructor(
     private readonly devicesRepo: DevicesRepository,
-    private readonly devicesService: DevicesService,
+    private readonly tokenBanService: TokenBanService,
     private readonly jwtAdapter: JwtAdapter,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -24,7 +24,7 @@ export class RefreshJwtGuard implements CanActivate {
       refreshToken,
     );
     if (!payload) throw new UnauthorizedException();
-    if (await this.devicesService.refreshTokenIsBanned(refreshToken))
+    if (await this.tokenBanService.refreshTokenIsBanned(refreshToken))
       throw new UnauthorizedException();
     request.payload = payload;
     return true;

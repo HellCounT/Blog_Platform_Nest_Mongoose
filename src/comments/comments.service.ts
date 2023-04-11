@@ -6,10 +6,10 @@ import {
 import { PostsQuery } from '../posts/posts.query';
 import { UsersQuery } from '../users/users.query';
 import mongoose from 'mongoose';
-import { CommentDb } from './comments.types';
+import { CommentDb } from './types/comments.types';
 import { CommentsRepository } from './comments.repository';
 import { CommentViewDto } from './dto/output.comment-view.dto';
-import { LikeStatus } from '../likes/likes.types';
+import { LikeStatus } from '../likes/types/likes.types';
 import { CommentsQuery } from './comments.query';
 import { LikesForCommentsService } from '../likes/likes-for-comments.service';
 

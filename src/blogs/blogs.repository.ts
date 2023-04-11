@@ -1,9 +1,9 @@
-import { BlogDb } from './blogs.types';
+import { BlogDb } from './types/blogs.types';
 import mongoose, { Model } from 'mongoose';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogDocument } from './blogs.schema';
-import { Post, PostDocument } from '../posts/posts.schema';
+import { Blog, BlogDocument } from './entity/blogs.schema';
+import { Post, PostDocument } from '../posts/entity/posts.schema';
 
 @Injectable()
 export class BlogsRepository {
@@ -11,6 +11,11 @@ export class BlogsRepository {
     @InjectModel(Blog.name) private blogModel: Model<BlogDocument>,
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
   ) {}
+  async getBlogById(id: string): Promise<BlogDocument> {
+    return this.blogModel.findOne({
+      _id: new mongoose.Types.ObjectId(id),
+    });
+  }
   async createBlog(newBlog: BlogDb): Promise<BlogDb> {
     const blogInstance = new this.blogModel(newBlog);
     await blogInstance.save();
@@ -57,5 +62,8 @@ export class BlogsRepository {
       { 'blogOwnerInfo.isBanned': isBanned },
     );
     return;
+  }
+  async save(blog: BlogDocument): Promise<BlogDocument> {
+    return await blog.save();
   }
 }

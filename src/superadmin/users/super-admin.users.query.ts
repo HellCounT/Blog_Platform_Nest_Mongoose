@@ -1,10 +1,12 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from '../../users/users.schema';
+import { User, UserDocument } from '../../users/entity/users.schema';
 import { Model } from 'mongoose';
 import { BanStatus, UserQueryParser } from '../../application/query.parser';
-import { UserPaginatorType } from '../../users/users.types';
-import { OutputSuperAdminUserDto } from './dto/output.superadmin.user.dto';
+import { UserPaginatorType } from '../../users/types/users.types';
+import { OutputSuperAdminUserDto } from './dto/output.super-admin.user.dto';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class SuperAdminUsersQuery {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
   async viewAllUsers(q: UserQueryParser): Promise<UserPaginatorType> {

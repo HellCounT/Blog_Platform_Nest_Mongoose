@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Comment, CommentDocument } from './comments.schema';
+import { Comment, CommentDocument } from './entity/comments.schema';
 import mongoose, { Model } from 'mongoose';
-import { CommentDb } from './comments.types';
-import { LikeStatus } from '../likes/likes.types';
+import { CommentDb } from './types/comments.types';
+import { LikeStatus } from '../likes/types/likes.types';
 import { CommentViewDto } from './dto/output.comment-view.dto';
 
 @Injectable()

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { UserDb, UserViewModelType } from './users.types';
+import { UserDb, UserViewModelType } from './types/users.types';
 import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from './users.schema';
+import { User, UserDocument } from './entity/users.schema';
 
 @Injectable()
 export class UsersRepository {
@@ -28,7 +28,7 @@ export class UsersRepository {
     });
     return deleteResult.deletedCount === 1;
   }
-  async findByLoginOrEmail(loginOrEmail: string): Promise<UserDb> {
+  async findByLoginOrEmail(loginOrEmail: string): Promise<UserDocument> {
     return this.userModel
       .findOne({
         $or: [

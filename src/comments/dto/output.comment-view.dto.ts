@@ -1,4 +1,4 @@
-import { LikesInfoViewModelType } from '../../posts/posts.types';
+import { LikesInfoViewModelType } from '../../posts/types/posts.types';
 
 export class CommentViewDto {
   id: string;

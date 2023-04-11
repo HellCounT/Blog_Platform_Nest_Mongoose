@@ -1,9 +1,9 @@
-import { PostDb, PostViewModelType } from './posts.types';
+import { PostDb, PostViewModelType } from './types/posts.types';
 import mongoose, { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Post, PostDocument } from './posts.schema';
-import { Blog, BlogDocument } from '../blogs/blogs.schema';
+import { Post, PostDocument } from './entity/posts.schema';
+import { Blog, BlogDocument } from '../blogs/entity/blogs.schema';
 
 @Injectable()
 export class PostsRepository {

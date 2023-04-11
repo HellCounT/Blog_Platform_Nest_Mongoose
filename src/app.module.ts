@@ -17,29 +17,29 @@ import { PostsQuery } from './posts/posts.query';
 import { CommentsQuery } from './comments/comments.query';
 import { UsersQuery } from './users/users.query';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Blog, BlogSchema } from './blogs/blogs.schema';
-import { Post, PostSchema } from './posts/posts.schema';
-import { Comment, CommentSchema } from './comments/comments.schema';
-import { User, UserSchema } from './users/users.schema';
+import { Blog, BlogSchema } from './blogs/entity/blogs.schema';
+import { Post, PostSchema } from './posts/entity/posts.schema';
+import { Comment, CommentSchema } from './comments/entity/comments.schema';
+import { User, UserSchema } from './users/entity/users.schema';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthController } from './auth/auth.controller';
-import { Device, DeviceSchema } from './security/devices/devices.schema';
+import { Device, DeviceSchema } from './security/devices/entity/devices.schema';
 import {
   ExpiredToken,
   ExpiredTokenSchema,
-} from './security/tokens/expiredTokenSchema';
+} from './security/tokens/entity/expiredTokenSchema';
 import { AuthModule } from './auth/auth.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { DevicesController } from './security/devices/devices.controller';
 import {
   LikeForPost,
   LikesForPostsSchema,
-} from './likes/likes-for-post.schema';
+} from './likes/entity/likes-for-post.schema';
 import {
   LikeForComment,
   LikesForCommentsSchema,
-} from './likes/likes-for-comments.schema';
+} from './likes/entity/likes-for-comments.schema';
 import { LikesForCommentsRepository } from './likes/likes-for-comments.repository';
 import { LikesForPostsRepository } from './likes/likes-for-posts.repository';
 import { JwtAdapter } from './auth/jwt.adapter';
@@ -49,7 +49,7 @@ import { EmailManager } from './email/email-manager';
 import { JwtService } from '@nestjs/jwt';
 import { DevicesRepository } from './security/devices/devices.repository';
 import { ExpiredTokensRepository } from './security/tokens/expired.tokens.repository';
-import { DevicesService } from './security/devices/devices.service';
+import { TokenBanService } from './security/tokens/token.ban.service';
 import { CommentsService } from './comments/comments.service';
 import { CommentsRepository } from './comments/comments.repository';
 import { IsUniqueEmailConstraint } from './auth/decorators/validation-decorators/is-unique-email.decorator';
@@ -58,6 +58,60 @@ import { EmailIsNotConfirmedConstraint } from './auth/decorators/validation-deco
 import { EmailConfirmationCodeIsCorrectConstraint } from './auth/decorators/validation-decorators/confirmation-code-is-correct.decorator';
 import { EmailService } from './email/email.service';
 import { BlogExistsConstraint } from './blogs/decorators/validation-decorators/blog-exists.decorator';
+import { SuperAdminBlogsQuery } from './superadmin/blogs/super-admin.blogs.query';
+import { SuperAdminUsersQuery } from './superadmin/users/super-admin.users.query';
+
+const controllers = [
+  AppController,
+  AuthController,
+  BlogsController,
+  PostsController,
+  CommentsController,
+  DevicesController,
+];
+
+const services = [
+  AppService,
+  BlogsService,
+  PostsService,
+  CommentsService,
+  UsersService,
+  LikesForCommentsService,
+  LikesForPostsService,
+  TokenBanService,
+  EmailService,
+  JwtService,
+];
+
+const repositories = [
+  BlogsRepository,
+  PostsRepository,
+  UsersRepository,
+  LikesForCommentsRepository,
+  LikesForPostsRepository,
+  CommentsRepository,
+  DevicesRepository,
+  ExpiredTokensRepository,
+];
+
+const query = [
+  BlogsQuery,
+  PostsQuery,
+  CommentsQuery,
+  UsersQuery,
+  SuperAdminBlogsQuery,
+  SuperAdminUsersQuery,
+];
+
+const constraints = [
+  IsUniqueEmailConstraint,
+  IsNewLoginConstraint,
+  EmailIsNotConfirmedConstraint,
+  EmailConfirmationCodeIsCorrectConstraint,
+  BlogExistsConstraint,
+];
+
+const adapters = [JwtAdapter, EmailManager];
 
 @Module({
   imports: [
@@ -85,49 +139,18 @@ import { BlogExistsConstraint } from './blogs/decorators/validation-decorators/b
       limit: parseInt(process.env.THROTTLE_LIMIT, 10),
     }),
   ],
-  controllers: [
-    AppController,
-    AuthController,
-    BlogsController,
-    PostsController,
-    CommentsController,
-    DevicesController,
-  ],
+  controllers: [...controllers],
   providers: [
     //Services
-    AppService,
-    BlogsService,
-    PostsService,
-    CommentsService,
-    UsersService,
-    LikesForCommentsService,
-    LikesForPostsService,
-    DevicesService,
-    EmailService,
-    JwtService,
+    ...services,
     //Query
-    BlogsQuery,
-    PostsQuery,
-    CommentsQuery,
-    UsersQuery,
+    ...query,
     //Repository
-    BlogsRepository,
-    PostsRepository,
-    UsersRepository,
-    LikesForCommentsRepository,
-    LikesForPostsRepository,
-    CommentsRepository,
-    DevicesRepository,
-    ExpiredTokensRepository,
+    ...repositories,
     //Adapters
-    JwtAdapter,
-    EmailManager,
+    ...adapters,
     //Constraints
-    IsUniqueEmailConstraint,
-    IsNewLoginConstraint,
-    EmailIsNotConfirmedConstraint,
-    EmailConfirmationCodeIsCorrectConstraint,
-    BlogExistsConstraint,
+    ...constraints,
   ],
 })
 export class AppModule {}

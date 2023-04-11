@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserDb } from '../users/users.types';
-import { RefreshTokenResult, TokenPayloadType } from './auth.types';
+import { UserDb } from '../users/types/users.types';
+import {
+  RefreshTokenResult,
+  TokenPairType,
+  TokenPayloadType,
+} from './auth.types';
 import mongoose from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 import { ConfigurationType } from '../configuration/configuration';
@@ -12,6 +16,18 @@ export class JwtAdapter {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService<ConfigurationType>,
   ) {}
+  getTokenPair(user: UserDb): TokenPairType {
+    return {
+      accessToken: this.createJwt(user),
+      refreshTokenMeta: this.createNewRefreshJwt(user),
+    };
+  }
+  getRefreshedTokenPair(user: UserDb, deviceId: mongoose.Types.ObjectId) {
+    return {
+      accessToken: this.createJwt(user),
+      refreshTokenMeta: this.updateRefreshJwt(user, deviceId),
+    };
+  }
   createJwt(user: UserDb): string {
     return this.jwtService.sign(
       { userId: user._id },

@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { UserDb } from './users.types';
+import { UserDb } from './types/users.types';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from './users.schema';
+import { User, UserDocument } from './entity/users.schema';
 import mongoose, { Model } from 'mongoose';
-import { Device, DeviceDocument } from '../security/devices/devices.schema';
+import {
+  Device,
+  DeviceDocument,
+} from '../security/devices/entity/devices.schema';
 import { OutputDeviceDto } from '../security/devices/dto/output.device.dto';
 
 @Injectable()

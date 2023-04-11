@@ -1,9 +1,13 @@
 import { QueryParser } from '../application/query.parser';
-import { BlogDb, BlogPaginatorType, BlogViewModelType } from './blogs.types';
+import {
+  BlogDb,
+  BlogPaginatorType,
+  BlogViewModelType,
+} from './types/blogs.types';
 import mongoose, { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogDocument } from './blogs.schema';
+import { Blog, BlogDocument } from './entity/blogs.schema';
 
 @Injectable()
 export class BlogsQuery {
@@ -40,7 +44,7 @@ export class BlogsQuery {
     if (foundBlogInstance) return this._mapBlogToViewType(foundBlogInstance);
     else return null;
   }
-  _mapBlogToViewType(blog: BlogDb): BlogViewModelType {
+  private _mapBlogToViewType(blog: BlogDb): BlogViewModelType {
     return {
       id: blog._id.toString(),
       name: blog.name,

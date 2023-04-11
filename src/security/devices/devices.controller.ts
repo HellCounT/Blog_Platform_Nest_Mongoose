@@ -6,18 +6,20 @@ import {
   Param,
   UseGuards,
 } from '@nestjs/common';
-import { DevicesService } from './devices.service';
 import { UsersQuery } from '../../users/users.query';
 import { RefreshJwtGuard } from '../../auth/guards/refresh-jwt.guard';
 import { GetRefreshTokenPayload } from '../../auth/decorators/get-decorators/get-refresh-token-payload.decorator';
 import { TokenPayloadType } from '../../auth/auth.types';
 import { OutputDeviceDto } from './dto/output.device.dto';
+import { CommandBus } from '@nestjs/cqrs';
+import { DeleteSessionCommand } from './use-cases/delete.session.use-case';
+import { DeleteAllOtherSessionsCommand } from './use-cases/delete.all.other.sessions.use-case';
 
 @Controller('security/devices')
 export class DevicesController {
   constructor(
-    protected devicesService: DevicesService,
     protected usersQueryRepo: UsersQuery,
+    protected commandBus: CommandBus,
   ) {}
   @UseGuards(RefreshJwtGuard)
   @Get()
@@ -36,9 +38,8 @@ export class DevicesController {
   async deleteAllOtherSessions(
     @GetRefreshTokenPayload() payload: TokenPayloadType,
   ) {
-    return await this.devicesService.deleteAllOtherSessions(
-      payload.userId,
-      payload.deviceId,
+    return await this.commandBus.execute(
+      new DeleteAllOtherSessionsCommand(payload.userId, payload.deviceId),
     );
   }
   @UseGuards(RefreshJwtGuard)
@@ -48,6 +49,8 @@ export class DevicesController {
     @Param('deviceId') deviceId: string,
     @GetRefreshTokenPayload() payload: TokenPayloadType,
   ) {
-    return await this.devicesService.deleteSession(payload.userId, deviceId);
+    return await this.commandBus.execute(
+      new DeleteSessionCommand(payload.userId, deviceId),
+    );
   }
 }

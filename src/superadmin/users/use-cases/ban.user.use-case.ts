@@ -8,8 +8,8 @@ import { LikesForCommentsRepository } from '../../../likes/likes-for-comments.re
 import { DevicesRepository } from '../../../security/devices/devices.repository';
 import { InputBanUserDto } from '../dto/input.ban-user.dto';
 import { NotFoundException } from '@nestjs/common';
-import { PostDocument } from '../../../posts/posts.schema';
-import { CommentDocument } from '../../../comments/comments.schema';
+import { PostDocument } from '../../../posts/entity/posts.schema';
+import { CommentDocument } from '../../../comments/entity/comments.schema';
 import { ExpiredTokensRepository } from '../../../security/tokens/expired.tokens.repository';
 import mongoose from 'mongoose';
 
@@ -32,7 +32,8 @@ export class BanUserUseCase {
   async execute(command: BanUserCommand): Promise<boolean> {
     const user = await this.usersRepo.getUserById(command.id);
     if (!user) throw new NotFoundException();
-    if (user.globalBanInfo.isBanned === command.banUserDto.isBanned) return;
+    if (user.globalBanInfo.isBanned === command.banUserDto.isBanned)
+      return true;
     const posts = await this.postsRepo.getByUserId(command.id);
     const comments = await this.commentsRepo.getByUserId(command.id);
     await this._banEntitiesOnUserBan(
@@ -43,7 +44,7 @@ export class BanUserUseCase {
     await this._recalculateLikesCountersOnEntities(posts, comments);
     if (command.banUserDto.isBanned === true)
       await this._killAllSessions(command.id);
-    return;
+    return true;
   }
   private async _banEntitiesOnUserBan(
     userId: string,

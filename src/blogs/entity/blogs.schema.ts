@@ -10,9 +10,6 @@ class BlogOwnerInfo {
 
   @Prop({ required: true, maxlength: 50 })
   userLogin: string;
-
-  @Prop({ required: true, default: false })
-  isBanned: boolean;
 }
 
 export const BlogOwnerInfoSchema = SchemaFactory.createForClass(BlogOwnerInfo);

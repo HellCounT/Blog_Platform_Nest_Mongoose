@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PostDb, PostViewModelType } from './posts.types';
+import { PostDb, PostViewModelType } from './types/posts.types';
 import mongoose from 'mongoose';
 import { BlogsQuery } from '../blogs/blogs.query';
 import { PostsRepository } from './posts.repository';
-import { LikeStatus } from '../likes/likes.types';
+import { LikeStatus } from '../likes/types/likes.types';
 import { PostsQuery } from './posts.query';
 import { LikesForPostsService } from '../likes/likes-for-posts.service';
 import { InputCreatePostDto } from './dto/input.create-post.dto';

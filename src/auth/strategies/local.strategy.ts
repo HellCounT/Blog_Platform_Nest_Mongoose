@@ -1,16 +1,19 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { AuthService } from '../auth.service';
 import { UnauthorizedException } from '@nestjs/common';
 import { Strategy } from 'passport-local';
-import { UserDb } from '../../users/users.types';
+import { UserDb } from '../../users/types/users.types';
+import { CommandBus } from '@nestjs/cqrs';
+import { ValidateUserCommand } from '../use-cases/validate.user.use-case';
 
 export class LocalStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly authService: AuthService) {
+  constructor(private readonly commandBus: CommandBus) {
     super({ usernameField: 'loginOrEmail' });
   }
 
   async validate(loginOrEmail: string, password: string): Promise<UserDb> {
-    const user = await this.authService.validateUser(loginOrEmail, password);
+    const user = await this.commandBus.execute(
+      new ValidateUserCommand({ loginOrEmail, password }),
+    );
     if (!user) throw new UnauthorizedException();
     return user;
   }

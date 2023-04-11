@@ -1,6 +1,6 @@
 import { InputCreateUserDto } from '../dto/input.create-user.dto';
 import { UsersRepository } from '../../../users/users.repository';
-import { UserDb, UserViewModelType } from '../../../users/users.types';
+import { UserDb, UserViewModelType } from '../../../users/types/users.types';
 import mongoose from 'mongoose';
 import { UsersService } from '../../../users/users.service';
 import { CommandHandler } from '@nestjs/cqrs';

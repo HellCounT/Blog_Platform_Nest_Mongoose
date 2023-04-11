@@ -1,5 +1,5 @@
 import { LikesForPostsRepository } from './likes-for-posts.repository';
-import { LikeStatus, PostLikeDb } from './likes.types';
+import { LikeStatus, PostLikeDb } from './types/likes.types';
 import mongoose from 'mongoose';
 import { Injectable } from '@nestjs/common';
 

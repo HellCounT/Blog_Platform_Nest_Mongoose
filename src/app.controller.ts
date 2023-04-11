@@ -1,23 +1,23 @@
 import { Controller, Delete, Get, HttpCode } from '@nestjs/common';
 import { AppService } from './app.service';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog, BlogDocument } from './blogs/blogs.schema';
+import { Blog, BlogDocument } from './blogs/entity/blogs.schema';
 import { Model } from 'mongoose';
-import { Post, PostDocument } from './posts/posts.schema';
-import { User, UserDocument } from './users/users.schema';
-import { Comment, CommentDocument } from './comments/comments.schema';
+import { Post, PostDocument } from './posts/entity/posts.schema';
+import { User, UserDocument } from './users/entity/users.schema';
+import { Comment, CommentDocument } from './comments/entity/comments.schema';
 import {
   LikeForPost,
   LikeForPostDocument,
-} from './likes/likes-for-post.schema';
+} from './likes/entity/likes-for-post.schema';
 import {
   LikeForComment,
   LikeForCommentDocument,
-} from './likes/likes-for-comments.schema';
+} from './likes/entity/likes-for-comments.schema';
 import {
   ExpiredToken,
   ExpiredTokenDocument,
-} from './security/tokens/expiredTokenSchema';
+} from './security/tokens/entity/expiredTokenSchema';
 
 @Controller()
 export class AppController {
