@@ -3,9 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from './configuration/configuration';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersService } from './users/users.service';
 import { UsersRepository } from './users/users.repository';
-import { BlogsService } from './blogs/blogs.service';
 import { BlogsRepository } from './blogs/blogs.repository';
 import { BlogsController } from './blogs/blogs.controller';
 import { BlogsQuery } from './blogs/blogs.query';
@@ -60,6 +58,27 @@ import { EmailService } from './email/email.service';
 import { BlogExistsConstraint } from './blogs/decorators/validation-decorators/blog-exists.decorator';
 import { SuperAdminBlogsQuery } from './superadmin/blogs/super-admin.blogs.query';
 import { SuperAdminUsersQuery } from './superadmin/users/super-admin.users.query';
+import { ConfirmUserEmailUseCase } from './auth/use-cases/confirm.user.email.use-case';
+import { RegisterUserUseCase } from './auth/use-cases/register.user.use-case';
+import { ResendActivationCodeUseCase } from './auth/use-cases/resend.activation.code.use-case';
+import { SendPasswordRecoveryCodeUseCase } from './auth/use-cases/send.password.recovery.code.use-case';
+import { UpdatePasswordByRecoveryCodeUseCase } from './auth/use-cases/update.password.by.recovery.code.use-case';
+import { ValidateUserUseCase } from './auth/use-cases/validate.user.use-case';
+import { CreateBlogUseCase } from './blogger/blogs/use-cases/create.blog.use-case';
+import { CreatePostForBlogUseCase } from './blogger/blogs/use-cases/create.post.for.blog.use-case';
+import { DeleteBlogUseCase } from './blogger/blogs/use-cases/delete.blog.use-case';
+import { DeletePostUseCase } from './blogger/blogs/use-cases/delete.post.use-case';
+import { UpdateBlogUseCase } from './blogger/blogs/use-cases/update.blog.use-case';
+import { UpdatePostForBlogUseCase } from './blogger/blogs/use-cases/update.post.for.blog.use-case';
+import { DeleteAllOtherSessionsUseCase } from './security/devices/use-cases/delete.all.other.sessions.use-case';
+import { DeleteSessionUseCase } from './security/devices/use-cases/delete.session.use-case';
+import { LogoutSessionUseCase } from './security/devices/use-cases/logout.session.use-case';
+import { StartNewSessionUseCase } from './security/devices/use-cases/start.new.session.use-case';
+import { UpdateSessionWithDeviceIdUseCase } from './security/devices/use-cases/update.session.with.device.id.use-case';
+import { BindBlogToUserUseCase } from './superadmin/blogs/use-cases/bind.blog.to.user.use-case';
+import { BanUserUseCase } from './superadmin/users/use-cases/ban.user.use-case';
+import { CreateUserUseCase } from './superadmin/users/use-cases/create.user.use-case';
+import { DeleteUserUseCase } from './superadmin/users/use-cases/delete.user.use-case';
 
 const controllers = [
   AppController,
@@ -72,15 +91,37 @@ const controllers = [
 
 const services = [
   AppService,
-  BlogsService,
   PostsService,
   CommentsService,
-  UsersService,
   LikesForCommentsService,
   LikesForPostsService,
   TokenBanService,
   EmailService,
   JwtService,
+];
+
+const useCases = [
+  ConfirmUserEmailUseCase,
+  RegisterUserUseCase,
+  ResendActivationCodeUseCase,
+  SendPasswordRecoveryCodeUseCase,
+  UpdatePasswordByRecoveryCodeUseCase,
+  ValidateUserUseCase,
+  CreateBlogUseCase,
+  CreatePostForBlogUseCase,
+  DeleteBlogUseCase,
+  DeletePostUseCase,
+  UpdateBlogUseCase,
+  UpdatePostForBlogUseCase,
+  DeleteAllOtherSessionsUseCase,
+  DeleteSessionUseCase,
+  LogoutSessionUseCase,
+  StartNewSessionUseCase,
+  UpdateSessionWithDeviceIdUseCase,
+  BindBlogToUserUseCase,
+  BanUserUseCase,
+  CreateUserUseCase,
+  DeleteUserUseCase,
 ];
 
 const repositories = [
@@ -143,6 +184,8 @@ const adapters = [JwtAdapter, EmailManager];
   providers: [
     //Services
     ...services,
+    //UseCases
+    ...useCases,
     //Query
     ...query,
     //Repository

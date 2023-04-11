@@ -2,8 +2,8 @@ import { InputCreateUserDto } from '../dto/input.create-user.dto';
 import { UsersRepository } from '../../../users/users.repository';
 import { UserDb, UserViewModelType } from '../../../users/types/users.types';
 import mongoose from 'mongoose';
-import { UsersService } from '../../../users/users.service';
 import { CommandHandler } from '@nestjs/cqrs';
+import { generateHash } from '../../../application/generate.hash';
 
 export class CreateUserCommand {
   constructor(public userCreateDto: InputCreateUserDto) {}
@@ -11,15 +11,10 @@ export class CreateUserCommand {
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserUseCase {
-  constructor(
-    protected usersRepo: UsersRepository,
-    protected usersService: UsersService,
-  ) {}
+  constructor(protected usersRepo: UsersRepository) {}
 
   async execute(command: CreateUserCommand): Promise<UserViewModelType | null> {
-    const passwordHash = await this.usersService._generateHash(
-      command.userCreateDto.password,
-    );
+    const passwordHash = await generateHash(command.userCreateDto.password);
     const currentDate = new Date();
     const newUser = new UserDb(
       new mongoose.Types.ObjectId(),
@@ -37,6 +32,11 @@ export class CreateUserUseCase {
       {
         recoveryCode: undefined,
         expirationDate: undefined,
+      },
+      {
+        isBanned: false,
+        banDate: null,
+        banReason: null,
       },
     );
     return await this.usersRepo.createUser(newUser);
