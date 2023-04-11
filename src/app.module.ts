@@ -79,6 +79,7 @@ import { BindBlogToUserUseCase } from './superadmin/blogs/use-cases/bind.blog.to
 import { BanUserUseCase } from './superadmin/users/use-cases/ban.user.use-case';
 import { CreateUserUseCase } from './superadmin/users/use-cases/create.user.use-case';
 import { DeleteUserUseCase } from './superadmin/users/use-cases/delete.user.use-case';
+import { CommandBus } from '@nestjs/cqrs';
 
 const controllers = [
   AppController,
@@ -182,6 +183,7 @@ const adapters = [JwtAdapter, EmailManager];
   ],
   controllers: [...controllers],
   providers: [
+    CommandBus,
     //Services
     ...services,
     //UseCases
