@@ -34,7 +34,6 @@ export class SuperAdminUsersController {
   @Get()
   async getAllUsers(@Query() query: UserQueryParser) {
     const queryParams: UserQueryParser = parseUserQueryPagination(query);
-    console.log(queryParams);
     return this.superAdminUsersQueryRepo.viewAllUsers(queryParams);
   }
 
