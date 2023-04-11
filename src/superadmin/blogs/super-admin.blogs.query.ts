@@ -1,5 +1,3 @@
-// Имеет свою модель просмотра, в которой есть инфа о владельце блога
-
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument } from '../../blogs/entity/blogs.schema';

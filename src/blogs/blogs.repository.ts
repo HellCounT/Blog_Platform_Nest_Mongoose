@@ -1,6 +1,10 @@
 import { BlogDb } from './types/blogs.types';
 import mongoose, { Model } from 'mongoose';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument } from './entity/blogs.schema';
 import { Post, PostDocument } from '../posts/entity/posts.schema';
@@ -26,11 +30,14 @@ export class BlogsRepository {
     name: string,
     description: string,
     websiteUrl: string,
+    userId: string,
   ): Promise<boolean> {
     const blogInstance = await this.blogModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
     });
     if (!blogInstance) throw new NotFoundException();
+    if (blogInstance.blogOwnerInfo.userId !== userId)
+      throw new ForbiddenException();
     if (name) {
       blogInstance.name = name;
       await this.postModel.updateMany(
@@ -47,11 +54,14 @@ export class BlogsRepository {
     await blogInstance.save();
     return true;
   }
-  async deleteBlog(id: string): Promise<boolean> {
-    const result = await this.blogModel.deleteOne({
-      _id: new mongoose.Types.ObjectId(id),
+  async deleteBlog(blogId: string, userId: string): Promise<void> {
+    const blog = await this.getBlogById(blogId);
+    if (!blog) throw new NotFoundException();
+    if (blog.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
+    await this.blogModel.deleteOne({
+      _id: new mongoose.Types.ObjectId(blogId),
     });
-    return result.deletedCount === 1;
+    return;
   }
   async getByUserId(userId: string): Promise<BlogDocument[]> {
     return this.blogModel.find({ 'blogOwnerInfo.userId': userId });

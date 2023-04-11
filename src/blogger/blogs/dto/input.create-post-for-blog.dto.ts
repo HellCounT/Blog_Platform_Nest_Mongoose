@@ -1,5 +1,5 @@
 import { Length } from 'class-validator';
-import { Trim } from '../../auth/decorators/validation-decorators/trim.decorator';
+import { Trim } from '../../../auth/decorators/validation-decorators/trim.decorator';
 
 export class InputCreatePostForBlogDto {
   @Trim()
