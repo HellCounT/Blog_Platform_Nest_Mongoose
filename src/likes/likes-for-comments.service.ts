@@ -15,6 +15,7 @@ export class LikesForCommentsService {
       new mongoose.Types.ObjectId(),
       commentId,
       userId,
+      false,
       likeStatus,
     );
     await this.likesForCommentsRepo.createNewLike(newLike);

@@ -25,6 +25,9 @@ import {
 import { BloggerBlogsQuery } from './blogger.blogs.query';
 import { InputCreatePostForBlogDto } from './dto/input.create-post-for-blog.dto';
 import { CreatePostForBlogCommand } from './use-cases/create.post.for.blog.use-case';
+import { InputUpdatePostDto } from './dto/input.update-post.dto';
+import { UpdatePostForBlogCommand } from './use-cases/update.post.for.blog.use-case';
+import { DeletePostCommand } from './use-cases/delete.post.use-case';
 
 @UseGuards(JwtAuthGuard)
 @Controller('blogger/blogs')
@@ -70,6 +73,7 @@ export class BloggerBlogsController {
     return;
   }
   @Post(':blogId/posts')
+  @HttpCode(201)
   async createPostForBlog(
     @Param('blogId') blogId: string,
     @Body() createPostDto: InputCreatePostForBlogDto,
@@ -78,5 +82,35 @@ export class BloggerBlogsController {
     return await this.commandBus.execute(
       new CreatePostForBlogCommand(createPostDto, blogId, req.user.userId),
     );
+  }
+  @Put(':blogId/posts/:id')
+  @HttpCode(204)
+  async updatePost(
+    @Param('blogId') blogId: string,
+    @Param(':id') postId: string,
+    @Body() updatePostDto: InputUpdatePostDto,
+    @Req() req,
+  ) {
+    await this.commandBus.execute(
+      new UpdatePostForBlogCommand(
+        updatePostDto,
+        blogId,
+        postId,
+        req.user.userId,
+      ),
+    );
+    return;
+  }
+  @Delete(':blogId/posts/:id')
+  @HttpCode(204)
+  async deletePost(
+    @Param('blogId') blogId: string,
+    @Param(':id') postId: string,
+    @Req() req,
+  ) {
+    await this.commandBus.execute(
+      new DeletePostCommand(blogId, postId, req.user.userId),
+    );
+    return;
   }
 }

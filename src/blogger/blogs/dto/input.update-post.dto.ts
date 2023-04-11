@@ -1,6 +1,6 @@
 import { IsMongoId, IsNotEmpty, IsString, Length } from 'class-validator';
-import { BlogExists } from '../../blogs/decorators/validation-decorators/blog-exists.decorator';
-import { Trim } from '../../auth/decorators/validation-decorators/trim.decorator';
+import { BlogExists } from '../../../blogs/decorators/validation-decorators/blog-exists.decorator';
+import { Trim } from '../../../auth/decorators/validation-decorators/trim.decorator';
 
 export class InputUpdatePostDto {
   @IsString({ message: 'Invalid format' })

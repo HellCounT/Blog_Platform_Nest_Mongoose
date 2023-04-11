@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpCode,
   Param,
@@ -15,15 +14,12 @@ import { PostsService } from './posts.service';
 import { PostsQuery } from './posts.query';
 import { parseQueryPagination, QueryParser } from '../application/query.parser';
 import { CommentsQuery } from '../comments/comments.query';
-import { BasicAuthGuard } from '../auth/guards/basic-auth.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { InputCommentDto } from '../comments/dto/input-comment.dto';
 import { CommentsService } from '../comments/comments.service';
 import { CommentPaginatorDto } from '../comments/dto/output.comment-paginator.dto';
 import { InputLikeStatusDto } from '../likes/dto/input.like-status.dto';
 import { UsersQuery } from '../users/users.query';
-import { InputCreatePostDto } from './dto/input.create-post.dto';
-import { InputUpdatePostDto } from './dto/input.update-post.dto';
 import { GuestGuard } from '../auth/guards/guest.guard';
 
 @Controller('posts')
@@ -35,27 +31,6 @@ export class PostsController {
     protected readonly commentsQueryRepo: CommentsQuery,
     protected readonly usersQueryRepo: UsersQuery,
   ) {}
-  @UseGuards(BasicAuthGuard)
-  @Post()
-  @HttpCode(201)
-  async createPost(@Body() postCreateDto: InputCreatePostDto) {
-    return await this.postsService.createPost(postCreateDto);
-  }
-  @UseGuards(BasicAuthGuard)
-  @Put(':id')
-  @HttpCode(204)
-  async updatePost(
-    @Param('id') id: string,
-    @Body() postUpdateDto: InputUpdatePostDto,
-  ) {
-    return await this.postsService.updatePost(id, postUpdateDto);
-  }
-  @UseGuards(BasicAuthGuard)
-  @Delete(':id')
-  @HttpCode(204)
-  async deletePost(@Param('id') id: string) {
-    return await this.postsService.deletePost(id);
-  }
   @UseGuards(GuestGuard)
   @Get()
   async getAllPosts(@Query() query: QueryParser, @Req() req) {

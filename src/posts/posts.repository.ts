@@ -11,6 +11,9 @@ export class PostsRepository {
     @InjectModel(Post.name) private postModel: Model<PostDocument>,
     @InjectModel(Blog.name) private blogModel: Model<BlogDocument>,
   ) {}
+  async getPostById(postId: string): Promise<PostDocument> {
+    return this.postModel.findOne({ _id: new mongoose.Types.ObjectId(postId) });
+  }
   async createPost(newPost: PostDb): Promise<PostViewModelType | null> {
     const postInstance = new this.postModel(newPost);
     const saveResult = await postInstance.save();
@@ -36,24 +39,18 @@ export class PostsRepository {
     short: string,
     text: string,
     blogId: string,
+    blogName: string,
   ): Promise<boolean | null> {
-    const foundBlog = await this.blogModel.findOne({
-      _id: new mongoose.Types.ObjectId(blogId),
+    const postInstance = await this.postModel.findOne({
+      _id: new mongoose.Types.ObjectId(inputId),
     });
-    if (!foundBlog) return null;
-    else {
-      const postInstance = await this.postModel.findOne({
-        _id: new mongoose.Types.ObjectId(inputId),
-      });
-      if (!postInstance) return false;
-      postInstance.title = postTitle;
-      postInstance.shortDescription = short;
-      postInstance.content = text;
-      postInstance.blogId = blogId;
-      postInstance.blogName = foundBlog.name;
-      await postInstance.save();
-      return true;
-    }
+    postInstance.title = postTitle;
+    postInstance.shortDescription = short;
+    postInstance.content = text;
+    postInstance.blogId = blogId;
+    postInstance.blogName = blogName;
+    await postInstance.save();
+    return true;
   }
   async deletePost(inputId: string): Promise<boolean> {
     const deleteResult = await this.postModel.deleteOne({

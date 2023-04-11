@@ -17,6 +17,7 @@ export class LikesForPostsService {
       postId,
       userId,
       userLogin,
+      false,
       new Date(),
       likeStatus,
     );
