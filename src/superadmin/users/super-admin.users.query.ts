@@ -41,7 +41,7 @@ export class SuperAdminUsersQuery {
       .limit(q.pageSize)
       .lean();
     console.log(reqPageDbUsers);
-    const pageUsers = reqPageDbUsers.map((u) => this._mapUserToViewType(u));
+    const pageUsers = reqPageDbUsers.map((u) => this._mapUserToSAViewType(u));
     return {
       pagesCount: Math.ceil(allUsersCount / q.pageSize),
       page: q.pageNumber,
@@ -50,9 +50,9 @@ export class SuperAdminUsersQuery {
       items: pageUsers,
     };
   }
-  private _mapUserToViewType(user: UserDocument): OutputSuperAdminUserDto {
-    let banDateString = '';
-    if (user.globalBanInfo.banDate === null) banDateString = 'Not Banned';
+  private _mapUserToSAViewType(user: UserDocument): OutputSuperAdminUserDto {
+    let banDateString;
+    if (user.globalBanInfo.banDate === null) banDateString = null;
     else banDateString = user.globalBanInfo.banDate.toISOString();
     return {
       id: user._id.toString(),

@@ -35,10 +35,12 @@ export class CommentsQuery {
     activeUserId = '',
   ): Promise<CommentPaginatorDto | null> {
     const foundCommentsCount = await this.commentModel.countDocuments({
+      'commentatorInfo.isBanned': false,
       postId: { $eq: postId },
     });
     const reqPageDbComments = await this.commentModel
       .find({
+        'commentatorInfo.isBanned': false,
         postId: { $eq: postId },
       })
       .sort({ [q.sortBy]: q.sortDirection })

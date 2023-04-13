@@ -5,7 +5,7 @@ export class OutputSuperAdminUserDto {
   createdAt: string;
   banInfo: {
     isBanned: boolean;
-    banDate: string;
+    banDate: string | null;
     banReason: string;
   };
 }
