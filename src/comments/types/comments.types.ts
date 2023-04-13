@@ -7,6 +7,7 @@ export class CommentDb {
     public commentatorInfo: {
       userId: string;
       userLogin: string;
+      isBanned: boolean;
     },
     public postId: string,
     public createdAt: string,

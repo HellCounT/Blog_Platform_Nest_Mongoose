@@ -36,6 +36,7 @@ export class CommentsService {
       {
         userId: userId.toString(),
         userLogin: foundUser.accountData.login,
+        isBanned: false,
       },
       postId,
       new Date().toISOString(),
