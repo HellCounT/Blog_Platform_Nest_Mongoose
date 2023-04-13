@@ -83,6 +83,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { SuperAdminBlogsController } from './superadmin/blogs/super-admin.blogs.controller';
 import { SuperAdminUsersController } from './superadmin/users/super-admin.users.controller';
 import { BloggerBlogsController } from './blogger/blogs/blogger.blogs.controller';
+import { BloggerBlogsQuery } from './blogger/blogs/blogger.blogs.query';
 
 const controllers = [
   AppController,
@@ -149,6 +150,7 @@ const query = [
   UsersQuery,
   SuperAdminBlogsQuery,
   SuperAdminUsersQuery,
+  BloggerBlogsQuery,
 ];
 
 const constraints = [
