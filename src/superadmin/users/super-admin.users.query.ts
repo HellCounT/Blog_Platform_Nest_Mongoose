@@ -12,7 +12,6 @@ export class SuperAdminUsersQuery {
   async viewAllUsers(q: UserQueryParser): Promise<UserPaginatorType> {
     let loginFilter = '';
     let emailFilter = '';
-    console.log(q);
     if (q.searchLoginTerm) loginFilter = '.*' + q.searchLoginTerm + '.*';
     if (q.searchEmailTerm) emailFilter = '.*' + q.searchEmailTerm + '.*';
     let banFilter: any = '';

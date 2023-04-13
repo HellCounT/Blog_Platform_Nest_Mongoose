@@ -121,6 +121,7 @@ export class UsersRepository {
       userInstance.globalBanInfo.banDate = null;
       userInstance.globalBanInfo.banReason = null;
     }
+    userInstance.save();
     return;
   }
 }
