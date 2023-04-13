@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { UserDb, UserViewModelType } from './types/users.types';
+import { UserDb } from './types/users.types';
 import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './entity/users.schema';
+import { OutputSuperAdminUserDto } from '../superadmin/users/dto/output.super-admin.user.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -12,14 +13,22 @@ export class UsersRepository {
       _id: new mongoose.Types.ObjectId(id),
     });
   }
-  async createUser(newUser: UserDb): Promise<UserViewModelType> {
+  async createUser(newUser: UserDb): Promise<OutputSuperAdminUserDto> {
     const userInstance = new this.userModel(newUser);
     const result = await userInstance.save();
+    let banDateString;
+    if (result.globalBanInfo.banDate === null) banDateString = null;
+    else banDateString = result.globalBanInfo.banDate.toISOString();
     return {
       id: result._id.toString(),
       login: result.accountData.login,
       email: result.accountData.email,
       createdAt: result.accountData.createdAt,
+      banInfo: {
+        isBanned: result.globalBanInfo.isBanned,
+        banDate: banDateString,
+        banReason: result.globalBanInfo.banReason,
+      },
     };
   }
   async deleteUser(id: string): Promise<boolean> {

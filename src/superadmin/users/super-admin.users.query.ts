@@ -40,7 +40,6 @@ export class SuperAdminUsersQuery {
       .skip((q.pageNumber - 1) * q.pageSize)
       .limit(q.pageSize)
       .lean();
-    console.log(reqPageDbUsers);
     const pageUsers = reqPageDbUsers.map((u) => this._mapUserToSAViewType(u));
     return {
       pagesCount: Math.ceil(allUsersCount / q.pageSize),
