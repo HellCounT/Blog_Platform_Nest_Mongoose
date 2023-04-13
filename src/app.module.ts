@@ -79,7 +79,7 @@ import { BindBlogToUserUseCase } from './superadmin/blogs/use-cases/bind.blog.to
 import { BanUserUseCase } from './superadmin/users/use-cases/ban.user.use-case';
 import { CreateUserUseCase } from './superadmin/users/use-cases/create.user.use-case';
 import { DeleteUserUseCase } from './superadmin/users/use-cases/delete.user.use-case';
-import { CommandBus } from '@nestjs/cqrs';
+import { CqrsModule } from '@nestjs/cqrs';
 import { SuperAdminBlogsController } from './superadmin/blogs/super-admin.blogs.controller';
 import { SuperAdminUsersController } from './superadmin/users/super-admin.users.controller';
 import { BloggerBlogsController } from './blogger/blogs/blogger.blogs.controller';
@@ -188,10 +188,10 @@ const adapters = [JwtAdapter, EmailManager];
       ttl: parseInt(process.env.THROTTLE_TTL, 10),
       limit: parseInt(process.env.THROTTLE_LIMIT, 10),
     }),
+    CqrsModule,
   ],
   controllers: [...controllers],
   providers: [
-    CommandBus,
     //Services
     ...services,
     //UseCases
