@@ -24,6 +24,7 @@ export class CommentsQuery {
   ): Promise<CommentViewDto | null> {
     const foundCommentInstance = await this.commentModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
+      'commentatorInfo.isBanned': false,
     });
     if (foundCommentInstance)
       return this._mapCommentToViewType(foundCommentInstance, activeUserId);
