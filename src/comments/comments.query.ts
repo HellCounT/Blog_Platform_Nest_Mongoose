@@ -68,6 +68,7 @@ export class CommentsQuery {
     return this.likeForCommentModel.findOne({
       commentId: commentId,
       userId: userId,
+      isBanned: false,
     });
   }
   async _mapCommentToViewType(
