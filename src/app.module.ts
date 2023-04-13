@@ -80,6 +80,9 @@ import { BanUserUseCase } from './superadmin/users/use-cases/ban.user.use-case';
 import { CreateUserUseCase } from './superadmin/users/use-cases/create.user.use-case';
 import { DeleteUserUseCase } from './superadmin/users/use-cases/delete.user.use-case';
 import { CommandBus } from '@nestjs/cqrs';
+import { SuperAdminBlogsController } from './superadmin/blogs/super-admin.blogs.controller';
+import { SuperAdminUsersController } from './superadmin/users/super-admin.users.controller';
+import { BloggerBlogsController } from './blogger/blogs/blogger.blogs.controller';
 
 const controllers = [
   AppController,
@@ -88,6 +91,9 @@ const controllers = [
   PostsController,
   CommentsController,
   DevicesController,
+  SuperAdminBlogsController,
+  SuperAdminUsersController,
+  BloggerBlogsController,
 ];
 
 const services = [
