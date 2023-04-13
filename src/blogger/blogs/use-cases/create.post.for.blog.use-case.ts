@@ -35,6 +35,10 @@ export class CreatePostForBlogUseCase {
       foundBlog.name,
       new Date(),
       {
+        isBanned: false,
+        userId: foundBlog.blogOwnerInfo.userId,
+      },
+      {
         likesCount: 0,
         dislikesCount: 0,
       },

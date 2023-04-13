@@ -36,6 +36,10 @@ export class PostDb {
     public blogId: string,
     public blogName: string,
     public createdAt: Date,
+    public postOwnerInfo: {
+      userId: string;
+      isBanned: boolean;
+    },
     public likesInfo: {
       likesCount: number;
       dislikesCount: number;
