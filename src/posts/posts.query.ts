@@ -27,9 +27,11 @@ export class PostsQuery {
     q: QueryParser,
     activeUserId: string,
   ): Promise<PostPaginatorType> {
-    const allPostsCount = await this.postModel.countDocuments();
+    const allPostsCount = await this.postModel.countDocuments({
+      'postOwnerInfo.isBanned': false,
+    });
     const reqPageDbPosts = await this.postModel
-      .find()
+      .find({ 'postOwnerInfo.isBanned': false })
       .sort({ [q.sortBy]: q.sortDirection })
       .skip((q.pageNumber - 1) * q.pageSize)
       .limit(q.pageSize)
@@ -72,9 +74,10 @@ export class PostsQuery {
     ) {
       const foundPostsCount = await this.postModel.countDocuments({
         blogId: { $eq: blogId },
+        'postOwnerInfo.isBanned': false,
       });
       const reqPageDbPosts = await this.postModel
-        .find({ blogId: { $eq: blogId } })
+        .find({ blogId: { $eq: blogId }, 'postOwnerInfo.isBanned': false })
         .sort({ [q.sortBy]: q.sortDirection })
         .skip((q.pageNumber - 1) * q.pageSize)
         .limit(q.pageSize)
@@ -100,6 +103,7 @@ export class PostsQuery {
     return this.likeForPostModel.findOne({
       postId: postId,
       userId: userId,
+      isBanned: false,
     });
   }
   private async _getNewestLikes(
@@ -109,6 +113,7 @@ export class PostsQuery {
       .find({
         postId: postId,
         likeStatus: LikeStatus.like,
+        isBanned: false,
       })
       .sort({ addedAt: -1 })
       .limit(3)
