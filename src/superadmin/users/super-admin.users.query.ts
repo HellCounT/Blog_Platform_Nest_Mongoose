@@ -12,14 +12,15 @@ export class SuperAdminUsersQuery {
   async viewAllUsers(q: UserQueryParser): Promise<UserPaginatorType> {
     let loginFilter = '';
     let emailFilter = '';
+    console.log(q);
     if (q.searchLoginTerm) loginFilter = '.*' + q.searchLoginTerm + '.*';
     if (q.searchEmailTerm) emailFilter = '.*' + q.searchEmailTerm + '.*';
     let banFilter: any = '';
     if (q.banStatus === BanStatus.all) banFilter = {};
     if (q.banStatus === BanStatus.notBanned)
-      banFilter = { 'banInfo.isBanned': false };
+      banFilter = { 'globalBanInfo.isBanned': false };
     if (q.banStatus === BanStatus.banned)
-      banFilter = { 'banInfo.isBanned': true };
+      banFilter = { 'globalBanInfo.isBanned': true };
     const allUsersCount = await this.userModel.countDocuments({
       ...banFilter,
       $or: [
@@ -39,6 +40,7 @@ export class SuperAdminUsersQuery {
       .skip((q.pageNumber - 1) * q.pageSize)
       .limit(q.pageSize)
       .lean();
+    console.log(reqPageDbUsers);
     const pageUsers = reqPageDbUsers.map((u) => this._mapUserToViewType(u));
     return {
       pagesCount: Math.ceil(allUsersCount / q.pageSize),
@@ -49,6 +51,9 @@ export class SuperAdminUsersQuery {
     };
   }
   private _mapUserToViewType(user: UserDocument): OutputSuperAdminUserDto {
+    let banDateString = '';
+    if (user.globalBanInfo.banDate === null) banDateString = 'Not Banned';
+    else banDateString = user.globalBanInfo.banDate.toISOString();
     return {
       id: user._id.toString(),
       login: user.accountData.login,
@@ -56,7 +61,7 @@ export class SuperAdminUsersQuery {
       createdAt: user.accountData.createdAt,
       banInfo: {
         isBanned: user.globalBanInfo.isBanned,
-        banDate: user.globalBanInfo.banDate.toISOString(),
+        banDate: banDateString,
         banReason: user.globalBanInfo.banReason,
       },
     };
