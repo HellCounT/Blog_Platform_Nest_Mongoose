@@ -87,7 +87,7 @@ export class BloggerBlogsController {
   @HttpCode(204)
   async updatePost(
     @Param('blogId') blogId: string,
-    @Param(':id') postId: string,
+    @Param('id') postId: string,
     @Body() updatePostDto: InputUpdatePostDto,
     @Req() req,
   ) {
@@ -105,7 +105,7 @@ export class BloggerBlogsController {
   @HttpCode(204)
   async deletePost(
     @Param('blogId') blogId: string,
-    @Param(':id') postId: string,
+    @Param('id') postId: string,
     @Req() req,
   ) {
     await this.commandBus.execute(

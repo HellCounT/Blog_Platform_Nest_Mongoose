@@ -739,7 +739,7 @@ window.onload = function() {
               }
             },
             {
-              "name": ":id",
+              "name": "id",
               "required": true,
               "in": "path",
               "schema": {
@@ -775,7 +775,7 @@ window.onload = function() {
               }
             },
             {
-              "name": ":id",
+              "name": "id",
               "required": true,
               "in": "path",
               "schema": {

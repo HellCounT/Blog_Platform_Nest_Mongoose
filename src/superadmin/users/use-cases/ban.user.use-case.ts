@@ -70,16 +70,13 @@ export class BanUserUseCase {
     likesInComments: LikeForCommentDocument[],
   ): Promise<void> {
     for (let i = 0; i < likesInPosts.length; i++) {
-      console.log('postId: ', likesInPosts[i].postId);
       const postLikesCounter = await this.likesForPostsRepo.getNewLikesCounter(
         likesInPosts[i].postId,
       );
-      console.log('new postsLikesCounter ', postLikesCounter);
       const postDislikesCounter =
         await this.likesForPostsRepo.getNewDislikesCounter(
           likesInPosts[i].postId,
         );
-      console.log('new postsDislikesCounter ', postDislikesCounter);
       await this.postsRepo.updateLikesCounters(
         postLikesCounter,
         postDislikesCounter,
