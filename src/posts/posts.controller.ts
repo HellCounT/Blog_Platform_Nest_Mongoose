@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
   Req,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostsQuery } from './posts.query';
@@ -80,6 +81,7 @@ export class PostsController {
     @Param('postId') postId: string,
   ) {
     const foundUser = await this.usersQueryRepo.findUserById(req.user.userId);
+    if (foundUser.globalBanInfo.isBanned) throw new UnauthorizedException();
     return await this.postsService.updateLikeStatus(
       postId,
       req.user.userId,
