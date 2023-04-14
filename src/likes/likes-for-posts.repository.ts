@@ -41,7 +41,7 @@ export class LikesForPostsRepository {
     return this.likesForPostsModel.find({ userId: userId });
   }
   async banByUserId(userId: string, isBanned: boolean): Promise<void> {
-    this.likesForPostsModel.updateMany(
+    await this.likesForPostsModel.updateMany(
       { userId: userId },
       { isBanned: isBanned },
     );

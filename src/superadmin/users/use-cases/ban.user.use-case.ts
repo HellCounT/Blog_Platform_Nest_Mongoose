@@ -34,8 +34,6 @@ export class BanUserUseCase {
     if (!user) throw new NotFoundException();
     if (user.globalBanInfo.isBanned === command.banUserDto.isBanned)
       return true;
-    // const posts = await this.postsRepo.getByUserId(command.id);
-    // const comments = await this.commentsRepo.getByUserId(command.id);
     const likesInPosts = await this.likesForPostsRepo.getByUserId(command.id);
     const likesInComments = await this.likesForCommentsRepo.getByUserId(
       command.id,
@@ -72,6 +70,7 @@ export class BanUserUseCase {
     likesInComments: LikeForCommentDocument[],
   ): Promise<void> {
     for (let i = 0; i < likesInPosts.length; i++) {
+      console.log('postId: ', likesInPosts[i].postId);
       const postLikesCounter = await this.likesForPostsRepo.getNewLikesCounter(
         likesInPosts[i].postId,
       );
@@ -92,12 +91,10 @@ export class BanUserUseCase {
         await this.likesForCommentsRepo.getNewLikesCounter(
           likesInComments[i].commentId,
         );
-      console.log('new commentsLikesCounter ', commentLikesCounter);
       const commentDislikesCounter =
         await this.likesForCommentsRepo.getNewDislikesCounter(
           likesInComments[i].commentId,
         );
-      console.log('new commentDislikesCounter ', commentDislikesCounter);
       await this.commentsRepo.updateLikesCounters(
         commentLikesCounter,
         commentDislikesCounter,
