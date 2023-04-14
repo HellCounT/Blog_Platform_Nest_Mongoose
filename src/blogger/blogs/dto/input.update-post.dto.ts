@@ -1,5 +1,4 @@
-import { IsMongoId, IsNotEmpty, IsString, Length } from 'class-validator';
-import { BlogExists } from '../../../blogs/decorators/validation-decorators/blog-exists.decorator';
+import { IsString, Length } from 'class-validator';
 import { Trim } from '../../../auth/decorators/validation-decorators/trim.decorator';
 
 export class InputUpdatePostDto {
@@ -15,10 +14,4 @@ export class InputUpdatePostDto {
   @Trim()
   @Length(1, 1000, { message: 'Incorrect content length' })
   content: string;
-  // @IsMongoId({ message: 'Invalid id pattern' })
-  // @BlogExists({ message: 'Blog does not exist' })
-  // @IsString({ message: 'Invalid format' })
-  // @IsNotEmpty({ message: 'Field is not provided' })
-  // @Trim()
-  // blogId: string;
 }
