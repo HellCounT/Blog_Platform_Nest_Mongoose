@@ -15,10 +15,10 @@ export class InputUpdatePostDto {
   @Trim()
   @Length(1, 1000, { message: 'Incorrect content length' })
   content: string;
-  @IsMongoId({ message: 'Invalid id pattern' })
-  @BlogExists({ message: 'Blog does not exist' })
-  @IsString({ message: 'Invalid format' })
-  @IsNotEmpty({ message: 'Field is not provided' })
-  @Trim()
-  blogId: string;
+  // @IsMongoId({ message: 'Invalid id pattern' })
+  // @BlogExists({ message: 'Blog does not exist' })
+  // @IsString({ message: 'Invalid format' })
+  // @IsNotEmpty({ message: 'Field is not provided' })
+  // @Trim()
+  // blogId: string;
 }
