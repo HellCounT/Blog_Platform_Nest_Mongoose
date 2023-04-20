@@ -84,6 +84,7 @@ import { SuperAdminBlogsController } from './superadmin/blogs/super-admin.blogs.
 import { SuperAdminUsersController } from './superadmin/users/super-admin.users.controller';
 import { BloggerBlogsController } from './blogger/blogs/blogger.blogs.controller';
 import { BloggerBlogsQuery } from './blogger/blogs/blogger.blogs.query';
+import { BloggerUsersController } from './blogger/users/blogger.users.controller';
 
 const controllers = [
   AppController,
@@ -95,6 +96,7 @@ const controllers = [
   SuperAdminBlogsController,
   SuperAdminUsersController,
   BloggerBlogsController,
+  BloggerUsersController,
 ];
 
 const services = [

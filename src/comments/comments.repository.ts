@@ -4,7 +4,7 @@ import { Comment, CommentDocument } from './entity/comments.schema';
 import mongoose, { Model } from 'mongoose';
 import { CommentDb } from './types/comments.types';
 import { LikeStatus } from '../likes/types/likes.types';
-import { CommentViewDto } from './dto/output.comment-view.dto';
+import { CommentViewDto } from './dto/output.comment.view.dto';
 
 @Injectable()
 export class CommentsRepository {

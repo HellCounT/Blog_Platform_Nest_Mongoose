@@ -113,4 +113,13 @@ export class BloggerBlogsController {
     );
     return;
   }
+  @Get('comments')
+  @HttpCode(200)
+  async getAllCommentsForBloggerPosts(@Req() req, @Query() query: QueryParser) {
+    const queryParams = parseQueryPagination(query);
+    return await this.bloggerBlogsQueryRepo.getAllCommentsForBloggerPosts(
+      queryParams,
+      req.user.userId,
+    );
+  }
 }

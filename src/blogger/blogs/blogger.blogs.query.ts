@@ -2,9 +2,28 @@ import { Injectable } from '@nestjs/common';
 import { QueryParser } from '../../application/query.parser';
 import { BlogPaginatorType } from '../../blogs/types/blogs.types';
 import { BlogsQuery } from '../../blogs/blogs.query';
+import {
+  CommentsForBloggerViewType,
+  OutputCommentsPaginatorBloggerDto,
+} from './dto/output.comments.paginator.blogger.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Post, PostDocument } from '../../posts/entity/posts.schema';
+import {
+  Comment,
+  CommentDocument,
+} from '../../comments/entity/comments.schema';
+import mongoose, { Model } from 'mongoose';
+import { Blog, BlogDocument } from '../../blogs/entity/blogs.schema';
 
 @Injectable()
 export class BloggerBlogsQuery extends BlogsQuery {
+  constructor(
+    @InjectModel(Post.name) protected postModel: Model<PostDocument>,
+    @InjectModel(Comment.name) protected commentModel: Model<CommentDocument>,
+    @InjectModel(Blog.name) protected blogModel: Model<BlogDocument>,
+  ) {
+    super(blogModel);
+  }
   async getAllBlogsForBlogger(
     q: QueryParser,
     userId,
@@ -31,6 +50,56 @@ export class BloggerBlogsQuery extends BlogsQuery {
       pageSize: q.pageSize,
       totalCount: allBlogsCount,
       items: pageBlogs,
+    };
+  }
+  async getAllCommentsForBloggerPosts(
+    q: QueryParser,
+    userId: string,
+  ): Promise<OutputCommentsPaginatorBloggerDto> {
+    const allCommentsCount = await this.commentModel.countDocuments({
+      'commentatorInfo.userId': userId,
+    });
+    const reqPageDbComments = await this.commentModel
+      .find({
+        'commentatorInfo.userId': userId,
+      })
+      .sort({ [q.sortBy]: q.sortDirection })
+      .skip((q.pageNumber - 1) * q.pageSize)
+      .limit(q.pageSize)
+      .lean();
+    const items = [];
+    for await (const c of reqPageDbComments) {
+      const comment = await this._mapCommentToBloggerViewType(c);
+      items.push(comment);
+    }
+    return {
+      pagesCount: Math.ceil(allCommentsCount / q.pageSize),
+      page: q.pageNumber,
+      pageSize: q.pageSize,
+      totalCount: allCommentsCount,
+      items: items,
+    };
+  }
+  private async _mapCommentToBloggerViewType(
+    comment: CommentDocument,
+  ): Promise<CommentsForBloggerViewType> {
+    const post = await this.postModel.findOne({
+      _id: new mongoose.Types.ObjectId(comment.postId),
+    });
+    return {
+      id: comment._id.toString(),
+      content: comment.content,
+      commentatorInfo: {
+        userId: comment.commentatorInfo.userId,
+        userLogin: comment.commentatorInfo.userLogin,
+      },
+      createdAt: comment.createdAt,
+      postInfo: {
+        id: comment.postId,
+        title: post.title,
+        blogId: post.blogId,
+        blogName: post.blogName,
+      },
     };
   }
 }

@@ -1,4 +1,4 @@
-import { CommentViewDto } from './output.comment-view.dto';
+import { CommentViewDto } from './output.comment.view.dto';
 
 export class CommentPaginatorDto {
   pagesCount: number;
