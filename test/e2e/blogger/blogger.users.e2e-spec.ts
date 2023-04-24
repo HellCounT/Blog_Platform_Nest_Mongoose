@@ -4,7 +4,10 @@ import request from 'supertest';
 import { bloggerUsersPath } from '../../helpers/paths';
 import { blogsFactory, usersFactory } from '../../helpers/factory';
 import { InputBanUserForBlogDto } from '../../../src/blogger/users/dto/input.ban-user-for-blog.dto';
-import { correctUserBanByBlogger } from '../../test-entities/blogger.user.test-entities';
+import {
+  correctUserBanByBlogger,
+  correctUserUnbanByBlogger,
+} from '../../test-entities/blogger.user.test-entities';
 import { authHeader, bearerAccessToken } from '../../helpers/auth';
 import { PaginatorType } from '../../../src/application-helpers/paginator.type';
 import { OutputBannedUserByBloggerDto } from '../../../src/blogger/users/dto/output.user-banned-by-blogger.dto';
@@ -34,18 +37,24 @@ describe('Super Admin Blogs Controller (e2e)', () => {
         .get(bloggerUsersPath + '/blog/5bf142459b72e12b2b1b2cd')
         .expect(401);
     });
-    it('1.2. Should ban user for blog and return 204, then return 200 and one banned user', async () => {
+    it('1.2. Should ban user for blog and return 204, then return 200 and one banned user, then unban and return no banned users', async () => {
       const user = usersFactory.createUser();
-      const userId = await usersFactory.insertUser(app, user);
+      await usersFactory.insertUser(app, user);
       const tokenPair = await usersFactory.loginAndGetTokenPair(app, user);
       const blogId = await blogsFactory.insertBlog(app, tokenPair.accessToken);
+      const user2 = usersFactory.createUser();
+      const user2Id = await usersFactory.insertUser(app, user2);
       const banUserForBlogDto: InputBanUserForBlogDto = {
         ...correctUserBanByBlogger,
         blogId: blogId,
       };
+      const unbanUserForBlogDto: InputBanUserForBlogDto = {
+        ...correctUserUnbanByBlogger,
+        blogId: blogId,
+      };
 
       await request(app)
-        .put(bloggerUsersPath + '/' + userId + '/ban')
+        .put(bloggerUsersPath + '/' + user2Id + '/ban')
         .set(authHeader, bearerAccessToken(tokenPair.accessToken))
         .send(banUserForBlogDto)
         .expect(204);
@@ -62,8 +71,8 @@ describe('Super Admin Blogs Controller (e2e)', () => {
         totalCount: 1,
         items: [
           {
-            id: expect.any(String),
-            login: user.login,
+            id: user2Id,
+            login: user2.login,
             banInfo: {
               isBanned: banUserForBlogDto.isBanned,
               banDate: expect.any(String),
@@ -71,6 +80,24 @@ describe('Super Admin Blogs Controller (e2e)', () => {
             },
           },
         ],
+      });
+      await request(app)
+        .put(bloggerUsersPath + '/' + user2Id + '/ban')
+        .set(authHeader, bearerAccessToken(tokenPair.accessToken))
+        .send(unbanUserForBlogDto)
+        .expect(204);
+      const response2 = await request(app)
+        .get(bloggerUsersPath + '/blog' + '/' + blogId)
+        .set(authHeader, bearerAccessToken(tokenPair.accessToken))
+        .expect(200);
+      expect(response2.body).toEqual<
+        PaginatorType<OutputBannedUserByBloggerDto>
+      >({
+        pagesCount: 0,
+        page: 1,
+        pageSize: 10,
+        totalCount: 0,
+        items: [],
       });
     });
     it('1.3. Should return 404 if id from uri param not found', async () => {

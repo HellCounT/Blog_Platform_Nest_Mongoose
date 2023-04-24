@@ -9,3 +9,10 @@ export const incorrectUserBanByBlogger = {
   banReason: '',
   blogId: '',
 };
+
+export const correctUserUnbanByBlogger = {
+  isBanned: false,
+  banReason:
+    'DouchebagNoMore, DouchebagNoMore, DouchebagNoMore, DouchebagNoMore',
+  blogId: '',
+};
