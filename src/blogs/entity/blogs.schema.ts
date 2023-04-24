@@ -10,6 +10,9 @@ class BlogOwnerInfo {
 
   @Prop({ required: true, maxlength: 50 })
   userLogin: string;
+
+  @Prop({ required: true })
+  isBanned: boolean;
 }
 
 export const BlogOwnerInfoSchema = SchemaFactory.createForClass(BlogOwnerInfo);
@@ -36,6 +39,12 @@ export class Blog {
 
   @Prop({ required: true, type: BlogOwnerInfoSchema })
   blogOwnerInfo: BlogOwnerInfo;
+
+  @Prop({ required: true })
+  isBanned: boolean;
+
+  @Prop({ required: false })
+  banDate: Date | null;
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);

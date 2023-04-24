@@ -16,4 +16,5 @@ export class BanUserForBlogUseCase {
     protected usersRepo: UsersRepository,
     protected blogsRepo: BlogsRepository,
   ) {}
+  async execute(command: BanUserForBlogCommand): Promise<boolean> {}
 }

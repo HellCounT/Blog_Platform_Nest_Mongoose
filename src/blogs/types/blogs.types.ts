@@ -22,6 +22,8 @@ export class BlogDb {
       userLogin: string;
       isBanned: boolean;
     },
+    public isBanned: boolean,
+    public banDate: Date | null,
   ) {}
 }
 

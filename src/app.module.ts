@@ -85,6 +85,10 @@ import { SuperAdminUsersController } from './superadmin/users/super-admin.users.
 import { BloggerBlogsController } from './blogger/blogs/blogger.blogs.controller';
 import { BloggerBlogsQuery } from './blogger/blogs/blogger.blogs.query';
 import { BloggerUsersController } from './blogger/users/blogger.users.controller';
+import {
+  UserBannedByBlogger,
+  UserBannedByBloggerSchema,
+} from './blogger/users/users-banned-by-blogger/entity/user-banned-by-blogger.schema';
 
 const controllers = [
   AppController,
@@ -180,6 +184,7 @@ const adapters = [JwtAdapter, EmailManager];
       { name: User.name, schema: UserSchema },
       { name: Device.name, schema: DeviceSchema },
       { name: ExpiredToken.name, schema: ExpiredTokenSchema },
+      { name: UserBannedByBlogger.name, schema: UserBannedByBloggerSchema },
     ]),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'swagger-static'),

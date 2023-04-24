@@ -33,6 +33,8 @@ export class CreateBlogUseCase {
         userLogin: user.accountData.login,
         isBanned: false,
       },
+      false,
+      null,
     );
     const result = await this.blogsRepo.createBlog(newBlog);
     return {
