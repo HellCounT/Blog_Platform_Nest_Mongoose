@@ -44,6 +44,7 @@ export class PostDb {
       likesCount: number;
       dislikesCount: number;
     },
+    public parentBlogIsBanned: boolean,
   ) {}
 }
 

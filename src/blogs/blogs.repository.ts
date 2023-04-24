@@ -73,6 +73,17 @@ export class BlogsRepository {
     );
     return;
   }
+  async banBlogById(blogId: string, isBanned: boolean): Promise<void> {
+    const blogInstance = await this.getBlogById(blogId);
+    blogInstance.isBanned = isBanned;
+    if (isBanned) {
+      blogInstance.banDate = new Date();
+    } else {
+      blogInstance.banDate = null;
+    }
+    await blogInstance.save();
+    return;
+  }
   async save(blog: BlogDocument): Promise<BlogDocument> {
     return await blog.save();
   }

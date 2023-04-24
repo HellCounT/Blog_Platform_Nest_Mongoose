@@ -42,6 +42,7 @@ export class CreatePostForBlogUseCase {
         likesCount: 0,
         dislikesCount: 0,
       },
+      false,
     );
     return await this.postsRepo.createPost(newPost);
   }

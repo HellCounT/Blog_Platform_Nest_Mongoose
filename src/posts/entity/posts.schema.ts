@@ -46,6 +46,9 @@ export class Post {
 
   @Prop({ required: true, type: PostOwnerInfoSchema })
   postOwnerInfo: PostOwnerInfo;
+
+  @Prop({ required: true })
+  parentBlogIsBanned: boolean;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

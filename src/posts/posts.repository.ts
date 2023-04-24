@@ -83,4 +83,11 @@ export class PostsRepository {
     );
     return;
   }
+  async banByBlogId(blogId: string, isBanned: boolean): Promise<void> {
+    await this.postModel.updateMany(
+      { blogId: blogId },
+      { parentBlogIsBanned: isBanned },
+    );
+    return;
+  }
 }

@@ -75,9 +75,14 @@ export class PostsQuery {
       const foundPostsCount = await this.postModel.countDocuments({
         blogId: { $eq: blogId },
         'postOwnerInfo.isBanned': false,
+        parentBlogIsBanned: false,
       });
       const reqPageDbPosts = await this.postModel
-        .find({ blogId: { $eq: blogId }, 'postOwnerInfo.isBanned': false })
+        .find({
+          blogId: { $eq: blogId },
+          'postOwnerInfo.isBanned': false,
+          parentBlogIsBanned: false,
+        })
         .sort({ [q.sortBy]: q.sortDirection })
         .skip((q.pageNumber - 1) * q.pageSize)
         .limit(q.pageSize)
