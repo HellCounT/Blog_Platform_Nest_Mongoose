@@ -3,7 +3,7 @@ import { HydratedDocument } from 'mongoose';
 
 export type UserBannedByBloggerDocument = HydratedDocument<UserBannedByBlogger>;
 
-@Schema({ _id: false })
+@Schema()
 export class UserBannedByBlogger {
   @Prop({ required: true })
   blogId: string;

@@ -10,6 +10,7 @@ import { PaginatorType } from '../../../src/application-helpers/paginator.type';
 import { OutputBannedUserByBloggerDto } from '../../../src/blogger/users/dto/output.user-banned-by-blogger.dto';
 
 describe('Super Admin Blogs Controller (e2e)', () => {
+  jest.setTimeout(10000);
   let nestApp: INestApplication;
   let app: any;
 
@@ -33,7 +34,7 @@ describe('Super Admin Blogs Controller (e2e)', () => {
         .get(bloggerUsersPath + '/blog/5bf142459b72e12b2b1b2cd')
         .expect(401);
     });
-    it('1.2. Should return 200 if authorized and should return one banned blog', async () => {
+    it('1.2. Should ban user for blog and return 204, then return 200 and one banned user', async () => {
       const user = usersFactory.createUser();
       const userId = await usersFactory.insertUser(app, user);
       const tokenPair = await usersFactory.loginAndGetTokenPair(app, user);

@@ -29,7 +29,7 @@ export class BanUserForBlogUseCase {
     if (command.blogOwnerId !== foundBlog.blogOwnerInfo.userId)
       throw new UnauthorizedException();
     if (!userToBan || !foundBlog) throw new BadRequestException();
-    const foundBan = this.usersBannedByBloggerRepo.findUserBan(
+    const foundBan = await this.usersBannedByBloggerRepo.findUserBan(
       command.banUserForBlogDto.blogId,
       command.userIdToBan,
     );
