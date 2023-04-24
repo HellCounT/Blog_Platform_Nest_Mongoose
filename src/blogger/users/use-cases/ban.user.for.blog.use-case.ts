@@ -3,7 +3,7 @@ import { CommandHandler } from '@nestjs/cqrs';
 import { UsersRepository } from '../../../users/users.repository';
 import { BlogsRepository } from '../../../blogs/blogs.repository';
 import { UsersBannedByBloggerRepository } from '../users-banned-by-blogger/users-banned-by-blogger.repository';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { UserBannedByBloggerDb } from '../users-banned-by-blogger/types/user-banned-by-blogger.types';
 
 export class BanUserForBlogCommand {
@@ -27,7 +27,7 @@ export class BanUserForBlogUseCase {
       command.banUserForBlogDto.blogId,
     );
     if (command.blogOwnerId !== foundBlog.blogOwnerInfo.userId)
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     if (!userToBan || !foundBlog) throw new BadRequestException();
     const foundBan = await this.usersBannedByBloggerRepo.findUserBan(
       command.banUserForBlogDto.blogId,

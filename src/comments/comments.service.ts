@@ -2,7 +2,6 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { PostsQuery } from '../posts/posts.query';
 import { UsersQuery } from '../users/users.query';
@@ -34,10 +33,10 @@ export class CommentsService {
     const foundPost = await this.postsQueryRepo.findPostById(postId, userId);
     if (!foundUser || !foundPost) throw new NotFoundException();
     const bannedByBlogger = await this.usersBannedByBloggerRepo.findUserBan(
-      userId,
       foundPost.blogId,
+      userId,
     );
-    if (bannedByBlogger) throw new UnauthorizedException();
+    if (bannedByBlogger) throw new ForbiddenException();
     const newComment = new CommentDb(
       new mongoose.Types.ObjectId(),
       content,
