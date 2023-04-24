@@ -26,6 +26,10 @@ export class BloggerUsersQuery {
     userId: string,
     q: UserQueryParser,
   ): Promise<PaginatorType<OutputBannedUserByBloggerDto>> {
+    let sortField: string;
+    if (q.sortBy === 'login') sortField = 'bannedUserLogin';
+    if (q.sortBy === 'id') sortField = 'bannedUserId';
+    if (q.sortBy === 'banDate') sortField = 'banDate';
     const foundBlog = await this.blogModel.findOne({
       _id: new mongoose.Types.ObjectId(blogId),
     });
@@ -43,7 +47,7 @@ export class BloggerUsersQuery {
         .find({
           bannedUserLogin: { $regex: loginFilter, $options: 'i' },
         })
-        .sort({ [q.sortBy]: q.sortDirection })
+        .sort({ [sortField]: q.sortDirection })
         .skip((q.pageNumber - 1) * q.pageSize)
         .limit(q.pageSize)
         .lean();
