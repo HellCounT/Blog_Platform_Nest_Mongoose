@@ -9,8 +9,8 @@ export class OutputSuperAdminBlogDto {
     userId: string;
     userLogin: string;
   };
-  // banInfo: {
-  //   isBanned: boolean;
-  //   banDate: string | null;
-  // };
+  banInfo: {
+    isBanned: boolean;
+    banDate: string | null;
+  };
 }

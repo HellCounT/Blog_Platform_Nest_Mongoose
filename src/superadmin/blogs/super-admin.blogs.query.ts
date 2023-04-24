@@ -37,6 +37,9 @@ export class SuperAdminBlogsQuery {
   private _mapBlogToSuperAdminViewType(
     blog: BlogDocument,
   ): OutputSuperAdminBlogDto {
+    let banDateString;
+    if (blog.banDate === null) banDateString = null;
+    else banDateString = blog.banDate.toISOString();
     return {
       id: blog._id.toString(),
       name: blog.name,
@@ -47,6 +50,10 @@ export class SuperAdminBlogsQuery {
       blogOwnerInfo: {
         userId: blog.blogOwnerInfo.userId,
         userLogin: blog.blogOwnerInfo.userLogin,
+      },
+      banInfo: {
+        isBanned: blog.isBanned,
+        banDate: banDateString,
       },
     };
   }
