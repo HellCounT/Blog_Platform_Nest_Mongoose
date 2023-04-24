@@ -23,7 +23,9 @@ export class BanUserForBlogUseCase {
   ) {}
   async execute(command: BanUserForBlogCommand): Promise<boolean> {
     const userToBan = await this.usersRepo.getUserById(command.userIdToBan);
-    const foundBlog = await this.blogsRepo.getBlogById(command.blogOwnerId);
+    const foundBlog = await this.blogsRepo.getBlogById(
+      command.banUserForBlogDto.blogId,
+    );
     if (command.blogOwnerId !== foundBlog.blogOwnerInfo.userId)
       throw new UnauthorizedException();
     if (!userToBan || !foundBlog) throw new BadRequestException();
