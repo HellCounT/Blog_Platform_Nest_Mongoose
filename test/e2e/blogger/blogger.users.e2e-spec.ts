@@ -73,5 +73,21 @@ describe('Super Admin Blogs Controller (e2e)', () => {
         ],
       });
     });
+    it('1.3. Should return 404 if id from uri param not found', async () => {
+      const user = usersFactory.createUser();
+      const incorrectUserId = '5bf142459b72e12b2b1b2cd';
+      await usersFactory.insertUser(app, user);
+      const tokenPair = await usersFactory.loginAndGetTokenPair(app, user);
+      const blogId = await blogsFactory.insertBlog(app, tokenPair.accessToken);
+      const banUserForBlogDto: InputBanUserForBlogDto = {
+        ...correctUserBanByBlogger,
+        blogId: blogId,
+      };
+      await request(app)
+        .put(bloggerUsersPath + '/' + incorrectUserId + '/ban')
+        .set(authHeader, bearerAccessToken(tokenPair.accessToken))
+        .send(banUserForBlogDto)
+        .expect(404);
+    });
   });
 });

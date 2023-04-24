@@ -1,7 +1,7 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
@@ -35,7 +35,7 @@ export class BloggerUsersQuery {
     });
     if (!foundBlog) throw new NotFoundException();
     if (foundBlog.blogOwnerInfo.userId !== userId)
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     let loginFilter = '';
     if (q.searchLoginTerm) loginFilter = '.*' + q.searchLoginTerm + '.*';
     const bansCount: number =

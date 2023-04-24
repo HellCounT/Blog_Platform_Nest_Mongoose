@@ -23,7 +23,6 @@ export class UsersBannedByBloggerRepository {
     });
   }
   async banUser(banUserByBloggerInfo: UserBannedByBloggerDb): Promise<void> {
-    console.log('banUserByBloggerInfo ', banUserByBloggerInfo);
     const banUserByBloggerInstance = new this.userBannedByBloggerModel(
       banUserByBloggerInfo,
     );
