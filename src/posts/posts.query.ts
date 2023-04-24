@@ -55,6 +55,7 @@ export class PostsQuery {
   ): Promise<PostViewModelType | null> {
     const foundPostInstance = await this.postModel.findOne({
       _id: new mongoose.Types.ObjectId(id),
+      parentBlogIsBanned: false,
     });
     if (foundPostInstance)
       return this._mapPostToViewType(foundPostInstance, activeUserId);
