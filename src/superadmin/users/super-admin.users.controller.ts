@@ -18,7 +18,7 @@ import { DeleteUserCommand } from './use-cases/delete.user.use-case';
 import {
   parseUserQueryPagination,
   UserQueryParser,
-} from '../../application/query.parser';
+} from '../../application-helpers/query.parser';
 import { SuperAdminUsersQuery } from './super-admin.users.query';
 import { InputBanUserDto } from './dto/input.ban-user.dto';
 import { BanUserCommand } from './use-cases/ban.user.use-case';

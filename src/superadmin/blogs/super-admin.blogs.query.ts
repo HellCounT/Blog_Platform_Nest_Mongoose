@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogDocument } from '../../blogs/entity/blogs.schema';
 import { Model } from 'mongoose';
-import { QueryParser } from '../../application/query.parser';
+import { QueryParser } from '../../application-helpers/query.parser';
 import { BlogSAPaginatorType } from './types/super-admin.blogs.types';
 import { OutputSuperAdminBlogDto } from './dto/output.super-admin.blog.dto';
 

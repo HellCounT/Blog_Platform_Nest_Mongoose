@@ -13,7 +13,10 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostsQuery } from './posts.query';
-import { parseQueryPagination, QueryParser } from '../application/query.parser';
+import {
+  parseQueryPagination,
+  QueryParser,
+} from '../application-helpers/query.parser';
 import { CommentsQuery } from '../comments/comments.query';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { InputCommentDto } from '../comments/dto/input-comment.dto';

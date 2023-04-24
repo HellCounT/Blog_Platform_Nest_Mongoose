@@ -16,7 +16,7 @@ import { SuperAdminBlogsQuery } from './super-admin.blogs.query';
 import {
   parseQueryPagination,
   QueryParser,
-} from '../../application/query.parser';
+} from '../../application-helpers/query.parser';
 
 @UseGuards(BasicAuthGuard)
 @Controller('sa/blogs')

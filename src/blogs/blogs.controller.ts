@@ -8,7 +8,10 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { parseQueryPagination, QueryParser } from '../application/query.parser';
+import {
+  parseQueryPagination,
+  QueryParser,
+} from '../application-helpers/query.parser';
 import { BlogsQuery } from './blogs.query';
 import { PostsService } from '../posts/posts.service';
 import { PostsQuery } from '../posts/posts.query';

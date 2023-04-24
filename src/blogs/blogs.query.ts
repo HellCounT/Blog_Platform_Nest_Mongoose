@@ -1,4 +1,4 @@
-import { QueryParser } from '../application/query.parser';
+import { QueryParser } from '../application-helpers/query.parser';
 import { BlogPaginatorType, BlogViewModelType } from './types/blogs.types';
 import mongoose, { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';

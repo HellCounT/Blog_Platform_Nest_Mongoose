@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 import add from 'date-fns/add';
 import { ServiceUnavailableException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { generateHash } from '../../application/generate.hash';
+import { generateHash } from '../../application-helpers/generate.hash';
 
 export class RegisterUserCommand {
   constructor(public registrationUserDto: InputRegistrationUserDto) {}

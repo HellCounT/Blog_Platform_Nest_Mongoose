@@ -1,7 +1,10 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../../users/entity/users.schema';
 import { Model } from 'mongoose';
-import { BanStatus, UserQueryParser } from '../../application/query.parser';
+import {
+  BanStatus,
+  UserQueryParser,
+} from '../../application-helpers/query.parser';
 import { UserPaginatorType } from '../../users/types/users.types';
 import { OutputSuperAdminUserDto } from './dto/output.super-admin.user.dto';
 import { Injectable } from '@nestjs/common';

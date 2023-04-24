@@ -3,7 +3,7 @@ import { UsersRepository } from '../../../users/users.repository';
 import { UserDb, UserViewModelType } from '../../../users/types/users.types';
 import mongoose from 'mongoose';
 import { CommandHandler } from '@nestjs/cqrs';
-import { generateHash } from '../../../application/generate.hash';
+import { generateHash } from '../../../application-helpers/generate.hash';
 
 export class CreateUserCommand {
   constructor(public userCreateDto: InputCreateUserDto) {}

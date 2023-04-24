@@ -89,6 +89,9 @@ import {
   UserBannedByBlogger,
   UserBannedByBloggerSchema,
 } from './blogger/users/users-banned-by-blogger/entity/user-banned-by-blogger.schema';
+import { UsersBannedByBloggerRepository } from './blogger/users/users-banned-by-blogger/users-banned-by-blogger.repository';
+import { BanUserForBlogUseCase } from './blogger/users/use-cases/ban.user.for.blog.use-case';
+import { BloggerUsersQuery } from './blogger/users/blogger.users.query';
 
 const controllers = [
   AppController,
@@ -136,6 +139,7 @@ const useCases = [
   BanUserUseCase,
   CreateUserUseCase,
   DeleteUserUseCase,
+  BanUserForBlogUseCase,
 ];
 
 const repositories = [
@@ -147,6 +151,7 @@ const repositories = [
   CommentsRepository,
   DevicesRepository,
   ExpiredTokensRepository,
+  UsersBannedByBloggerRepository,
 ];
 
 const query = [
@@ -157,6 +162,7 @@ const query = [
   SuperAdminBlogsQuery,
   SuperAdminUsersQuery,
   BloggerBlogsQuery,
+  BloggerUsersQuery,
 ];
 
 const constraints = [

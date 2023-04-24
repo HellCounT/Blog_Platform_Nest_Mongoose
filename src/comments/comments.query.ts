@@ -1,5 +1,5 @@
 import mongoose, { Model } from 'mongoose';
-import { QueryParser } from '../application/query.parser';
+import { QueryParser } from '../application-helpers/query.parser';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment, CommentDocument } from './entity/comments.schema';
