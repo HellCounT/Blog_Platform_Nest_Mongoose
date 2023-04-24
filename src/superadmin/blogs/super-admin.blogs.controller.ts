@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -17,6 +18,8 @@ import {
   parseQueryPagination,
   QueryParser,
 } from '../../application-helpers/query.parser';
+import { BanBlogCommand } from './use-cases/ban.blog.use-case';
+import { InputSABanBlogDto } from './dto/input.super-admin.ban.blog.dto';
 
 @UseGuards(BasicAuthGuard)
 @Controller('sa/blogs')
@@ -45,5 +48,14 @@ export class SuperAdminBlogsController {
     )
       throw new BadRequestException(['wrong id']);
     await this.commandBus.execute(new BindBlogToUserCommand(blogId, userId));
+  }
+  @Put(':id/ban')
+  @HttpCode(204)
+  async banBlog(
+    @Param('id') blogId: string,
+    @Body() banBlogDto: InputSABanBlogDto,
+  ) {
+    await this.commandBus.execute(new BanBlogCommand(banBlogDto, blogId));
+    return;
   }
 }
