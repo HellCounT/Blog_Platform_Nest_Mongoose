@@ -1,3 +1,5 @@
+import { LikeStatus } from '../../../likes/types/likes.types';
+
 export class OutputCommentsPaginatorBloggerDto {
   pagesCount: number;
   page: number;
@@ -19,5 +21,10 @@ export type CommentsForBloggerViewType = {
     title: string;
     blogId: string;
     blogName: string;
+  };
+  likesInfo: {
+    likesCount: number;
+    dislikesCount: number;
+    myStatus: LikeStatus;
   };
 };

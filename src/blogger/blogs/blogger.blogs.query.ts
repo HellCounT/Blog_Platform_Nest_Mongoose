@@ -14,6 +14,8 @@ import {
 } from '../../comments/entity/comments.schema';
 import mongoose, { Model } from 'mongoose';
 import { Blog, BlogDocument } from '../../blogs/entity/blogs.schema';
+import { CommentLikeDb, LikeStatus } from '../../likes/types/likes.types';
+import { LikeForComment } from '../../likes/entity/likes-for-comments.schema';
 
 @Injectable()
 export class BloggerBlogsQuery extends BlogsQuery {
@@ -21,6 +23,8 @@ export class BloggerBlogsQuery extends BlogsQuery {
     @InjectModel(Post.name) protected postModel: Model<PostDocument>,
     @InjectModel(Comment.name) protected commentModel: Model<CommentDocument>,
     @InjectModel(Blog.name) protected blogModel: Model<BlogDocument>,
+    @InjectModel(LikeForComment.name)
+    protected likeForCommentModel: Model<LikeForComment>,
   ) {
     super(blogModel);
   }
@@ -69,7 +73,7 @@ export class BloggerBlogsQuery extends BlogsQuery {
       .lean();
     const items = [];
     for await (const c of reqPageDbComments) {
-      const comment = await this._mapCommentToBloggerViewType(c);
+      const comment = await this._mapCommentToBloggerViewType(c, userId);
       items.push(comment);
     }
     return {
@@ -82,10 +86,15 @@ export class BloggerBlogsQuery extends BlogsQuery {
   }
   private async _mapCommentToBloggerViewType(
     comment: CommentDocument,
+    userId: string,
   ): Promise<CommentsForBloggerViewType> {
     const post = await this.postModel.findOne({
       _id: new mongoose.Types.ObjectId(comment.postId),
     });
+    const like = await this.getUserLikeForComment(
+      userId,
+      comment._id.toString(),
+    );
     return {
       id: comment._id.toString(),
       content: comment.content,
@@ -100,6 +109,21 @@ export class BloggerBlogsQuery extends BlogsQuery {
         blogId: post.blogId,
         blogName: post.blogName,
       },
+      likesInfo: {
+        likesCount: comment.likesInfo.likesCount,
+        dislikesCount: comment.likesInfo.dislikesCount,
+        myStatus: like?.likeStatus || LikeStatus.none,
+      },
     };
+  }
+  async getUserLikeForComment(
+    userId: string,
+    commentId: string,
+  ): Promise<CommentLikeDb | null> {
+    return this.likeForCommentModel.findOne({
+      commentId: commentId,
+      userId: userId,
+      isBanned: false,
+    });
   }
 }
