@@ -92,6 +92,7 @@ import {
 import { UsersBannedByBloggerRepository } from './blogger/users/users-banned-by-blogger/users-banned-by-blogger.repository';
 import { BanUserForBlogUseCase } from './blogger/users/use-cases/ban.user.for.blog.use-case';
 import { BloggerUsersQuery } from './blogger/users/blogger.users.query';
+import { BanBlogUseCase } from './superadmin/blogs/use-cases/ban.blog.use-case';
 
 const controllers = [
   AppController,
@@ -140,6 +141,7 @@ const useCases = [
   CreateUserUseCase,
   DeleteUserUseCase,
   BanUserForBlogUseCase,
+  BanBlogUseCase,
 ];
 
 const repositories = [

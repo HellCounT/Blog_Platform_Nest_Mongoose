@@ -18,6 +18,10 @@ import {
   ExpiredToken,
   ExpiredTokenDocument,
 } from './security/tokens/entity/expiredTokenSchema';
+import {
+  UserBannedByBlogger,
+  UserBannedByBloggerDocument,
+} from './blogger/users/users-banned-by-blogger/entity/user-banned-by-blogger.schema';
 
 @Controller()
 export class AppController {
@@ -33,6 +37,8 @@ export class AppController {
     private likesForCommentsModel: Model<LikeForCommentDocument>,
     @InjectModel(ExpiredToken.name)
     private expiredTokensModel: Model<ExpiredTokenDocument>,
+    @InjectModel(UserBannedByBlogger.name)
+    private userBannedByBloggerModel: Model<UserBannedByBloggerDocument>,
   ) {}
 
   @Get()
@@ -49,6 +55,7 @@ export class AppController {
     await this.likesForPostsModel.deleteMany({});
     await this.likesForCommentsModel.deleteMany({});
     await this.expiredTokensModel.deleteMany({});
+    await this.userBannedByBloggerModel.deleteMany({});
     return;
   }
 }

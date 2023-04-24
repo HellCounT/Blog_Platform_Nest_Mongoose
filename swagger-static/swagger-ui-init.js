@@ -538,6 +538,36 @@ window.onload = function() {
           }
         }
       },
+      "/sa/blogs/{id}/ban": {
+        "put": {
+          "operationId": "SuperAdminBlogsController_banBlog",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InputSABanBlogDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
       "/sa/users": {
         "get": {
           "operationId": "SuperAdminUsersController_getAllUsers",
@@ -789,6 +819,67 @@ window.onload = function() {
             }
           }
         }
+      },
+      "/blogger/blogs/comments": {
+        "get": {
+          "operationId": "BloggerBlogsController_getAllCommentsForBloggerPosts",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/blogger/users/{id}/ban": {
+        "put": {
+          "operationId": "BloggerUsersController_banUser",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InputBanUserForBlogDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          }
+        }
+      },
+      "/blogger/users/blog/{id}": {
+        "get": {
+          "operationId": "BloggerUsersController_getAllBannedUsersForBlog",
+          "parameters": [
+            {
+              "name": "id",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          }
+        }
       }
     },
     "info": {
@@ -838,6 +929,10 @@ window.onload = function() {
           "type": "object",
           "properties": {}
         },
+        "InputSABanBlogDto": {
+          "type": "object",
+          "properties": {}
+        },
         "InputCreateUserDto": {
           "type": "object",
           "properties": {}
@@ -859,6 +954,10 @@ window.onload = function() {
           "properties": {}
         },
         "InputUpdatePostDto": {
+          "type": "object",
+          "properties": {}
+        },
+        "InputBanUserForBlogDto": {
           "type": "object",
           "properties": {}
         }

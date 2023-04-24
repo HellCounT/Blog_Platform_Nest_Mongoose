@@ -32,7 +32,7 @@ export class UpdatePostForBlogUseCase {
       command.updatePostDto.title,
       command.updatePostDto.shortDescription,
       command.updatePostDto.content,
-      command.updatePostDto.blogId,
+      command.postId,
       blog.name,
     );
     return true;

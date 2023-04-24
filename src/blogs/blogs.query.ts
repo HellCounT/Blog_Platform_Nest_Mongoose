@@ -15,10 +15,12 @@ export class BlogsQuery {
     if (q.searchNameTerm) filter = '.*' + q.searchNameTerm + '.*';
     const allBlogsCount = await this.blogModel.countDocuments({
       name: { $regex: filter, $options: 'i' },
+      isBanned: false,
     });
     const reqPageDbBlogs = await this.blogModel
       .find({
         name: { $regex: filter, $options: 'i' },
+        isBanned: false,
       })
       .sort({ [q.sortBy]: q.sortDirection })
       .skip((q.pageNumber - 1) * q.pageSize)

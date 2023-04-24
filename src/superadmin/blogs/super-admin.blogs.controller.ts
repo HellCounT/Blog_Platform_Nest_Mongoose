@@ -43,8 +43,8 @@ export class SuperAdminBlogsController {
     @Param('userId') userId: string,
   ) {
     if (
-      mongoose.Types.ObjectId.isValid(blogId) ||
-      mongoose.Types.ObjectId.isValid(userId)
+      !mongoose.Types.ObjectId.isValid(blogId) ||
+      !mongoose.Types.ObjectId.isValid(userId)
     )
       throw new BadRequestException(['wrong id']);
     await this.commandBus.execute(new BindBlogToUserCommand(blogId, userId));
