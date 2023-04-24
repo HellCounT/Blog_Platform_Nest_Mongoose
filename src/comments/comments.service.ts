@@ -2,6 +2,7 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PostsQuery } from '../posts/posts.query';
 import { UsersQuery } from '../users/users.query';
@@ -12,6 +13,7 @@ import { CommentViewDto } from './dto/output.comment.view.dto';
 import { LikeStatus } from '../likes/types/likes.types';
 import { CommentsQuery } from './comments.query';
 import { LikesForCommentsService } from '../likes/likes-for-comments.service';
+import { UsersBannedByBloggerRepository } from '../blogger/users/users-banned-by-blogger/users-banned-by-blogger.repository';
 
 @Injectable()
 export class CommentsService {
@@ -21,6 +23,7 @@ export class CommentsService {
     protected commentsQueryRepo: CommentsQuery,
     protected readonly usersQueryRepo: UsersQuery,
     protected likesForCommentsService: LikesForCommentsService,
+    protected readonly usersBannedByBloggerRepo: UsersBannedByBloggerRepository,
   ) {}
   async createComment(
     content: string,
@@ -30,6 +33,11 @@ export class CommentsService {
     const foundUser = await this.usersQueryRepo.findUserById(userId);
     const foundPost = await this.postsQueryRepo.findPostById(postId, userId);
     if (!foundUser || !foundPost) throw new NotFoundException();
+    const bannedByBlogger = await this.usersBannedByBloggerRepo.findUserBan(
+      userId,
+      foundPost.blogId,
+    );
+    if (bannedByBlogger) throw new UnauthorizedException();
     const newComment = new CommentDb(
       new mongoose.Types.ObjectId(),
       content,
