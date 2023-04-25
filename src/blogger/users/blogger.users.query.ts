@@ -41,11 +41,13 @@ export class BloggerUsersQuery {
     const bansCount: number =
       await this.userBannedByBloggerModel.countDocuments({
         bannedUserLogin: { $regex: loginFilter, $options: 'i' },
+        blogId: blogId,
       });
     const reqPageDbBans: Array<UserBannedByBloggerDocument> =
       await this.userBannedByBloggerModel
         .find({
           bannedUserLogin: { $regex: loginFilter, $options: 'i' },
+          blogId: blogId,
         })
         .sort({ [sortField]: q.sortDirection })
         .skip((q.pageNumber - 1) * q.pageSize)
