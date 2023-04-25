@@ -10,6 +10,7 @@ export class CommentDb {
       isBanned: boolean;
     },
     public postId: string,
+    public bloggerId: string,
     public createdAt: string,
     public likesInfo: {
       likesCount: number;

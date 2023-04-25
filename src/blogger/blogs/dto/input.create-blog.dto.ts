@@ -1,15 +1,18 @@
-import { IsUrl, Length, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsUrl, MaxLength } from 'class-validator';
 import { Trim } from '../../../auth/decorators/validation-decorators/trim.decorator';
 
 export class InputBlogCreateDto {
   @Trim()
-  @Length(1, 15, { message: 'Incorrect name length' })
+  @IsNotEmpty()
+  @MaxLength(15, { message: 'Incorrect name length' })
   name: string;
   @Trim()
-  @Length(1, 500, { message: 'Incorrect description length' })
+  @IsNotEmpty()
+  @MaxLength(500, { message: 'Incorrect description length' })
   description: string;
   @Trim()
-  @IsUrl({}, { message: 'Value is not an URL' })
+  @IsNotEmpty()
   @MaxLength(100, { message: 'Max URL length exceeded' })
+  @IsUrl({}, { message: 'websiteUrl is not an URL' })
   websiteUrl: string;
 }

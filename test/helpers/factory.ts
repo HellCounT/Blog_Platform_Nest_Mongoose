@@ -3,19 +3,45 @@ import request from 'supertest';
 import { authLoginPath, bloggerBlogsPath, superAdminUsersPath } from './paths';
 import {
   authHeader,
-  bearerAccessToken,
+  getBearerAccessToken,
   superAdminLogin,
   superAdminPassword,
 } from './auth';
 import { v4 as uuidv4 } from 'uuid';
 import { correctBlog } from '../test-entities/blog.test-entities';
+import { correctPost } from '../test-entities/post.test-entities';
+import { correctComment } from '../test-entities/comment.test-entities';
 
 export const blogsFactory = {
   async insertBlog(app: any, accessToken: string): Promise<string> {
     const response = await request(app)
       .post(bloggerBlogsPath)
-      .set(authHeader, bearerAccessToken(accessToken))
+      .set(authHeader, getBearerAccessToken(accessToken))
       .send(correctBlog);
+    return response.body.id;
+  },
+};
+
+export const postsFactory = {
+  async insertPost(
+    app: any,
+    accessToken: string,
+    blogId: string,
+  ): Promise<string> {
+    const response = await request(app)
+      .post(bloggerBlogsPath + '/' + blogId + '/posts')
+      .set(authHeader, getBearerAccessToken(accessToken))
+      .send(correctPost);
+    return response.body.id;
+  },
+};
+
+export const commentsFactory = {
+  async insertComment(app: any, accessToken: string, postId: string) {
+    const response = await request(app)
+      .post('/posts' + '/' + postId + '/comments')
+      .set(authHeader, getBearerAccessToken(accessToken))
+      .send(correctComment);
     return response.body.id;
   },
 };

@@ -34,6 +34,9 @@ export class Comment {
   postId: string;
 
   @Prop({ required: true })
+  bloggerId: string;
+
+  @Prop({ required: true })
   createdAt: string;
 
   @Prop({ required: true, type: LikesInfoSchema })
