@@ -60,7 +60,6 @@ export class BloggerBlogsQuery extends BlogsQuery {
     q: QueryParser,
     userId: string,
   ): Promise<OutputCommentsPaginatorBloggerDto> {
-    console.log('userId: ', userId);
     const allCommentsCount = await this.commentModel.countDocuments({
       bloggerId: userId,
     });
@@ -72,7 +71,6 @@ export class BloggerBlogsQuery extends BlogsQuery {
       .skip((q.pageNumber - 1) * q.pageSize)
       .limit(q.pageSize)
       .lean();
-    console.log('found comments: ', reqPageDbComments);
     const items = [];
     for await (const c of reqPageDbComments) {
       const comment = await this._mapCommentToBloggerViewType(c, userId);

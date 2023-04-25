@@ -3,11 +3,7 @@ import { CommandHandler } from '@nestjs/cqrs';
 import { UsersRepository } from '../../../users/users.repository';
 import { BlogsRepository } from '../../../blogs/blogs.repository';
 import { UsersBannedByBloggerRepository } from '../users-banned-by-blogger/users-banned-by-blogger.repository';
-import {
-  BadRequestException,
-  ForbiddenException,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { UserBannedByBloggerDb } from '../users-banned-by-blogger/types/user-banned-by-blogger.types';
 import mongoose from 'mongoose';
 
@@ -35,7 +31,7 @@ export class BanUserForBlogUseCase {
     );
     if (command.blogOwnerId !== foundBlog.blogOwnerInfo.userId)
       throw new ForbiddenException();
-    if (!userToBan || !foundBlog) throw new BadRequestException();
+    if (!userToBan || !foundBlog) throw new NotFoundException();
     const foundBan = await this.usersBannedByBloggerRepo.findUserBan(
       command.banUserForBlogDto.blogId,
       command.userIdToBan,
